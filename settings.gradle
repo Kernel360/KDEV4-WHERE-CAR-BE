@@ -1,7 +1,4 @@
 rootProject.name = 'where-car'
 
-include 'module-common'
-include 'module-hub'
-include 'module-collector'
-include 'module-token-server'
-include 'module-rest-server'
+include 'collector'
+include 'rest'
