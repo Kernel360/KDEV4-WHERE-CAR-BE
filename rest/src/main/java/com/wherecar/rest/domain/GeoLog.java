@@ -1,16 +1,25 @@
 package com.wherecar.rest.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+
+
+@Table(name="geo_logs")
 @Entity
-@Table(name="geofence_logs")
-public class GeofenceLog {
+@Builder
+@ToString(exclude = {"car", "geoInfo"})
+@NoArgsConstructor
+@AllArgsConstructor
+public class GeoLog extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="log_id")
+    @Column(name="geo_log_id")
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,8 +37,8 @@ public class GeofenceLog {
     private Double sum;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="info_id")
-    private GeofenceInfo info;
+    @JoinColumn(name="geo_info_id")
+    private GeoInfo geoInfo;
 
     private String evaluateValue;
 

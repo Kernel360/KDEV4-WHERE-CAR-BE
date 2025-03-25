@@ -1,13 +1,21 @@
 package com.wherecar.rest.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@Entity
 @Table(name="gps_logs")
-public class GpsLog {
+@Entity
+@Builder
+@ToString(exclude = "car")
+@NoArgsConstructor
+@AllArgsConstructor
+public class GpsLog extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name ="gps_log_id")

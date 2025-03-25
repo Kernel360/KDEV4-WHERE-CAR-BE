@@ -1,15 +1,24 @@
 package com.wherecar.rest.domain;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@Entity
+
 @Table(name = "cars")
-public class Car {
+@Entity
+@Builder
+@ToString(exclude = {"company", "geoInfo"})
+@NoArgsConstructor
+@AllArgsConstructor
+public class Car extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="car_id")
     private long id;
+
     private String make;
     private String model;
     private String year;
@@ -26,9 +35,14 @@ public class Car {
 
     @Column(nullable = true)
     private String img;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="company_id")
     private Company company;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="geoinfo_id")
+    private GeoInfo geoInfo;
 
     private Double batteryVoltage;
 

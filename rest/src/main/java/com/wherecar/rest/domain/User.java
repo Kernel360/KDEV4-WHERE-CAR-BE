@@ -1,11 +1,19 @@
 package com.wherecar.rest.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
-@Entity
 @Table(name="users")
-public class User {
+@Entity
+@Builder
+@ToString(exclude = "company")
+@NoArgsConstructor
+@AllArgsConstructor
+public class User extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="user_id")
@@ -14,9 +22,5 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="company_id")
     private Company company;
-
-    //TODO:Authority 관련된거 추가할지 뺄지 정하기
-
-
 
 }
