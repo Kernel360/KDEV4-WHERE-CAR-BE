@@ -1,0 +1,12 @@
+services:
+
+  db:
+    image: mariadb:11.4.5-ubi9
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: password
+      MARIADB_DATABASE: wherecar
+      MARIADB_USER: user
+      MARIADB_PASSWORD: 1234
+    ports:
+      - 3306:3306
