@@ -1,16 +1,23 @@
 package com.wherecar.rest.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+@Table(name = "on_off_logs")
 @Entity
-//Todo: 이름나중에 변경할것
-public class CarLog {
+@Builder
+@ToString(exclude = "car")
+@NoArgsConstructor
+@AllArgsConstructor
+public class OnOffLog extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="log_id")
+    @Column(name="on_off_log_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

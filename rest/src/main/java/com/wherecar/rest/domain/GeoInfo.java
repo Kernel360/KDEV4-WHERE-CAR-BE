@@ -1,21 +1,24 @@
 package com.wherecar.rest.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+@Table(name="geo_infos")
 @Entity
-@Table(name="geofence_infos")
-public class GeofenceInfo {
+@Builder
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+public class GeoInfo extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="info_id")
+    @Column(name="geo_info_id")
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="car_id")
-    private Car car;
 
     private String geoEventType;
     private String geoRange;

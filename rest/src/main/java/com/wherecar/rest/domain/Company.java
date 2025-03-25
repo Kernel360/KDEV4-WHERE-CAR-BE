@@ -1,15 +1,23 @@
 package com.wherecar.rest.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@Table(name = "companies")
 @Entity
-public class Company {
+@Builder
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+public class Company extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="company_id")
     private Long id;
+
     private String name;
     private String address;
     private String phone;
