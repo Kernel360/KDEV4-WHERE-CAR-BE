@@ -23,4 +23,11 @@ public class User extends BaseEntity{
     @JoinColumn(name="company_id")
     private Company company;
 
+    private String name;
+    private String email;
+    private String password;
+    private String phone;
+    //직급
+    private String jobTitle;
+
 }

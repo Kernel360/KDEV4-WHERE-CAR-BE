@@ -29,8 +29,16 @@ public class OnOffLog extends BaseEntity{
     private Double longitude;
     private Double angle;
     private Double speed;
-    private Double sum;
+
+    private Double onSum;
+    private Double offSum;
+
+    private Double onMileage;
+    private Double offMileage;
 
     private LocalDateTime onTime;
     private LocalDateTime offTime;
+
+    private String driver;
+    private String description;
 }
