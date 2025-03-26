@@ -19,6 +19,7 @@ public class Car extends BaseEntity{
     @Column(name="car_id")
     private long id;
 
+    // Todo: make Enum 만들자
     private String make;
     private String model;
     private String year;
@@ -32,9 +33,6 @@ public class Car extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(name="acquisition_type")
     private AcquisitionType acquisitionType;
-
-    @Column(nullable = true)
-    private String img;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="company_id")
