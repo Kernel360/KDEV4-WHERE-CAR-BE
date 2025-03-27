@@ -20,7 +20,7 @@ public class CarController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCar(@PathVariable Long id, @RequestBody RegisterCarRequest registerCarRequest) {
+    public ResponseEntity<String> updateCar(@PathVariable Long id, @RequestBody RegisterCarRequest registerCarRequest) {
         carService.updateCar(id, registerCarRequest);
         return ResponseEntity.ok("수정되었습니다.");
     }
