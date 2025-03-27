@@ -4,10 +4,10 @@ import com.wherecar.rest.domain.Company;
 import com.wherecar.rest.dto.CompanyRequest;
 import com.wherecar.rest.dto.CompanyResponse;
 import com.wherecar.rest.repository.CompanyRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -18,6 +18,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public CompanyResponse getCompanyDetails(Long id) {
         Company company = companyRepository.findById(id).orElseThrow(() -> new RuntimeException("회사 세부 정보를 찾을수 없습니다."));
 
@@ -56,5 +57,4 @@ public class CompanyServiceImpl implements CompanyService {
         }
         companyRepository.deleteById(id);
     }
-
 }
