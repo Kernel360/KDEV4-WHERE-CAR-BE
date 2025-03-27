@@ -19,5 +19,10 @@ public class CarController {
         return ResponseEntity.ok("등록되었습니다.");
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCar(@PathVariable Long id, @RequestBody RegisterCarRequest registerCarRequest) {
+        carService.updateCar(id, registerCarRequest);
+        return ResponseEntity.ok("수정되었습니다.");
+    }
 
 }

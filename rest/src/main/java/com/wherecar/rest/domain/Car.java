@@ -3,10 +3,10 @@ package com.wherecar.rest.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-
-@Getter
 @Table(name = "cars")
 @Entity
+@Getter
+@Setter
 @Builder
 @ToString(exclude = {"company", "geoInfo"})
 @NoArgsConstructor
