@@ -1,10 +1,14 @@
 package com.wherecar.rest.controller;
 
+import com.wherecar.rest.constants.PaginationConstants;
+import com.wherecar.rest.dto.CarResponse;
 import com.wherecar.rest.dto.RegisterCarRequest;
 import com.wherecar.rest.service.CarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/cars")
@@ -29,6 +33,15 @@ public class CarController {
     public ResponseEntity<String> deleteCar(@PathVariable Long id) {
         carService.deleteCar(id);
         return ResponseEntity.ok("삭제되었습니다.");
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CarResponse>> getAllCars(
+            @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
+            @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size) {
+
+        List<CarResponse> cars = carService.getAllCars(page, size);
+        return ResponseEntity.ok(cars);
     }
 
 }

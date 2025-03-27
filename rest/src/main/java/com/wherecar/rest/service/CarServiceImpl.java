@@ -1,12 +1,18 @@
 package com.wherecar.rest.service;
 
 import com.wherecar.rest.domain.Car;
+import com.wherecar.rest.dto.CarResponse;
 import com.wherecar.rest.dto.RegisterCarRequest;
 import com.wherecar.rest.repository.CarRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -61,6 +67,32 @@ public class CarServiceImpl implements CarService {
             throw new RuntimeException("차량을 찾을 수 없습니다.");
         }
         carRepository.deleteById(id);
+    }
+
+    @Override
+    public List<CarResponse> getAllCars(int page, int size) {
+        //Todo: 현재 사용자 정보 조회 (Admin, User에 따라 구분)
+        //Todo: 현재 사용자의 회사 아이디 조회
+        Long userCompanyId = null;
+
+        PageRequest pageRequest = PageRequest.of(page,size);
+
+        Page<Car> carPage = carRepository.findByCompanyId(userCompanyId, pageRequest);
+
+        return carPage.stream().map(car -> CarResponse.builder()
+                        .id(car.getId())
+                        .mdn(car.getMdn())
+                        .make(car.getMake())
+                        .model(car.getModel())
+                        .year(car.getYear())
+                        .mileage(car.getMileage())
+                        .ownerType(car.getOwnerType())
+                        .acquisitionType(car.getAcquisitionType())
+//                      Todo: 회사 추가되면 반영
+//                      .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
+                        .batteryVoltage(car.getBatteryVoltage())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }
