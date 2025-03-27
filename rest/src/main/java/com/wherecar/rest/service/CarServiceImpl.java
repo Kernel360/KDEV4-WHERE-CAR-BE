@@ -75,8 +75,9 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<CarResponse> getAllCars(int page, int size) {
-        //Todo: 현재 사용자 정보 조회 (Admin, User에 따라 구분)
-        //Todo: 현재 사용자의 Company 아이디 조회
+        // Todo: 현재 사용자 정보 조회 (Admin, User에 따라 구분)
+        // Todo: 현재 사용자의 Company 아이디 조회
+
         Long userCompanyId = null;
 
         PageRequest pageRequest = PageRequest.of(page,size);
@@ -92,8 +93,10 @@ public class CarServiceImpl implements CarService {
                         .mileage(car.getMileage())
                         .ownerType(car.getOwnerType())
                         .acquisitionType(car.getAcquisitionType())
+
 //                      Todo: Company 추가되면 반영, CompanyName을 추가할 건지 결정
 //                      .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
+
                         .batteryVoltage(car.getBatteryVoltage())
                         .build())
                 .collect(Collectors.toList());
@@ -112,8 +115,10 @@ public class CarServiceImpl implements CarService {
                 .mileage(car.getMileage())
                 .ownerType(car.getOwnerType())
                 .acquisitionType(car.getAcquisitionType())
+
 //                Todo: Company 추가되면 반영
 //                .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
+
                 .batteryVoltage(car.getBatteryVoltage())
                 .build();
     }
