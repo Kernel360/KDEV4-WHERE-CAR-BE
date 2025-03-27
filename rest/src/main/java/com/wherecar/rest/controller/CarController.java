@@ -18,25 +18,25 @@ public class CarController {
     private final CarService carService;
 
     @PostMapping
-    public ResponseEntity<String> registerCar(@RequestBody RegisterCarRequest registerCarRequest) {
+    public ResponseEntity<String> CarRegister(@RequestBody RegisterCarRequest registerCarRequest) {
         carService.registerCar(registerCarRequest);
         return ResponseEntity.ok("등록되었습니다.");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateCar(@PathVariable Long id, @RequestBody RegisterCarRequest registerCarRequest) {
+    public ResponseEntity<String> CarUpdate(@PathVariable Long id, @RequestBody RegisterCarRequest registerCarRequest) {
         carService.updateCar(id, registerCarRequest);
         return ResponseEntity.ok("수정되었습니다.");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCar(@PathVariable Long id) {
+    public ResponseEntity<String> CarDelete(@PathVariable Long id) {
         carService.deleteCar(id);
         return ResponseEntity.ok("삭제되었습니다.");
     }
 
     @GetMapping
-    public ResponseEntity<List<CarResponse>> getAllCars(
+    public ResponseEntity<List<CarResponse>> CarsGetAll(
             @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size) {
 
@@ -45,7 +45,7 @@ public class CarController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CarResponse> getCarDetails(@PathVariable Long id) {
+    public ResponseEntity<CarResponse> DetailsGetCar(@PathVariable Long id) {
         CarResponse car = carService.getCarDetails(id);
         return ResponseEntity.ok(car);
     }
