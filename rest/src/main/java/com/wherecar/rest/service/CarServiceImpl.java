@@ -28,7 +28,7 @@ public class CarServiceImpl implements CarService {
     public void registerCar(RegisterCarRequest registerCarRequest) {
 
 //        Company company = companyRepository.findById(registerCarRequest.getCompanyId())
-//                .orElseThrow(() -> new RuntimeException("회사 정보가 존재하지 않습니다."));
+//                .orElseThrow(() -> new RuntimeException("Company 정보가 존재하지 않습니다."));
 
         Car car = Car.builder()
                 .make(registerCarRequest.getMake())
@@ -72,7 +72,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public List<CarResponse> getAllCars(int page, int size) {
         //Todo: 현재 사용자 정보 조회 (Admin, User에 따라 구분)
-        //Todo: 현재 사용자의 회사 아이디 조회
+        //Todo: 현재 사용자의 Company 아이디 조회
         Long userCompanyId = null;
 
         PageRequest pageRequest = PageRequest.of(page,size);
@@ -88,7 +88,7 @@ public class CarServiceImpl implements CarService {
                         .mileage(car.getMileage())
                         .ownerType(car.getOwnerType())
                         .acquisitionType(car.getAcquisitionType())
-//                      Todo: 회사 추가되면 반영
+//                      Todo: Company 추가되면 반영
 //                      .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
                         .batteryVoltage(car.getBatteryVoltage())
                         .build())
@@ -109,7 +109,7 @@ public class CarServiceImpl implements CarService {
                 .mileage(car.getMileage())
                 .ownerType(car.getOwnerType())
                 .acquisitionType(car.getAcquisitionType())
-//                Todo: 회사 추가되면 반영
+//                Todo: Company 추가되면 반영
 //                .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
                 .batteryVoltage(car.getBatteryVoltage())
                 .build();
