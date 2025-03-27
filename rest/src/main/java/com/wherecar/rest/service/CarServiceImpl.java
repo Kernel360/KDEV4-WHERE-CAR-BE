@@ -92,7 +92,7 @@ public class CarServiceImpl implements CarService {
                         .mileage(car.getMileage())
                         .ownerType(car.getOwnerType())
                         .acquisitionType(car.getAcquisitionType())
-//                      Todo: Company 추가되면 반영
+//                      Todo: Company 추가되면 반영, CompanyName을 추가할 건지 결정
 //                      .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
                         .batteryVoltage(car.getBatteryVoltage())
                         .build())
@@ -102,7 +102,6 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarResponse getCarDetails(Long id) {
         Car car = carRepository.findById(id).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
-
 
         return CarResponse.builder()
                 .id(car.getId())
