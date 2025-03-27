@@ -8,37 +8,43 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Table(name = "on_off_logs")
+@Table(name = "car_logs")
 @Entity
 @Builder
 @ToString(exclude = "car")
 @NoArgsConstructor
 @AllArgsConstructor
-public class OnOffLog extends BaseEntity{
+public class CarLog extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="on_off_log_id")
+    @Column(name="car_log_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="car_id")
     private Car car;
 
-    private String gpsCondition;
-    private Double latitude;
-    private Double longitude;
-    private Double angle;
-    private Double speed;
-
+    private String onGpsCondition;
+    private Double onLatitude;
+    private Double onLongitude;
+    private Double onAngle;
+    private Double onSpeed;
     private Double onSum;
-    private Double offSum;
-
     private Double onMileage;
-    private Double offMileage;
-
     private LocalDateTime onTime;
+
+    private String offGpsCondition;
+    private Double offLatitude;
+    private Double offLongitude;
+    private Double offAngle;
+    private Double offSpeed;
+    private Double offSum;
+    private Double offMileage;
     private LocalDateTime offTime;
 
     private String driver;
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    private DriveType driveType;
 }
