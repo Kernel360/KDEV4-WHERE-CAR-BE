@@ -8,16 +8,16 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Table(name = "on_off_logs")
+@Table(name = "car_logs")
 @Entity
 @Builder
 @ToString(exclude = "car")
 @NoArgsConstructor
 @AllArgsConstructor
-public class OnOffLog extends BaseEntity{
+public class CarLog extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="on_off_log_id")
+    @Column(name="car_log_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
