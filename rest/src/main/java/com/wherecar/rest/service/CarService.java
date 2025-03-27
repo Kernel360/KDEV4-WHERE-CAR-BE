@@ -6,5 +6,6 @@ public interface CarService {
 
     void registerCar(RegisterCarRequest registerCarRequest);
     void updateCar(Long id, RegisterCarRequest registerCarRequest);
+    void deleteCar(Long id);
 
 }

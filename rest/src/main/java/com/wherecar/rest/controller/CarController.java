@@ -25,4 +25,10 @@ public class CarController {
         return ResponseEntity.ok("수정되었습니다.");
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCar(@PathVariable Long id) {
+        carService.deleteCar(id);
+        return ResponseEntity.ok("삭제되었습니다.");
+    }
+
 }
