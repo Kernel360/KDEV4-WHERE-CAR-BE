@@ -2,7 +2,7 @@ package com.wherecar.rest.service;
 
 import com.wherecar.rest.domain.Car;
 import com.wherecar.rest.dto.CarResponse;
-import com.wherecar.rest.dto.RegisterCarRequest;
+import com.wherecar.rest.dto.CarRegisterRequest;
 import com.wherecar.rest.repository.CarRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class CarServiceImpl implements CarService {
 //    private final CompanyRepository companyRepository;
 
     @Override
-    public void registerCar(RegisterCarRequest registerCarRequest) {
+    public void registerCar(CarRegisterRequest registerCarRequest) {
 
 //        Company company = companyRepository.findById(registerCarRequest.getCompanyId())
 //                .orElseThrow(() -> new RuntimeException("Company 정보가 존재하지 않습니다."));
@@ -46,7 +46,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void updateCar(Long id, RegisterCarRequest registerCarRequest) {
+    public void updateCar(Long id, CarRegisterRequest registerCarRequest) {
         Car car = carRepository.findById(id).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
 
         Car updatedCar = Car.builder()

@@ -1,7 +1,6 @@
 package com.wherecar.rest.dto;
 
 import com.wherecar.rest.domain.AcquisitionType;
-import com.wherecar.rest.domain.Company;
 import com.wherecar.rest.domain.OwnerType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterCarRequest {
+public class CarRegisterRequest {
 
     private String mdn;
     private String make;

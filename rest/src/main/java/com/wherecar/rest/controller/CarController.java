@@ -2,7 +2,7 @@ package com.wherecar.rest.controller;
 
 import com.wherecar.rest.constants.PaginationConstants;
 import com.wherecar.rest.dto.CarResponse;
-import com.wherecar.rest.dto.RegisterCarRequest;
+import com.wherecar.rest.dto.CarRegisterRequest;
 import com.wherecar.rest.service.CarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +18,13 @@ public class CarController {
     private final CarService carService;
 
     @PostMapping
-    public ResponseEntity<String> CarRegister(@RequestBody RegisterCarRequest registerCarRequest) {
+    public ResponseEntity<String> CarRegister(@RequestBody CarRegisterRequest registerCarRequest) {
         carService.registerCar(registerCarRequest);
         return ResponseEntity.ok("등록되었습니다.");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> CarUpdate(@PathVariable Long id, @RequestBody RegisterCarRequest registerCarRequest) {
+    public ResponseEntity<String> CarUpdate(@PathVariable Long id, @RequestBody CarRegisterRequest registerCarRequest) {
         carService.updateCar(id, registerCarRequest);
         return ResponseEntity.ok("수정되었습니다.");
     }
