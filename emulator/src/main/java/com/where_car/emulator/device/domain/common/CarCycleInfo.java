@@ -1,5 +1,6 @@
 package com.where_car.emulator.device.domain.common;
 
+import lombok.Builder;
 import lombok.Getter;
 
 /**
@@ -19,7 +20,9 @@ import lombok.Getter;
  * </pre>
  */
 
+
 @Getter
+@Builder
 public class CarCycleInfo {
 
   private String sec;

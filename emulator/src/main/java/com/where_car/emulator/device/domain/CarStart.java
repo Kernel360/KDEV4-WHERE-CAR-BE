@@ -3,6 +3,8 @@ package com.where_car.emulator.device.domain;
 import com.where_car.emulator.device.domain.common.CarCycleInfo;
 import com.where_car.emulator.device.domain.common.CarDevice;
 import com.where_car.emulator.device.domain.common.CarIdentity;
+import lombok.Builder;
+import lombok.Getter;
 
 /**
  * <pre>
@@ -17,6 +19,9 @@ import com.where_car.emulator.device.domain.common.CarIdentity;
  * @version 1.0
  * @since 2025-03-27
  */
+
+@Getter
+@Builder
 public class CarStart {
 
   private CarIdentity carIdentity;
