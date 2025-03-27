@@ -19,8 +19,10 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
+                        .anyRequest().permitAll()
 //                        .requestMatchers("/","/join", "/login").permitAll()
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
+
                 )
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
