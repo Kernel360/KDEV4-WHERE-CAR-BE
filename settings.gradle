@@ -2,3 +2,4 @@ rootProject.name = 'where-car'
 
 include 'collector'
 include 'rest'
+include 'emulator'
