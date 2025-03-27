@@ -4,12 +4,12 @@ import com.wherecar.rest.domain.Car;
 import com.wherecar.rest.dto.CarResponse;
 import com.wherecar.rest.dto.CarRegisterRequest;
 import com.wherecar.rest.repository.CarRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,6 +74,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CarResponse> getAllCars(int page, int size) {
         // Todo: 현재 사용자 정보 조회 (Admin, User에 따라 구분)
         // Todo: 현재 사용자의 Company 아이디 조회
@@ -103,6 +104,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CarResponse getCarDetails(Long id) {
         Car car = carRepository.findById(id).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
 
