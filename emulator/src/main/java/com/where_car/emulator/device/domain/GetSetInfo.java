@@ -4,7 +4,6 @@ import com.where_car.emulator.device.domain.common.CarDevice;
 import com.where_car.emulator.device.domain.common.CarIdentity;
 import java.time.LocalDateTime;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Getter;
 
 /**
@@ -25,6 +24,6 @@ public class GetSetInfo {
 
   private LocalDateTime onTime;
 
-  @Default
+  @Builder.Default
   private String dFWVer = "LTE 1.2";
 }
