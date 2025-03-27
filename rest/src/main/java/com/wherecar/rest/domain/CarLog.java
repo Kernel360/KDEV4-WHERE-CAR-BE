@@ -44,5 +44,7 @@ public class CarLog extends BaseEntity{
 
     private String driver;
     private String description;
+
+    @Enumerated(EnumType.STRING)
     private DriveType driveType;
 }
