@@ -6,7 +6,6 @@ import lombok.*;
 @Table(name = "cars")
 @Entity
 @Getter
-@Setter
 @Builder
 @ToString(exclude = {"company", "geoInfo"})
 @NoArgsConstructor

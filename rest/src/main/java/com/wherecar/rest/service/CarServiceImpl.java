@@ -49,16 +49,20 @@ public class CarServiceImpl implements CarService {
     public void updateCar(Long id, RegisterCarRequest registerCarRequest) {
         Car car = carRepository.findById(id).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
 
-        car.setMake(registerCarRequest.getMake());
-        car.setModel(registerCarRequest.getModel());
-        car.setYear(registerCarRequest.getYear());
-        car.setMileage(registerCarRequest.getMileage());
-        car.setMdn(registerCarRequest.getMdn());
-        car.setOwnerType(registerCarRequest.getOwnerType());
-        car.setAcquisitionType(registerCarRequest.getAcquisitionType());
-        car.setBatteryVoltage(registerCarRequest.getBatteryVoltage());
+        Car updatedCar = Car.builder()
+                .id(car.getId())
+                .make(registerCarRequest.getMake())
+                .model(registerCarRequest.getModel())
+                .year(registerCarRequest.getYear())
+                .mileage(registerCarRequest.getMileage())
+                .mdn(registerCarRequest.getMdn())
+                .ownerType(registerCarRequest.getOwnerType())
+                .acquisitionType(registerCarRequest.getAcquisitionType())
+                .batteryVoltage(registerCarRequest.getBatteryVoltage())
+                .company(car.getCompany())
+                .build();
 
-        carRepository.save(car);
+        carRepository.save(updatedCar);
     }
 
     @Override
