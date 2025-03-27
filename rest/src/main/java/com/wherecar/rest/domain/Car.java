@@ -1,14 +1,11 @@
 package com.wherecar.rest.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
+import lombok.*;
 
 @Table(name = "cars")
 @Entity
+@Getter
 @Builder
 @ToString(exclude = {"company", "geoInfo"})
 @NoArgsConstructor
