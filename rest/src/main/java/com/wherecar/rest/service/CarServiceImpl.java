@@ -95,4 +95,24 @@ public class CarServiceImpl implements CarService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public CarResponse getCarDetails(Long id) {
+        Car car = carRepository.findById(id).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
+
+
+        return CarResponse.builder()
+                .id(car.getId())
+                .mdn(car.getMdn())
+                .make(car.getMake())
+                .model(car.getModel())
+                .year(car.getYear())
+                .mileage(car.getMileage())
+                .ownerType(car.getOwnerType())
+                .acquisitionType(car.getAcquisitionType())
+//                Todo: 회사 추가되면 반영
+//                .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
+                .batteryVoltage(car.getBatteryVoltage())
+                .build();
+    }
+
 }

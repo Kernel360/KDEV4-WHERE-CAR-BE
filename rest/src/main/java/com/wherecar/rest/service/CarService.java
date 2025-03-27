@@ -11,4 +11,5 @@ public interface CarService {
     void updateCar(Long id, RegisterCarRequest registerCarRequest);
     void deleteCar(Long id);
     List<CarResponse> getAllCars(int page, int size);
+    CarResponse getCarDetails(Long id);
 }
