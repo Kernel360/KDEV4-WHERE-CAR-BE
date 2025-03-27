@@ -3,8 +3,9 @@ package com.where_car.emulator.device.domain;
 import com.where_car.emulator.device.domain.common.CarCycleInfo;
 import com.where_car.emulator.device.domain.common.CarDevice;
 import com.where_car.emulator.device.domain.common.CarIdentity;
-import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
+import lombok.Getter;
 
 
 /**
@@ -20,6 +21,9 @@ import java.util.List;
  * @version 1.0
  * @since 2025-03-27
  */
+
+@Getter
+@Builder
 public class CycleInfo {
 
   private CarIdentity carIdentity;
@@ -28,5 +32,5 @@ public class CycleInfo {
   private String oTime;
   private String cCnt;
 
-  private List<CarCycleInfo> cList = new ArrayList<>();
+  private List<CarCycleInfo> cList;
 }

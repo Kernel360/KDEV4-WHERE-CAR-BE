@@ -1,5 +1,7 @@
 package com.where_car.emulator.device.domain.common;
 
+import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 
 /**
@@ -16,10 +18,18 @@ import lombok.Getter;
  */
 
 @Getter
+@Builder
 public class CarDevice {
 
+  @Default
   private String tid = "A001";
+
+  @Default
   private String mid = "6";
+
+  @Default
   private String pv = "5";
+
+  @Default
   private String did = "1";
 }
