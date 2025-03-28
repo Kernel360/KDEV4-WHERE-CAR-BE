@@ -2,7 +2,7 @@ package com.where_car.emulator.device.domain.common;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 /**
  * <pre>
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 2025-03-27
  */
 
-@Configuration
+@Component
 @Getter
 public class CarIdentity {
 
