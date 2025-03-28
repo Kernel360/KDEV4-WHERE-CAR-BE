@@ -2,6 +2,7 @@ package com.where_car.emulator.device.domain;
 
 import com.where_car.emulator.device.domain.common.CarDevice;
 import com.where_car.emulator.device.domain.common.CarIdentity;
+import com.where_car.emulator.global.constants.DomainConstant;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -25,5 +26,5 @@ public class GetToken {
   private CarDevice carDevice;
 
   @Builder.Default
-  private String dFWVer = "LTE 1.2";
+  private String dFWVer = DomainConstant.FIRMWARE_VERSION;
 }
