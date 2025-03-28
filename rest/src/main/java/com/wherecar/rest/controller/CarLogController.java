@@ -3,6 +3,7 @@ package com.wherecar.rest.controller;
 import com.wherecar.rest.constants.PaginationConstants;
 import com.wherecar.rest.dto.CarLogDetailResponse;
 import com.wherecar.rest.dto.CarLogsResponse;
+import com.wherecar.rest.dto.CarLogsUpdateRequest;
 import com.wherecar.rest.service.CarLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,13 @@ class CarLogController {
 
         List<CarLogDetailResponse> carLogs = carLogService.getCarLogsDetails(carId, page, size);
         return ResponseEntity.ok(carLogs);
+    }
+
+    //운행일지 차량 상세 정보 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateCarLogDetails(@PathVariable Long id, @RequestBody CarLogsUpdateRequest carLogsUpdateRequest) {
+        carLogService.updateCarLogDetails(id, carLogsUpdateRequest);
+        return ResponseEntity.ok("수정되었습니다.");
     }
 
 

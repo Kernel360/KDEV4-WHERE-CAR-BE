@@ -5,6 +5,7 @@ import com.wherecar.rest.domain.CarLog;
 import com.wherecar.rest.domain.CarStatus;
 import com.wherecar.rest.dto.CarLogDetailResponse;
 import com.wherecar.rest.dto.CarLogsResponse;
+import com.wherecar.rest.dto.CarLogsUpdateRequest;
 import com.wherecar.rest.repository.CarLogRepository;
 import com.wherecar.rest.repository.CarRepository;
 import lombok.RequiredArgsConstructor;
@@ -75,6 +76,19 @@ public class CarLogServiceImpl implements CarLogService {
                         .driver(carLog.getDriver())
                         .build())
                 .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public void updateCarLogDetails(Long id, CarLogsUpdateRequest carLogsUpdateRequest) {
+
+        CarLog carLog = carLogRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 차량의 일지를 찾을 없습니다."));
+
+        carLog.changeDescription(carLogsUpdateRequest.getDescription());
+        carLog.changeDriver(carLogsUpdateRequest.getDriver());
+        carLog.changeDriveType(carLogsUpdateRequest.getDriveType());
+
+        carLogRepository.save(carLog);
 
     }
 

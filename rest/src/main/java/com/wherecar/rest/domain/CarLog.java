@@ -45,4 +45,16 @@ public class CarLog extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private DriveType driveType;
+
+    public void changeDriver(String driver) {
+        this.driver = driver;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description;
+    }
+
+    public void changeDriveType(DriveType driveType) {
+        this.driveType = driveType;
+    }
 }
