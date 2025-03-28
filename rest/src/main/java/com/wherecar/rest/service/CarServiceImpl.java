@@ -25,20 +25,20 @@ public class CarServiceImpl implements CarService {
 //    private final CompanyRepository companyRepository;
 
     @Override
-    public void createCar(CarRegisterRequest registerCarRequest) {
+    public void createCar(CarRegisterRequest carRegisterRequest) {
 
 //        Company company = companyRepository.findById(registerCarRequest.getCompanyId())
 //                .orElseThrow(() -> new RuntimeException("Company 정보가 존재하지 않습니다."));
 
         Car car = Car.builder()
-                .make(registerCarRequest.getMake())
-                .model(registerCarRequest.getModel())
-                .year(registerCarRequest.getYear())
-                .mileage(registerCarRequest.getMileage())
-                .mdn(registerCarRequest.getMdn())
-                .ownerType(registerCarRequest.getOwnerType())
-                .acquisitionType(registerCarRequest.getAcquisitionType())
-                .batteryVoltage(registerCarRequest.getBatteryVoltage())
+                .make(carRegisterRequest.getMake())
+                .model(carRegisterRequest.getModel())
+                .year(carRegisterRequest.getYear())
+                .mileage(carRegisterRequest.getMileage())
+                .mdn(carRegisterRequest.getMdn())
+                .ownerType(carRegisterRequest.getOwnerType())
+                .acquisitionType(carRegisterRequest.getAcquisitionType())
+                .batteryVoltage(carRegisterRequest.getBatteryVoltage())
 //                .company(company)
                 .build();
 
@@ -46,17 +46,17 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void updateCar(Long id, CarRegisterRequest registerCarRequest) {
+    public void updateCar(Long id, CarRegisterRequest carRegisterRequest) {
         Car car = carRepository.findById(id).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
 
-        car.changeMake(registerCarRequest.getMake());
-        car.changeModel(registerCarRequest.getModel());
-        car.changeYear(registerCarRequest.getYear());
-        car.changeMileage(registerCarRequest.getMileage());
-        car.changeMdn(registerCarRequest.getMdn());
-        car.changeOwnerType(registerCarRequest.getOwnerType());
-        car.changeAcquisitionType(registerCarRequest.getAcquisitionType());
-        car.changeBatteryVoltage(registerCarRequest.getBatteryVoltage());
+        car.changeMake(carRegisterRequest.getMake());
+        car.changeModel(carRegisterRequest.getModel());
+        car.changeYear(carRegisterRequest.getYear());
+        car.changeMileage(carRegisterRequest.getMileage());
+        car.changeMdn(carRegisterRequest.getMdn());
+        car.changeOwnerType(carRegisterRequest.getOwnerType());
+        car.changeAcquisitionType(carRegisterRequest.getAcquisitionType());
+        car.changeBatteryVoltage(carRegisterRequest.getBatteryVoltage());
 
         //Todo: geoInfo 수정 기능 추가
 
