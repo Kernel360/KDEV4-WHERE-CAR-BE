@@ -18,7 +18,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
 
     @Override
-    public CompanyResponse createCompany(CompanyRequest companyRequest) {
+    public Company createCompany(CompanyRequest companyRequest) {
 
         // 요청 데이터를 엔터티로 변환
         Company company = Company.builder()
@@ -29,18 +29,10 @@ public class CompanyServiceImpl implements CompanyService {
                 .website(companyRequest.getWebsite())
                 .build();
 
-        // DB에 저장
-        Company savedCompany = companyRepository.save(company);
+        // 요청 데이터 저장
+        companyRepository.save(company);
 
-        // 저장된 데이터를 DTO로 변환하여 반환
-        return CompanyResponse.builder()
-                .id(savedCompany.getId())
-                .address(savedCompany.getAddress())
-                .email(savedCompany.getEmail())
-                .name(savedCompany.getName())
-                .phone(savedCompany.getPhone())
-                .website(savedCompany.getWebsite())
-                .build();
+        return company;
     }
 
     @Override
