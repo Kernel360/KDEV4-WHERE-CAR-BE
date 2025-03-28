@@ -92,5 +92,14 @@ public class CarLogServiceImpl implements CarLogService {
 
     }
 
+    @Override
+    public void deleteCarLogDetails(Long id) {
+
+        if (!carLogRepository.existsById(id)) {
+            throw new RuntimeException("해당 차량의 일지를 찾을 없습니다.");
+        }
+        carLogRepository.deleteById(id);
+
+    }
 
 }

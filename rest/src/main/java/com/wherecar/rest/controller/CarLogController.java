@@ -43,10 +43,17 @@ class CarLogController {
 
     //운행일지 차량 상세 정보 수정
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateCarLogDetails(@PathVariable Long id, @RequestBody CarLogsUpdateRequest carLogsUpdateRequest) {
+    public ResponseEntity<String> carLogUpdateDetails(@PathVariable Long id, @RequestBody CarLogsUpdateRequest carLogsUpdateRequest) {
         carLogService.updateCarLogDetails(id, carLogsUpdateRequest);
         return ResponseEntity.ok("수정되었습니다.");
     }
 
+
+    //운행일지 차량 상세 정보 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> carLogDeleteDetails(@PathVariable Long id) {
+        carLogService.deleteCarLogDetails(id);
+        return ResponseEntity.ok("삭제되었습니다.");
+    }
 
 }
