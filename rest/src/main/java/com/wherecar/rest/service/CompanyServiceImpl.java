@@ -18,6 +18,32 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
 
     @Override
+    public CompanyResponse createCompany(CompanyRequest companyRequest) {
+
+        // 요청 데이터를 엔터티로 변환
+        Company company = Company.builder()
+                .address(companyRequest.getAddress())
+                .email(companyRequest.getEmail())
+                .name(companyRequest.getName())
+                .phone(companyRequest.getPhone())
+                .website(companyRequest.getWebsite())
+                .build();
+
+        // DB에 저장
+        Company savedCompany = companyRepository.save(company);
+
+        // 저장된 데이터를 DTO로 변환하여 반환
+        return CompanyResponse.builder()
+                .id(savedCompany.getId())
+                .address(savedCompany.getAddress())
+                .email(savedCompany.getEmail())
+                .name(savedCompany.getName())
+                .phone(savedCompany.getPhone())
+                .website(savedCompany.getWebsite())
+                .build();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public CompanyResponse getCompanyDetails(Long id) {
         Company company = companyRepository.findById(id).orElseThrow(() -> new RuntimeException("회사 세부 정보를 찾을수 없습니다."));
@@ -35,8 +61,6 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void updateCompany(Long id, CompanyRequest companyRequest) {
         Company company = companyRepository.findById(id).orElseThrow(() -> new RuntimeException("회사 정보를 찾을수 없습니다."));
-
-        log.info("requestinfo: {}", companyRequest);
 
         Company updateCompany = Company.builder()
                 .id(company.getId())

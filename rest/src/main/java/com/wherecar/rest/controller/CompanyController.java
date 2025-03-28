@@ -14,23 +14,31 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
+    // test 업체 등록
+//    @PostMapping("/create")
+//    public ResponseEntity<String> companyCreate(@RequestBody CompanyRequest companyRequest){
+//        System.out.println("companyRequest: "+companyRequest);
+//        companyService.createCompany(companyRequest);
+//        return ResponseEntity.ok("등록되었습니다.");
+//    }
+
     // 업체 상세정보 조회
     @GetMapping("/{id}")
-    public ResponseEntity<CompanyResponse> CompanyDetailsget(@PathVariable Long id) {
+    public ResponseEntity<CompanyResponse> companyDetailsGet(@PathVariable Long id) {
         CompanyResponse company = companyService.getCompanyDetails(id);
         return ResponseEntity.ok(company);
     }
 
     // 업체 수정
     @PutMapping("/{id}")
-    public ResponseEntity<String> CompanyUpdate(@PathVariable Long id, @RequestBody CompanyRequest companyRequest) {
+    public ResponseEntity<String> companyUpdate(@PathVariable Long id, @RequestBody CompanyRequest companyRequest) {
         companyService.updateCompany(id, companyRequest);
         return ResponseEntity.ok("수정되었습니다.");
     }
 
     // 업체 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> CompanyDelete(@PathVariable Long id) {
+    public ResponseEntity<String> companyDelete(@PathVariable Long id) {
         companyService.deleteCompany(id);
         return ResponseEntity.ok("삭제되었습니다.");
     }
