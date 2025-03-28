@@ -1,0 +1,24 @@
+  - name: github-action-reviewer-auto-registration
+  # You may pin to the exact commit or the version.
+  # uses: hkusu/review-assign-action@5bee595fdb9765d4a0bd35724b6302fa15569158
+  uses: hkusu/review-assign-action@v1.4.0
+  with:
+    # 
+    assignees: ${{ github.actor }} # assign pull request author
+    # 
+    reviewers: laterre39, hyeonjinan096, codingjjh0515, ijjung365, rjk0103
+    # 
+    max-num-of-reviewers: # optional
+    # 
+    draft-keyword: # optional
+    # 
+    ready-comment: # optional
+    # 
+    merged-comment: # optional
+    # 
+    bot-accounts: # optional
+    # 
+    github-token: # optional, default is ${{ github.token }}
+    # 
+    event: # optional, default is ${{ toJson(github.event) }}
+          
