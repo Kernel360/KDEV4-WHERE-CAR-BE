@@ -1,13 +1,11 @@
 package com.wherecar.rest.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Table(name = "companies")
 @Entity
+@Getter
 @Builder
 @ToString
 @NoArgsConstructor
