@@ -24,7 +24,7 @@ public class CarLog extends BaseEntity{
     @JoinColumn(name="car_id")
     private Car car;
 
-    private String onGpsCondition;
+    private GpsConditionType onGpsCondition;
     private Double onLatitude;
     private Double onLongitude;
     private Double onAngle;
@@ -33,7 +33,7 @@ public class CarLog extends BaseEntity{
     private Double onMileage;
     private LocalDateTime onTime;
 
-    private String offGpsCondition;
+    private GpsConditionType offGpsCondition;
     private Double offLatitude;
     private Double offLongitude;
     private Double offAngle;
