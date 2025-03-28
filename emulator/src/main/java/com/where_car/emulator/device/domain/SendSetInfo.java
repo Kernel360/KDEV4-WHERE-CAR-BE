@@ -1,6 +1,7 @@
 package com.where_car.emulator.device.domain;
 
 import com.where_car.emulator.device.domain.common.CarIdentity;
+import java.time.LocalDateTime;
 
 /**
  * <pre>
@@ -14,7 +15,7 @@ public class SendSetInfo {
 
   private CarIdentity carIdentity;
 
-  private String oTime;
-  private String ctrCnt;
-  private String geoCnt;
+  private LocalDateTime oTime;
+  private Integer ctrCnt;
+  private Integer geoCnt;
 }

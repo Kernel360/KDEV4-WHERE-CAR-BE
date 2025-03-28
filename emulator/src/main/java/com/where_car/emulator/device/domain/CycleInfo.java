@@ -30,7 +30,7 @@ public class CycleInfo {
   private CarDevice carDevice;
 
   private String oTime;
-  private String cCnt;
+  private Integer cCnt;
 
   private List<CarCycleInfo> cList;
 }

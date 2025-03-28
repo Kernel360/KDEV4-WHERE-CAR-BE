@@ -3,6 +3,7 @@ package com.where_car.emulator.device.domain;
 import com.where_car.emulator.device.domain.common.CarCycleInfo;
 import com.where_car.emulator.device.domain.common.CarDevice;
 import com.where_car.emulator.device.domain.common.CarIdentity;
+import java.time.LocalDateTime;
 
 /**
  * <pre>
@@ -17,8 +18,9 @@ public class GeoPoint {
   private CarIdentity carIdentity;
   private CarDevice carDevice;
 
-  private String geoGrpId;
-  private String geoPid;
+  private LocalDateTime onTime;
+  private Integer geoGrpId;
+  private Integer geoPid;
   private String evtVal;
 
   private CarCycleInfo cycleInfo;
