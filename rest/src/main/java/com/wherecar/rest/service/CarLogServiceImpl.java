@@ -1,8 +1,11 @@
 package com.wherecar.rest.service;
 
 import com.wherecar.rest.domain.Car;
+import com.wherecar.rest.domain.CarLog;
+import com.wherecar.rest.domain.CarStatus;
+import com.wherecar.rest.dto.CarLogDetailResponse;
 import com.wherecar.rest.dto.CarLogsResponse;
-import com.wherecar.rest.dto.CarResponse;
+import com.wherecar.rest.repository.CarLogRepository;
 import com.wherecar.rest.repository.CarRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,9 @@ import java.util.stream.Collectors;
 public class CarLogServiceImpl implements CarLogService {
 
     private final CarRepository carRepository;
+    private final CarLogRepository carLogRepository;
+
+    private static final double METER_TO_KILOMETER = 1000.0;
 
     @Override
     @Transactional(readOnly = true)
@@ -46,6 +52,31 @@ public class CarLogServiceImpl implements CarLogService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<CarLogDetailResponse> getCarLogsDetails(Long carId, int page, int size) {
+
+        carRepository.findById(carId).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
+
+        PageRequest pageRequest = PageRequest.of(page,size);
+
+        Page<CarLog> carLogPage = carLogRepository.findByCarId(carId, pageRequest);
+
+        return carLogPage.stream().map(carLog -> CarLogDetailResponse.builder()
+                        .LogId(carLog.getId())
+                        .onTime(carLog.getOnTime())
+                        .offTime(carLog.getOffTime())
+                        .onMileage(carLog.getOnMileage())
+                        .offMileage(carLog.getOffMileage())
+                        .totalMileage((carLog.getOffMileage() - carLog.getOnMileage())/METER_TO_KILOMETER)
+                        .driveType(carLog.getDriveType())
+                        .carStatus(carLog.getOffMileage() != null ? CarStatus.STOPPED : CarStatus.RUNNING)
+                        .description(carLog.getDescription())
+                        .driver(carLog.getDriver())
+                        .build())
+                .collect(Collectors.toList());
+
+    }
 
 
 }

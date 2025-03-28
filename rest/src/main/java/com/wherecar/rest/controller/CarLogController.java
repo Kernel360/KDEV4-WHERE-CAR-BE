@@ -1,16 +1,13 @@
 package com.wherecar.rest.controller;
 
 import com.wherecar.rest.constants.PaginationConstants;
+import com.wherecar.rest.dto.CarLogDetailResponse;
 import com.wherecar.rest.dto.CarLogsResponse;
-import com.wherecar.rest.dto.CarResponse;
 import com.wherecar.rest.service.CarLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +28,17 @@ class CarLogController {
         List<CarLogsResponse> carLogs = carLogService.getCarLogs(page, size);
         return ResponseEntity.ok(carLogs);
     }
+
+    //운행일지 차량 상세 정보 조회
+    @GetMapping("/{carId}")
+    public ResponseEntity<List<CarLogDetailResponse>> carLogsGetDetails(
+            @PathVariable Long carId,
+            @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
+            @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size) {
+
+        List<CarLogDetailResponse> carLogs = carLogService.getCarLogsDetails(carId, page, size);
+        return ResponseEntity.ok(carLogs);
+    }
+
 
 }
