@@ -25,7 +25,7 @@ public class CarServiceImpl implements CarService {
 //    private final CompanyRepository companyRepository;
 
     @Override
-    public void registerCar(CarRegisterRequest registerCarRequest) {
+    public void createCar(CarRegisterRequest registerCarRequest) {
 
 //        Company company = companyRepository.findById(registerCarRequest.getCompanyId())
 //                .orElseThrow(() -> new RuntimeException("Company 정보가 존재하지 않습니다."));
