@@ -49,20 +49,18 @@ public class CarServiceImpl implements CarService {
     public void updateCar(Long id, CarRegisterRequest registerCarRequest) {
         Car car = carRepository.findById(id).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
 
-        Car updatedCar = Car.builder()
-                .id(car.getId())
-                .make(registerCarRequest.getMake())
-                .model(registerCarRequest.getModel())
-                .year(registerCarRequest.getYear())
-                .mileage(registerCarRequest.getMileage())
-                .mdn(registerCarRequest.getMdn())
-                .ownerType(registerCarRequest.getOwnerType())
-                .acquisitionType(registerCarRequest.getAcquisitionType())
-                .batteryVoltage(registerCarRequest.getBatteryVoltage())
-                .company(car.getCompany())
-                .build();
+        car.changeMake(registerCarRequest.getMake());
+        car.changeModel(registerCarRequest.getModel());
+        car.changeYear(registerCarRequest.getYear());
+        car.changeMileage(registerCarRequest.getMileage());
+        car.changeMdn(registerCarRequest.getMdn());
+        car.changeOwnerType(registerCarRequest.getOwnerType());
+        car.changeAcquisitionType(registerCarRequest.getAcquisitionType());
+        car.changeBatteryVoltage(registerCarRequest.getBatteryVoltage());
 
-        carRepository.save(updatedCar);
+        //Todo: geoInfo 수정 기능 추가
+
+        carRepository.save(car);
     }
 
     @Override
