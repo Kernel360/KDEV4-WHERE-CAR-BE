@@ -1,19 +1,19 @@
-package com.wherecar.rest.domain;
+package com.wherecar.rest.user.domain;
 
+import com.wherecar.rest.domain.BaseEntity;
+import com.wherecar.rest.domain.Company;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 
 @Table(name="users")
 @Entity
+@Getter
 @Builder
 @ToString(exclude = "company")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntity{
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="user_id")
@@ -27,7 +27,6 @@ public class User extends BaseEntity{
     private String email;
     private String password;
     private String phone;
-    //직급
     private String jobTitle;
 
 }
