@@ -19,13 +19,15 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/root")
-    public ResponseEntity<Void> rootCreate(UserCompanyRequest userCompanyRequest) {
+    public ResponseEntity<Void> rootCreate(@RequestBody UserCompanyRequest userCompanyRequest) {
+        log.info("Creating user with company: {}", userCompanyRequest);
         userService.createRoot(userCompanyRequest);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/sub")
-    public ResponseEntity<Void> subCreate(UserRequest userRequest) {
+    public ResponseEntity<Void> subCreate(@RequestBody UserRequest userRequest) {
+        log.info("subCreate: {}", userRequest);
         Long myCompanyId = 0L;
         userService.createSub(userRequest, myCompanyId);
         return ResponseEntity.ok().build();
@@ -58,13 +60,13 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<Void> userUpdate(@PathVariable Long userId, UserRequest userRequest){
+    public ResponseEntity<Void> userUpdate(@PathVariable Long userId, @RequestBody UserRequest userRequest){
         userService.updateUserById(userId, userRequest);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/password")
-    public ResponseEntity<Void> passwordUpdate(String password){
+    public ResponseEntity<Void> passwordUpdate(@RequestBody String password){
         Long myUserId = 0L;
         userService.updatePasswordById(myUserId, password);
         return ResponseEntity.ok().build();
