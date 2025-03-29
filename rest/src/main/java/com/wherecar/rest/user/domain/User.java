@@ -29,4 +29,19 @@ public class User extends BaseEntity {
     private String phone;
     private String jobTitle;
 
+    public void changeName(String newName) {
+        this.name = newName;
+    }
+    public void changeEmail(String newEmail) {
+        this.email = newEmail;
+    }
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
+    public void changePhone(String newPhone) {
+        this.phone = newPhone;
+    }
+    public void changeJobTitle(String newJobTitle) {
+        this.jobTitle = newJobTitle;
+    }
 }
