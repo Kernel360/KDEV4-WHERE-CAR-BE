@@ -1,7 +1,12 @@
 package com.wherecar.rest.user.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.Objects;
 
 @Table(name="user_permissions")
 @Entity
@@ -21,4 +26,17 @@ public class UserPermission {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "permission_id")
     private Permission permission;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserPermission that = (UserPermission) o;
+        return user.equals(that.user) && permission.equals(that.permission);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, permission);
+    }
 }

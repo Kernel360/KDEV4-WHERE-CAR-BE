@@ -1,0 +1,77 @@
+package com.wherecar.rest.user.security;
+
+import com.wherecar.rest.user.domain.PermissionType;
+import com.wherecar.rest.user.domain.User;
+import com.wherecar.rest.user.domain.UserPermission;
+import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+public class CustomUserDetails implements UserDetails {
+
+    private final User user;
+    @Getter
+    private Set<PermissionType> permissionTypes;
+    @Getter
+    private Long companyId;
+
+    public CustomUserDetails(User user) {
+        this.user = user;
+        this.companyId = user.getCompany().getId();
+        Set<UserPermission> userPermissions = user.getUserPermissions();
+        Set<PermissionType> permissionTypes = new HashSet<>();
+        for (UserPermission userPermission : userPermissions) {
+            permissionTypes.add(userPermission.getPermission().getType());
+        }
+        this.permissionTypes = permissionTypes;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        return new ArrayList<>();
+    }
+
+    @Override
+    public String getPassword() {
+
+        return user.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+
+        return user.getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+
+        return true;
+    }
+
+}
