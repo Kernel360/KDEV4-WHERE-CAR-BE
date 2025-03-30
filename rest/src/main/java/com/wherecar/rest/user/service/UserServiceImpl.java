@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createRoot(UserCompanyRequest userCompanyRequest) {
+        emailExists(userCompanyRequest.getUser().getEmail());
         CompanyRequest companyRequest = userCompanyRequest.getCompany();
         Company company = Company.builder()
                 .phone(companyRequest.getPhone())
@@ -44,11 +45,15 @@ public class UserServiceImpl implements UserService {
         companyRepository.save(company);
 
         UserRequest userRequest = userCompanyRequest.getUser();
-        this.createUser(userRequest, company);
+        User user = this.createUser(userRequest, company);
+        Permission rootPermission = permissionRepository.findByType(PermissionType.ROOT).orElseThrow();
+        user.addPermission(rootPermission);
+        userRepository.save(user);
     }
 
     @Override
     public void createSub(UserRequest userRequest, Long companyId) {
+        emailExists(userRequest.getEmail());
         Company company = companyRepository.findById(companyId).orElseThrow();
         this.createUser(userRequest, company);
     }
@@ -144,7 +149,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    private void createUser(UserRequest userRequest, Company company) {
+    private User createUser(UserRequest userRequest, Company company) {
         User user = User.builder()
                 .phone(userRequest.getPhone())
                 .email(userRequest.getEmail())
@@ -154,14 +159,12 @@ public class UserServiceImpl implements UserService {
                 .company(company)
                 .build();
         userRepository.save(user);
+        return user;
     }
 
-    private void companyCheck(Long companyIdA, Long companyIdB){
-        if(companyIdA!=null && companyIdB!=null){
-            if(!companyIdA.equals(companyIdB)){
-                throw new RuntimeException("Not same company");
-            }
+    public void emailExists(String email) {
+        if (userRepository.findByEmail(email).isPresent()){
+           throw new RuntimeException("Email already exists");
         }
     }
-
 }
