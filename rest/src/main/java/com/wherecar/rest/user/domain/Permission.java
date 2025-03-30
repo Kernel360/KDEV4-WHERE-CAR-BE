@@ -18,4 +18,6 @@ public class Permission {
     @Enumerated(EnumType.STRING)
     @Column(unique = true)
     private PermissionType type;
+
+
 }

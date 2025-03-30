@@ -5,6 +5,9 @@ import com.wherecar.rest.domain.Company;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Table(name="users")
 @Entity
@@ -23,11 +26,16 @@ public class User extends BaseEntity {
     @JoinColumn(name="company_id")
     private Company company;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserPermission> userPermissions = new HashSet<>();
+
     private String name;
     private String email;
     private String password;
     private String phone;
     private String jobTitle;
+
+
 
     public void changeName(String newName) {
         this.name = newName;
@@ -44,4 +52,5 @@ public class User extends BaseEntity {
     public void changeJobTitle(String newJobTitle) {
         this.jobTitle = newJobTitle;
     }
+
 }
