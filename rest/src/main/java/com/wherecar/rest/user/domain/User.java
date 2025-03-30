@@ -26,7 +26,7 @@ public class User extends BaseEntity {
     @JoinColumn(name="company_id")
     private Company company;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserPermission> userPermissions = new HashSet<>();
 
     private String name;
