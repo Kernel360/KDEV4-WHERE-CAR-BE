@@ -1,6 +1,9 @@
 package com.wherecar.rest.user.controller;
 
+import com.wherecar.rest.user.auth.AuthUtil;
+import com.wherecar.rest.user.domain.PermissionType;
 import com.wherecar.rest.user.dto.*;
+import com.wherecar.rest.user.permissionCheck.RequiredPermission;
 import com.wherecar.rest.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+
     @PostMapping("/root")
     public ResponseEntity<Void> rootCreate(@RequestBody UserCompanyRequest userCompanyRequest) {
         log.info("Creating root user with company: {}", userCompanyRequest);
@@ -23,11 +27,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @RequiredPermission(PermissionType.SUB_USER_CREATE)
     @PostMapping("/sub")
     public ResponseEntity<Void> subCreate(@RequestBody UserRequest userRequest) {
         log.info("Creating sub user: {}", userRequest);
-        Long myCompanyId = 0L;
-        userService.createSub(userRequest, myCompanyId);
+        Long companyId = AuthUtil.getCompanyId();
+        userService.createSub(userRequest, companyId);
         return ResponseEntity.ok().build();
     }
 
@@ -46,6 +51,7 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
+    @RequiredPermission(PermissionType.ROOT)
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> userDelete(@PathVariable Long userId){
         log.info("Deleting user with id: {}", userId);
@@ -63,7 +69,7 @@ public class UserController {
     @PutMapping("/password")
     public ResponseEntity<Void> passwordUpdate(@RequestBody String password){
         log.info("Updating password");
-        Long myUserId = 0L;
+        Long myUserId = AuthUtil.getUserId();
         userService.updatePasswordById(myUserId, password);
         return ResponseEntity.ok().build();
     }

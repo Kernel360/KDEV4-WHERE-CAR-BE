@@ -71,4 +71,12 @@ public class CustomUserDetails implements UserDetails {
         }
         return permissionTypes;
     }
+
+    public Long getCompanyId(){
+        return user.getCompany().getId();
+    }
+
+    public Long getUserId(){
+        return user.getId();
+    }
 }

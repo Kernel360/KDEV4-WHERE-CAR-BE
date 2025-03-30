@@ -107,6 +107,8 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    //권한
+
     @Override
     public void addPermission(Long userId, PermissionRequest permissionRequest) {
         User user = userRepository.findById(userId).orElseThrow();
@@ -142,7 +144,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    public void createUser(UserRequest userRequest, Company company) {
+    private void createUser(UserRequest userRequest, Company company) {
         User user = User.builder()
                 .phone(userRequest.getPhone())
                 .email(userRequest.getEmail())
@@ -153,4 +155,13 @@ public class UserServiceImpl implements UserService {
                 .build();
         userRepository.save(user);
     }
+
+    private void companyCheck(Long companyIdA, Long companyIdB){
+        if(companyIdA!=null && companyIdB!=null){
+            if(!companyIdA.equals(companyIdB)){
+                throw new RuntimeException("Not same company");
+            }
+        }
+    }
+
 }
