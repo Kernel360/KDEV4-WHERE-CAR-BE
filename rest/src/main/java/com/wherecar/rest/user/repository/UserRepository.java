@@ -12,10 +12,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     List<User> findByCompanyId(Long id);
 
-    @Query("SELECT u FROM User u " +
-            "JOIN FETCH u.userPermissions up " +
-            "JOIN FETCH up.permission p " +
-            "JOIN FETCH u.company c " +
+    @Query("SELECT DISTINCT u FROM User u " +
+            "LEFT JOIN FETCH u.userPermissions up " +
+            "LEFT JOIN FETCH up.permission p " +
+            "LEFT JOIN FETCH u.company c " +
             "WHERE u.email = :email")
     Optional<User> findUserWithPermissionsAndCompany(@Param("email") String email);
+
 }

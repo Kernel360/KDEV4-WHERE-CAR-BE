@@ -19,7 +19,6 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-
     @PostMapping("/root")
     public ResponseEntity<Void> rootCreate(@RequestBody UserCompanyRequest userCompanyRequest) {
         log.info("Creating root user with company: {}", userCompanyRequest);
@@ -77,6 +76,8 @@ public class UserController {
     }
 
     //Permission
+
+
     @RequiredPermission(PermissionType.ROOT)
     @PostMapping("/permission/{userId}")
     public ResponseEntity<Void> permissionAdd(@PathVariable Long userId, @RequestBody PermissionRequest permissionRequest){

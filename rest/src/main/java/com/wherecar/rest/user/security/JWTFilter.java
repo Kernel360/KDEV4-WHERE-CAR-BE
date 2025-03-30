@@ -46,6 +46,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         User user = userRepository.findUserWithPermissionsAndCompany(email).orElseThrow();
 
+
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
