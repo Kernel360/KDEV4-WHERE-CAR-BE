@@ -35,7 +35,7 @@ public class UserController {
         userService.createSub(userRequest, companyId);
         return ResponseEntity.ok().build();
     }
-
+    @RequiredPermission(PermissionType.USER_VIEW)
     @GetMapping("/companies/{companyId}")
     public ResponseEntity<List<UserResponse>> usersGetOfCompany(@PathVariable Long companyId){
         log.info("Retrieving users with company");
@@ -43,7 +43,7 @@ public class UserController {
         return ResponseEntity.ok(userResponses);
     }
 
-
+    @RequiredPermission(PermissionType.USER_VIEW)
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponse> userGet(@PathVariable Long userId){
         log.info("Retrieving user with id: {}", userId);
@@ -59,6 +59,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @RequiredPermission(PermissionType.ROOT)
     @PutMapping("/{userId}")
     public ResponseEntity<Void> userUpdate(@PathVariable Long userId, @RequestBody UserRequest userRequest){
         log.info("Updating user with id: {}", userId);
@@ -66,6 +67,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @RequiredPermission(PermissionType.ROOT)
     @PutMapping("/password")
     public ResponseEntity<Void> passwordUpdate(@RequestBody String password){
         log.info("Updating password");
@@ -75,6 +77,7 @@ public class UserController {
     }
 
     //Permission
+    @RequiredPermission(PermissionType.ROOT)
     @PostMapping("/permission/{userId}")
     public ResponseEntity<Void> permissionAdd(@PathVariable Long userId, @RequestBody PermissionRequest permissionRequest){
         log.info("Adding permission with id: {}", userId);
@@ -82,6 +85,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @RequiredPermission(PermissionType.ROOT)
     @GetMapping("/permission/{userId}")
     public ResponseEntity<PermissionResponse> permissionGet(@PathVariable Long userId){
         log.info("Retrieving permission with id: {}", userId);
@@ -89,6 +93,7 @@ public class UserController {
         return ResponseEntity.ok(permissionResponse);
     }
 
+    @RequiredPermission(PermissionType.ROOT)
     @DeleteMapping("/permission/{userId}")
     public ResponseEntity<Void> permissionDelete(@PathVariable Long userId, @RequestBody PermissionRequest permissionRequest){
         log.info("Deleting permission with id: {}", userId);
