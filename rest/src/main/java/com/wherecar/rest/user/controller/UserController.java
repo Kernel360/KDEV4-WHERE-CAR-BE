@@ -72,19 +72,21 @@ public class UserController {
     @PostMapping("/permission/{userId}")
     public ResponseEntity<Void> permissionAdd(@PathVariable Long userId, @RequestBody PermissionRequest permissionRequest){
         log.info("Adding permission with id: {}", userId);
+        userService.addPermission(userId, permissionRequest);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/permission/{userId}")
     public ResponseEntity<PermissionResponse> permissionGet(@PathVariable Long userId){
         log.info("Retrieving permission with id: {}", userId);
-        PermissionResponse permissionResponse = new PermissionResponse();
+        PermissionResponse permissionResponse = userService.getPermissionById(userId);
         return ResponseEntity.ok(permissionResponse);
     }
 
     @DeleteMapping("/permission/{userId}")
-    public ResponseEntity<Void> permissionDelete(@PathVariable Long userId){
+    public ResponseEntity<Void> permissionDelete(@PathVariable Long userId, @RequestBody PermissionRequest permissionRequest){
         log.info("Deleting permission with id: {}", userId);
+        userService.deletePermissionById(userId, permissionRequest);
         return ResponseEntity.ok().build();
     }
 }

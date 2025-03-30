@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -13,5 +14,5 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PermissionResponse {
-    private Set<PermissionType> permissionTypes;
+    private Set<PermissionType> permissionTypes = new HashSet<>();
 }

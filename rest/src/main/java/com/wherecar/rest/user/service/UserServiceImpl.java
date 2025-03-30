@@ -114,6 +114,7 @@ public class UserServiceImpl implements UserService {
             Permission permission = permissionRepository.findByType(permissionType).orElseThrow();
             user.addPermission(permission);
         }
+        log.info("Size: {}", user.getUserPermissions().size());
         userRepository.save(user);
     }
 
