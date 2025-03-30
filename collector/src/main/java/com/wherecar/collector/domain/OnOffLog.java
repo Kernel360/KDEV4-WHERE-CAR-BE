@@ -1,17 +1,13 @@
 package com.wherecar.collector.domain;
 
-import com.wherecar.rest.domain.BaseEntity;
-import com.wherecar.rest.domain.Car;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Table(name = "on_off_logs")
 @Entity
+@Getter
 @Builder
 @ToString(exclude = "car")
 @NoArgsConstructor
@@ -26,21 +22,43 @@ public class OnOffLog extends BaseEntity {
     @JoinColumn(name="car_id")
     private Car car;
 
+    @Column(name = "gps_condition")
     private String gpsCondition;
-    private Double latitude;
-    private Double longitude;
-    private Double angle;
-    private Double speed;
 
-    private Double onSum;
-    private Double offSum;
+    @Column(name = "latitude")
+    private Integer latitude;
 
-    private Double onMileage;
-    private Double offMileage;
+    @Column(name = "longitude")
+    private Integer longitude;
 
+    @Column(name = "angle")
+    private Integer angle;
+
+    @Column(name = "speed")
+    private Integer speed;
+
+    @Column(name = "on_sum")
+    private Integer onSum;
+
+    @Column(name = "off_sum")
+    private Integer offSum;
+
+    @Column(name = "on_mileage")
+    private Integer onMileage;
+
+    @Column(name = "off_mileage")
+    private Integer offMileage;
+
+    @Column(name = "on_time")
     private LocalDateTime onTime;
+
+    @Column(name = "off_time")
     private LocalDateTime offTime;
 
+    @Column(name = "driver")
     private String driver;
+
+    @Column(name = "description")
     private String description;
+
 }

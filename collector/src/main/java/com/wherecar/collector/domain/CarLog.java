@@ -1,4 +1,4 @@
-package com.wherecar.rest.domain;
+package com.wherecar.collector.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

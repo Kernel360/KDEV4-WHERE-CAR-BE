@@ -1,15 +1,11 @@
 package com.wherecar.collector.domain;
 
-import com.wherecar.rest.domain.*;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
+import lombok.*;
 
 @Table(name = "cars")
 @Entity
+@Getter
 @Builder
 @ToString(exclude = {"company", "geoInfo"})
 @NoArgsConstructor
@@ -18,13 +14,22 @@ public class Car extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="car_id")
-    private long id;
+    private Long id;
 
     // Todo: make Enum 만들자
+    @Column(name = "make")
     private String make;
+
+    @Column(name = "model")
     private String model;
+
+    @Column(name = "year")
     private String year;
-    private Double mileage;
+
+    @Column(name = "mileage")
+    private Integer mileage;
+
+    @Column(name = "mdn")
     private String mdn;
 
     @Enumerated(EnumType.STRING)
@@ -40,9 +45,10 @@ public class Car extends BaseEntity {
     private Company company;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="geoinfo_id")
+    @JoinColumn(name="geo_info_id")
     private GeoInfo geoInfo;
 
-    private Double batteryVoltage;
+    @Column(name = "battery_voltage")
+    private Integer batteryVoltage;
 
 }

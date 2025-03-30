@@ -21,22 +21,30 @@ public class GpsLog extends BaseEntity{
     @Column(name ="gps_log_id")
     private Long id;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="car_id")
     private Car car;
 
     //oTime+sec
+    @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
+    @Column(name = "gps_condition")
     private String gpsCondition;
-    private Double latitude;
-    private Double longitude;
-    private Double angle;
-    private Double speed;
-    private Double sum;
 
+    @Column(name = "latitude")
+    private Integer latitude;
 
+    @Column(name = "longitude")
+    private Integer longitude;
 
+    @Column(name = "angle")
+    private Integer angle;
+
+    @Column(name = "speed")
+    private Integer speed;
+
+    @Column(name = "sum")
+    private Integer sum;
 
 }
