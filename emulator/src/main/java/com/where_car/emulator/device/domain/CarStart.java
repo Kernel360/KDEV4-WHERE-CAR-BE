@@ -32,4 +32,15 @@ public class CarStart {
   private LocalDateTime offTime;
 
   private CarCycleInfo cycleInfo;
+
+  @Override
+  public String toString() {
+    return "CarStart {\n" +
+        " carIdentity = { " + "mdn=" + carIdentity.getMdn() + ", " + "vrp=" + carIdentity.getVrp() + " }" +
+        "\n carDevice = { " + "tid=" + carDevice.getTid() + ", " + "mid=" + carDevice.getMid() + ", " + "pv=" + carDevice.getPv() + ", " + "did=" + carDevice.getDid() + " }" +
+        "\n onTime=" + onTime +
+        "\n offTime=" + offTime +
+        "\n cycleInfo=" + cycleInfo +
+        "\n}";
+  }
 }

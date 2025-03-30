@@ -15,16 +15,34 @@ public class DeviceWebController {
     this.deviceService = deviceService;
   }
 
+  /**
+   * <pre>
+   *   에뮬레이터 대시보드
+   *   tailwindcss를 사용하여 대시보드 UI를 구성 했습니다.
+   * </pre>
+   * @author Changil.kim
+   * @version 1.0
+   * @since 2025-03-30
+   */
   @GetMapping("/dashboard")
-  public String dashboard(Model model) {
-    model.addAttribute("deviceStatus", deviceService.fetchDeviceStatus());
+  public String deviceDashboard(Model model) {
+    model.addAttribute("deviceStatus", deviceService.isDeviceStatus());
     model.addAttribute("carIdentity", deviceService.fetchCarIdentity());
     return "dashboard";
   }
 
-  @PostMapping("/device/activate")
-  public String schedulerActive() {
-    deviceService.activateScheduler();
+  /**
+   * <pre>
+   *   에뮬레이터 활성화/비활성화
+   *   deviceStatus를 통해 스케줄러를 시작/정지 합니다.
+   * </pre>
+   * @author Changil.kim
+   * @version 1.0
+   * @since 2025-03-30
+   */
+  @PostMapping("/device/active")
+  public String deviceActive() {
+    deviceService.deviceActivateScheduler();
     return "redirect:/dashboard";
   }
 }

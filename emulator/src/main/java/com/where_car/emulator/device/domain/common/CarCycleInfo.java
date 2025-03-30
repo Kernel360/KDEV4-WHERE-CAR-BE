@@ -33,4 +33,18 @@ public class CarCycleInfo {
   private Integer spd;
   private Integer sum;
   private Integer bat;
+
+  @Override
+  public String toString() {
+    return "CarCycleInfo{" +
+        "sec='" + sec + '\'' +
+        ", gcd='" + gcd + '\'' +
+        ", lat=" + lat +
+        ", lon=" + lon +
+        ", ang=" + ang +
+        ", spd=" + spd +
+        ", sum=" + sum +
+        ", bat=" + bat +
+        '}';
+  }
 }
