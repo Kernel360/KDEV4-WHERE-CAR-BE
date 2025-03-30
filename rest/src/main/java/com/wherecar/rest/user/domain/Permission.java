@@ -1,23 +1,23 @@
-    package com.wherecar.rest.user.domain;
+package com.wherecar.rest.user.domain;
 
-    import jakarta.persistence.*;
-    import lombok.*;
+import jakarta.persistence.*;
+import lombok.*;
 
-    @Entity
-    @Table(name = "permissions")
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public class Permission {
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        @Column(name="permission_id")
-        private Long id;
+@Entity
+@Table(name = "permissions")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Permission {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="permission_id")
+    private Long id;
 
-        @Enumerated(EnumType.STRING)
-        @Column(unique = true)
-        private PermissionType type;
+    @Enumerated(EnumType.STRING)
+    @Column(unique = true)
+    private PermissionType type;
 
 
-    }
+}
