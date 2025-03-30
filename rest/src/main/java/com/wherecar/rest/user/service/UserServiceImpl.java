@@ -54,6 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserResponse> getUsersOfCompany(Long companyId) {
         List<User> users = userRepository.findByCompanyId(companyId);
         List<UserResponse> userResponses = new ArrayList<>();
@@ -71,6 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserResponse getUserById(Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
         return UserResponse.builder()
@@ -116,6 +118,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PermissionResponse getPermissionById(Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
         Set<UserPermission> userPermission = user.getUserPermissions();
