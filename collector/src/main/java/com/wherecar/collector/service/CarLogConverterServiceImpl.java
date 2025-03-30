@@ -1,10 +1,10 @@
 package com.wherecar.collector.service;
 
 import com.wherecar.collector.domain.Car;
-import com.wherecar.collector.domain.OnOffLog;
-import com.wherecar.collector.dto.OnOffLogRequest;
+import com.wherecar.collector.domain.CarLog;
+import com.wherecar.collector.dto.CarLogRequest;
 import com.wherecar.collector.repository.CarRepository;
-import com.wherecar.collector.repository.OnOffLogRepository;
+import com.wherecar.collector.repository.CarLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,11 +16,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional  // readOnly X
-public class OnOffLogConverterServiceImpl implements OnOffLogConverterService {
+public class CarLogConverterServiceImpl implements CarLogConverterService {
 
-    private final OnOffLogSaveService onOffLogSaveService;
+    private final CarLogSaveService carLogSaveService;
 
-    private final OnOffLogRepository onOffLogRepository;
+    private final CarLogRepository carLogRepository;
     private final CarRepository carRepository;
 
 
@@ -34,62 +34,62 @@ public class OnOffLogConverterServiceImpl implements OnOffLogConverterService {
      시동 ON 시 GPS 상태가 정상적이지 않으면, GPS 상태 값(gcd)을 ‘P’로 설정하고, 직전 시동 OFF 때의 GPS 위치 정보를 보낸다.
     */
     @Override
-    public void receiveOnLog(OnOffLogRequest onLogRequest) {
+    public void receiveOnLog(CarLogRequest onLogRequest) {
 
         Optional<Car> optionalCar = carRepository.findByMdn(onLogRequest.getMdn());
 
         if (optionalCar.isPresent()) {
             Car car = optionalCar.get();
 
-            // 직전 시동 OFF일 때의 OnOffLog를 찾는 쿼리 메서드 호출
-            Optional<OnOffLog> optionalPreviousOnOffLog = onOffLogRepository.findTopByCarIdOrderByOffTimeDesc(car.getId());
+            // 직전 시동 OFF일 때의 CarLog를 찾는 쿼리 메서드 호출
+            Optional<CarLog> optionalPreviousCarLog = carLogRepository.findTopByCarIdOrderByOffTimeDesc(car.getId());
 
-            if (optionalPreviousOnOffLog.isPresent()) {
-                OnOffLog previousOnOffLog = optionalPreviousOnOffLog.get();
+            if (optionalPreviousCarLog.isPresent()) {
+                CarLog previousCarLog = optionalPreviousCarLog.get();
 
                 // 시동 ON 시 최초 누적 거리는 그 직전 시동 OFF일 때의 누적 거리 값과 일치해야 한다.
-                if (previousOnOffLog.getOffSum() == onLogRequest.getSum()) {
+                if (previousCarLog.getOffSum() == onLogRequest.getSum()) {
 
                     // 시동 ON 시 mileage는 직전 시동 OFF 시 mileage
-                    Integer onMileage = previousOnOffLog.getOffMileage();
+                    Integer onMileage = previousCarLog.getOffMileage();
 
-                    // onLogRequest -> OnOffLog로 변환
-                    OnOffLog onOffLog = OnOffLog.builder()
+                    // onLogRequest -> CarLog로 변환
+                    CarLog carLog = CarLog.builder()
                             .car(car)
-                            .gpsCondition(onLogRequest.getGcd())
-                            .latitude(onLogRequest.getLat())
-                            .longitude(onLogRequest.getLon())
-                            .angle(onLogRequest.getAng())
-                            .speed(onLogRequest.getSpd())
+                            .onGpsCondition(onLogRequest.getGcd())
+                            .onLatitude(onLogRequest.getLat())
+                            .onLongitude(onLogRequest.getLon())
+                            .onAngle(onLogRequest.getAng())
+                            .onSpeed(onLogRequest.getSpd())
                             .onSum(onLogRequest.getSum())
                             .onMileage(onMileage)
                             .onTime(onLogRequest.getOnTime())
                             .build();
 
                     // 로그를 저장하는 서비스 호출
-                    onOffLogSaveService.saveOnOffLog(onOffLog);
+                    carLogSaveService.saveCarLog(carLog);
                 }
             }
 
             // 차는 Repository에 저장되어 있지만 최초 출고인 상황
-            if (optionalPreviousOnOffLog.isEmpty()) {
+            if (optionalPreviousCarLog.isEmpty()) {
                 Integer onMileage = 0;
 
-                // onLogRequest -> OnOffLog로 변환
-                OnOffLog onOffLog = OnOffLog.builder()
+                // onLogRequest -> CarLog로 변환
+                CarLog carLog = CarLog.builder()
                         .car(car)
-                        .gpsCondition(onLogRequest.getGcd())
-                        .latitude(onLogRequest.getLat())
-                        .longitude(onLogRequest.getLon())
-                        .angle(onLogRequest.getAng())
-                        .speed(onLogRequest.getSpd())
+                        .onGpsCondition(onLogRequest.getGcd())
+                        .onLatitude(onLogRequest.getLat())
+                        .onLongitude(onLogRequest.getLon())
+                        .onAngle(onLogRequest.getAng())
+                        .onSpeed(onLogRequest.getSpd())
                         .onSum(0)
                         .onMileage(onMileage)
                         .onTime(onLogRequest.getOnTime())
                         .build();
 
                 // 로그를 저장하는 서비스 호출
-                onOffLogSaveService.saveOnOffLog(onOffLog);
+                carLogSaveService.saveCarLog(carLog);
             }
 
         }
@@ -113,20 +113,20 @@ public class OnOffLogConverterServiceImpl implements OnOffLogConverterService {
     시동 OFF 시 GPS 상태가 정상적이지 않으면, GPS 상태 값(gcd)을 ‘P’로 설정한다.
     */
     @Override
-    public void receiveOffLog(OnOffLogRequest offLogRequest) {
+    public void receiveOffLog(CarLogRequest offLogRequest) {
 
         Optional<Car> optionalCar = carRepository.findByMdn(offLogRequest.getMdn());
 
         if (optionalCar.isPresent()) {
             Car car = optionalCar.get();
 
-            // // 직전 시동 ON일 때의 OnOffLog를 찾는 쿼리 메서드 호출
-            Optional<OnOffLog> optionalPreviousOnOffLog = onOffLogRepository.findTopByCarIdOrderByOnTimeDesc(car.getId());
+            // // 직전 시동 ON일 때의 CarLog를 찾는 쿼리 메서드 호출
+            Optional<CarLog> optionalPreviousCarLog = carLogRepository.findTopByCarIdOrderByOnTimeDesc(car.getId());
 
-            if (optionalPreviousOnOffLog.isPresent()) {
-                OnOffLog previousOnOffLog = optionalPreviousOnOffLog.get();
+            if (optionalPreviousCarLog.isPresent()) {
+                CarLog previousCarLog = optionalPreviousCarLog.get();
 
-                Integer onSum = previousOnOffLog.getOnSum();    // 직전 ON 로그의 sum
+                Integer onSum = previousCarLog.getOnSum();    // 직전 ON 로그의 sum
                 Integer offSum = offLogRequest.getSum();        // OFF 로그의 sum
                 Integer sumToSave = 0;
 
@@ -138,26 +138,31 @@ public class OnOffLogConverterServiceImpl implements OnOffLogConverterService {
                 }
 
                 // TODO sumToSave / 1000에서의 잘리는 데이터 어떻게 할지, 그냥 둘지 고민하기
-                Integer offMileage = previousOnOffLog.getOnMileage() + sumToSave / 1000;
+                Integer offMileage = previousCarLog.getOnMileage() + sumToSave / 1000;
 
-                // offLogRequest -> OnOffLog로 변환
-                OnOffLog onOffLog = OnOffLog.builder()
+                // offLogRequest -> CarLog로 변환
+                CarLog carLog = CarLog.builder()
                         .car(car)
-                        .gpsCondition(offLogRequest.getGcd())
-                        .latitude(offLogRequest.getLat())
-                        .longitude(offLogRequest.getLon())
-                        .angle(offLogRequest.getAng())
-                        .speed(offLogRequest.getSpd())
+                        .onGpsCondition(previousCarLog.getOnGpsCondition())
+                        .onLatitude(previousCarLog.getOnLatitude())
+                        .onLongitude(previousCarLog.getOnLongitude())
+                        .onAngle(previousCarLog.getOnAngle())
+                        .onSpeed(previousCarLog.getOnSpeed())
                         .onSum(onSum)
-                        .offSum(offLogRequest.getSum())
-                        .onMileage(previousOnOffLog.getOnMileage())
-                        .offMileage(offMileage)
+                        .onMileage(previousCarLog.getOnMileage())
                         .onTime(offLogRequest.getOnTime())
+                        .offGpsCondition(offLogRequest.getGcd())
+                        .offLatitude(offLogRequest.getLat())
+                        .offLongitude(offLogRequest.getLon())
+                        .offAngle(offLogRequest.getAng())
+                        .offSpeed(offLogRequest.getSpd())
+                        .offSum(offLogRequest.getSum())
+                        .offMileage(offMileage)
                         .offTime(offLogRequest.getOffTime())
                         .build();
 
                 // 로그를 저장하는 서비스 호출
-                onOffLogSaveService.saveOnOffLog(onOffLog);
+                carLogSaveService.saveCarLog(carLog);
 
             }
 

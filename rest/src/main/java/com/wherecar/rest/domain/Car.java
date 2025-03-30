@@ -10,7 +10,7 @@ import lombok.*;
 @ToString(exclude = {"company", "geoInfo"})
 @NoArgsConstructor
 @AllArgsConstructor
-public class Car extends BaseEntity{
+public class Car extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="car_id")
@@ -51,4 +51,39 @@ public class Car extends BaseEntity{
     @Column(name = "battery_voltage")
     private Integer batteryVoltage;
 
+    public void changeMake(String make) {
+        this.make = make;
+    }
+
+    public void changeModel(String model) {
+        this.model = model;
+    }
+
+    public void changeYear(String year) {
+        this.year = year;
+    }
+
+    public void changeMileage(Integer mileage) {
+        this.mileage = mileage;
+    }
+
+    public void changeMdn(String mdn) {
+        this.mdn = mdn;
+    }
+
+    public void changeOwnerType(OwnerType ownerType) {
+        this.ownerType = ownerType;
+    }
+
+    public void changeAcquisitionType(AcquisitionType acquisitionType) {
+        this.acquisitionType = acquisitionType;
+    }
+
+    public void changeBatteryVoltage(Integer batteryVoltage) {
+        this.batteryVoltage = batteryVoltage;
+    }
+
+    public void changeGeoInfo(GeoInfo geoInfo) {
+        this.geoInfo = geoInfo;
+    }
 }

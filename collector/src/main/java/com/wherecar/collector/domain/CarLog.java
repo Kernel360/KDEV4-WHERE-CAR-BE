@@ -1,20 +1,18 @@
 package com.wherecar.collector.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Table(name = "car_logs")
 @Entity
+@Getter
 @Builder
 @ToString(exclude = "car")
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarLog extends BaseEntity{
+public class CarLog extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="car_log_id")
@@ -81,4 +79,5 @@ public class CarLog extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(name = "drive_type")
     private DriveType driveType;
+
 }

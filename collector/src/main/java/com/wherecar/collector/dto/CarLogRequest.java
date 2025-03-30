@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OnOffLogRequest {
+public class CarLogRequest {
 
     String mdn;     // 차량 번호.       차량(단말) 식별 key
     String tid;     // 터미널 아이디.    차량 관제는 'A001'로 고정

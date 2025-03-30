@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OnOffLogResponse {
+public class CarLogResponse {
 
     String rstCd;   // 결과 코드.   응답 코드 정의 참조
     String rstMsg;  // 결과 메시지.  응답 코드 정의 참조
