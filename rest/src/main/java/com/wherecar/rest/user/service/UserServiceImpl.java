@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> getUsersOfMyCompany(Long companyId) {
+    public List<UserResponse> getUsersOfCompany(Long companyId) {
         List<User> users = userRepository.findByCompanyId(companyId);
         List<UserResponse> userResponses = new ArrayList<>();
         for (User user : users) {
