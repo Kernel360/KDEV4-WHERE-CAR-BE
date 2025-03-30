@@ -53,4 +53,20 @@ public class User extends BaseEntity {
         this.jobTitle = newJobTitle;
     }
 
+    public void addPermission(Permission permission) {
+        UserPermission userPermission = UserPermission.builder()
+                .user(this)
+                .permission(permission)
+                .build();
+        this.userPermissions.add(userPermission);
+    }
+
+    public void removePermission(Permission permission) {
+        for (UserPermission userPermission : this.userPermissions) {
+            if (userPermission.getPermission().equals(permission)) {
+                this.userPermissions.remove(userPermission);
+                break;
+            }
+        }
+    }
 }
