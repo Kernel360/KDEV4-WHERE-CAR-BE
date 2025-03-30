@@ -18,11 +18,11 @@ public class CarResponse {
     private String make;
     private String model;
     private String year;
-    private Double mileage;
+    private Integer mileage;
     private OwnerType ownerType;
     private AcquisitionType acquisitionType;
     private Long companyName;
-    private Double batteryVoltage;
+    private Integer batteryVoltage;
 
     //private GeoInfo geoInfo;
 }

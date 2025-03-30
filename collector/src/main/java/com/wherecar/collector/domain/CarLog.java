@@ -1,4 +1,4 @@
-package com.wherecar.rest.domain;
+package com.wherecar.collector.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @ToString(exclude = "car")
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarLog extends BaseEntity{
+public class CarLog extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="car_log_id")
@@ -79,4 +79,5 @@ public class CarLog extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(name = "drive_type")
     private DriveType driveType;
+
 }

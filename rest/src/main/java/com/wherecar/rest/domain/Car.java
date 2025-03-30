@@ -14,13 +14,22 @@ public class Car extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="car_id")
-    private long id;
+    private Long id;
 
     // Todo: make Enum 만들자
+    @Column(name = "make")
     private String make;
+
+    @Column(name = "model")
     private String model;
+
+    @Column(name = "year")
     private String year;
-    private Double mileage;
+
+    @Column(name = "mileage")
+    private Integer mileage;
+
+    @Column(name = "mdn")
     private String mdn;
 
     @Enumerated(EnumType.STRING)
@@ -36,10 +45,11 @@ public class Car extends BaseEntity{
     private Company company;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="geoinfo_id")
+    @JoinColumn(name="geo_info_id")
     private GeoInfo geoInfo;
 
-    private Double batteryVoltage;
+    @Column(name = "battery_voltage")
+    private Integer batteryVoltage;
 
     public void changeMake(String make) {
         this.make = make;
@@ -53,7 +63,7 @@ public class Car extends BaseEntity{
         this.year = year;
     }
 
-    public void changeMileage(Double mileage) {
+    public void changeMileage(Integer mileage) {
         this.mileage = mileage;
     }
 
@@ -69,7 +79,7 @@ public class Car extends BaseEntity{
         this.acquisitionType = acquisitionType;
     }
 
-    public void changeBatteryVoltage(Double batteryVoltage) {
+    public void changeBatteryVoltage(Integer batteryVoltage) {
         this.batteryVoltage = batteryVoltage;
     }
 
