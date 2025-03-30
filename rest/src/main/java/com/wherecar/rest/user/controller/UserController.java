@@ -1,8 +1,6 @@
 package com.wherecar.rest.user.controller;
 
-import com.wherecar.rest.user.dto.UserCompanyRequest;
-import com.wherecar.rest.user.dto.UserRequest;
-import com.wherecar.rest.user.dto.UserResponse;
+import com.wherecar.rest.user.dto.*;
 import com.wherecar.rest.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +65,26 @@ public class UserController {
         log.info("Updating password");
         Long myUserId = 0L;
         userService.updatePasswordById(myUserId, password);
+        return ResponseEntity.ok().build();
+    }
+
+    //Permission
+    @PostMapping("/permission/{userId}")
+    public ResponseEntity<Void> permissionAdd(@PathVariable Long userId, @RequestBody PermissionRequest permissionRequest){
+        log.info("Adding permission with id: {}", userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/permission/{userId}")
+    public ResponseEntity<PermissionResponse> permissionGet(@PathVariable Long userId){
+        log.info("Retrieving permission with id: {}", userId);
+        PermissionResponse permissionResponse = new PermissionResponse();
+        return ResponseEntity.ok(permissionResponse);
+    }
+
+    @DeleteMapping("/permission/{userId}")
+    public ResponseEntity<Void> permissionDelete(@PathVariable Long userId){
+        log.info("Deleting permission with id: {}", userId);
         return ResponseEntity.ok().build();
     }
 }
