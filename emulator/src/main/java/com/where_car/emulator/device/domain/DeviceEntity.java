@@ -1,7 +1,8 @@
 package com.where_car.emulator.device.domain;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 /**
  * <pre>
@@ -14,8 +15,9 @@ import lombok.Getter;
  */
 
 @Getter
-@Builder
+@Setter
+@Component
 public class DeviceEntity {
 
-  private boolean isOn;
+  private boolean deviceStatus;
 }
