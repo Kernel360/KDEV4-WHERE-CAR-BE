@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

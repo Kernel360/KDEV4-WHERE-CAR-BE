@@ -1,8 +1,9 @@
 package com.wherecar.rest.user.controller;
 
-import com.wherecar.rest.user.dto.UserCompanyRequest;
-import com.wherecar.rest.user.dto.UserRequest;
-import com.wherecar.rest.user.dto.UserResponse;
+import com.wherecar.rest.user.auth.AuthUtil;
+import com.wherecar.rest.user.domain.PermissionType;
+import com.wherecar.rest.user.dto.*;
+import com.wherecar.rest.user.permissionCheck.RequiredPermission;
 import com.wherecar.rest.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,14 +26,15 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @RequiredPermission(PermissionType.SUB_USER_CREATE)
     @PostMapping("/sub")
     public ResponseEntity<Void> subCreate(@RequestBody UserRequest userRequest) {
         log.info("Creating sub user: {}", userRequest);
-        Long myCompanyId = 0L;
-        userService.createSub(userRequest, myCompanyId);
+        Long companyId = AuthUtil.getCompanyId();
+        userService.createSub(userRequest, companyId);
         return ResponseEntity.ok().build();
     }
-
+    @RequiredPermission(PermissionType.USER_VIEW)
     @GetMapping("/companies/{companyId}")
     public ResponseEntity<List<UserResponse>> usersGetOfCompany(@PathVariable Long companyId){
         log.info("Retrieving users with company");
@@ -40,7 +42,7 @@ public class UserController {
         return ResponseEntity.ok(userResponses);
     }
 
-
+    @RequiredPermission(PermissionType.USER_VIEW)
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponse> userGet(@PathVariable Long userId){
         log.info("Retrieving user with id: {}", userId);
@@ -48,6 +50,7 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
+    @RequiredPermission(PermissionType.ROOT)
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> userDelete(@PathVariable Long userId){
         log.info("Deleting user with id: {}", userId);
@@ -55,6 +58,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @RequiredPermission(PermissionType.ROOT)
     @PutMapping("/{userId}")
     public ResponseEntity<Void> userUpdate(@PathVariable Long userId, @RequestBody UserRequest userRequest){
         log.info("Updating user with id: {}", userId);
@@ -62,11 +66,39 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @RequiredPermission(PermissionType.ROOT)
     @PutMapping("/password")
     public ResponseEntity<Void> passwordUpdate(@RequestBody String password){
         log.info("Updating password");
-        Long myUserId = 0L;
+        Long myUserId = AuthUtil.getUserId();
         userService.updatePasswordById(myUserId, password);
+        return ResponseEntity.ok().build();
+    }
+
+    //Permission
+
+
+    @RequiredPermission(PermissionType.ROOT)
+    @PostMapping("/permission/{userId}")
+    public ResponseEntity<Void> permissionAdd(@PathVariable Long userId, @RequestBody PermissionRequest permissionRequest){
+        log.info("Adding permission with id: {}", userId);
+        userService.addPermission(userId, permissionRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @RequiredPermission(PermissionType.ROOT)
+    @GetMapping("/permission/{userId}")
+    public ResponseEntity<PermissionResponse> permissionGet(@PathVariable Long userId){
+        log.info("Retrieving permission with id: {}", userId);
+        PermissionResponse permissionResponse = userService.getPermissionById(userId);
+        return ResponseEntity.ok(permissionResponse);
+    }
+
+    @RequiredPermission(PermissionType.ROOT)
+    @DeleteMapping("/permission/{userId}")
+    public ResponseEntity<Void> permissionDelete(@PathVariable Long userId, @RequestBody PermissionRequest permissionRequest){
+        log.info("Deleting permission with id: {}", userId);
+        userService.deletePermissionById(userId, permissionRequest);
         return ResponseEntity.ok().build();
     }
 }

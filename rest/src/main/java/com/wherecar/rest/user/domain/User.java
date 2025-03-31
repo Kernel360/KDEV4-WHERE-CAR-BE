@@ -17,6 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="user_id")
@@ -51,6 +52,26 @@ public class User extends BaseEntity {
     }
     public void changeJobTitle(String newJobTitle) {
         this.jobTitle = newJobTitle;
+    }
+
+    public void addPermission(Permission permission) {
+        if(userPermissions == null) {
+            this.userPermissions = new HashSet<>();
+        }
+        UserPermission userPermission = UserPermission.builder()
+                .user(this)
+                .permission(permission)
+                .build();
+        this.userPermissions.add(userPermission);
+    }
+
+    public void removePermission(Permission permission) {
+        for (UserPermission userPermission : this.userPermissions) {
+            if (userPermission.getPermission().equals(permission)) {
+                this.userPermissions.remove(userPermission);
+                break;
+            }
+        }
     }
 
 }
