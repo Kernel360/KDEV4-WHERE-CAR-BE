@@ -12,8 +12,6 @@ jobs:
         with:
           assignees: ${{ github.actor }} # assign pull request author
           reviewers: laterre39, hyeonjinan096, codingjjh0515, ijjung365, rjk0103
-          ready-comment: 'Ready for review :ok: <reviewers>'
-          merged-comment: 'It was merged. Thanks for your review :wink: <reviewers>'
           github-token: ${{ secrets.LATERRE_TK }}
       - name: Show result
         if: always()
