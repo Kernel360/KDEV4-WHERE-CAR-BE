@@ -21,7 +21,7 @@ public class CarController {
 
     @PostMapping
     public ResponseEntity<String> CarRegister(@RequestBody CarRegisterRequest registerCarRequest) {
-        carService.createCar(registerCarRequest);
+        carService.registerCar(registerCarRequest);
         return ResponseEntity.ok("등록되었습니다.");
     }
 
