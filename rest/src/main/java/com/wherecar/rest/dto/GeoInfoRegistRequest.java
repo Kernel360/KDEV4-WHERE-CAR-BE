@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 public class GeoInfoRegistRequest {
     private String geoEventType;
     private String geoRange;
-    private String latitude;
-    private String longitude;
+    private Integer latitude;
+    private Integer longitude;
     private LocalDateTime onTime;
     private LocalDateTime offTime;
 }

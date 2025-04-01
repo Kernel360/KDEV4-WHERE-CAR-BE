@@ -17,8 +17,8 @@ public class GeoList {
     private String geoGrpId;        // 그룹 아이디
     private String geoEventType;    // 이벤트 타입
     private String geoRange;        // 지오펜스 반경
-    private String latitude;        // 위도
-    private String longitude;       // 경도
+    private Integer latitude;        // 위도
+    private Integer longitude;       // 경도
     private LocalDateTime onTime;   // 시작 시간
     private LocalDateTime offTime;  // 종료 시간
 }

@@ -27,8 +27,8 @@ public class GeoInfoServiceImpl implements GeoInfoService {
         GeoInfo geoInfo = GeoInfo.builder()
                 .geoEventType(geoInfoRegistRequest.getGeoEventType())
                 .geoRange(geoInfoRegistRequest.getGeoRange())
-                .latitude(Double.valueOf(geoInfoRegistRequest.getLatitude()))
-                .longitude(Double.valueOf(geoInfoRegistRequest.getLongitude()))
+                .latitude(Integer.valueOf(geoInfoRegistRequest.getLatitude()))
+                .longitude(Integer.valueOf(geoInfoRegistRequest.getLongitude()))
                 .onTime(geoInfoRegistRequest.getOnTime())
                 .offTime(geoInfoRegistRequest.getOffTime())
                 .build();
@@ -64,9 +64,8 @@ public class GeoInfoServiceImpl implements GeoInfoService {
 
         geoInfo.changeGeoEventType(geoInfoRegistRequest.getGeoEventType());
         geoInfo.changeGeoRange(geoInfoRegistRequest.getGeoRange());
-        // todo: Double -> Integer 변경예정
-        geoInfo.changeLatitude(Double.valueOf(geoInfoRegistRequest.getLatitude()));
-        geoInfo.changeLongitude(Double.valueOf(geoInfoRegistRequest.getLongitude()));
+        geoInfo.changeLatitude(Integer.valueOf(geoInfoRegistRequest.getLatitude()));
+        geoInfo.changeLongitude(Integer.valueOf(geoInfoRegistRequest.getLongitude()));
 
         geoInfoRepository.save(geoInfo);
 
