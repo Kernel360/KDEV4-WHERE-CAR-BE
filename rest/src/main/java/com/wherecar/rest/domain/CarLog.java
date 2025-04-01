@@ -22,10 +22,6 @@ public class CarLog extends BaseEntity{
     @JoinColumn(name="car_id")
     private Car car;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="company_id")
-    private Company company;
-
     private GpsConditionType onGpsCondition;
     private Double onLatitude;
     private Double onLongitude;
