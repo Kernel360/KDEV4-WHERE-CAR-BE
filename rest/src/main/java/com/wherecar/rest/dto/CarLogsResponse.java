@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CarLogsResponse {
 
-    private Long LogId;
+    private Long logId;
 
     private String mdn;
 

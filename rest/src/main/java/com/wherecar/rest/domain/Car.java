@@ -38,7 +38,7 @@ public class Car extends BaseEntity{
     private Company company;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="geoinfo_id")
+    @JoinColumn(name="geo_info_id")
     private GeoInfo geoInfo;
 
     public void changeMake(String make) {

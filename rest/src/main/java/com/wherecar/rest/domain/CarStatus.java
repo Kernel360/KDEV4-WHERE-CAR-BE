@@ -25,11 +25,11 @@ public class CarStatus  extends BaseEntity{
     @Column(name="mileage")
     private Integer mileage;
 
-    @Column(name="battery_Voltage")
+    @Column(name="battery_voltage")
     private Integer batteryVoltage;
 
     @Enumerated(EnumType.STRING)
     @Column(name="owner_type")
-    private CarState carstate;
+    private CarState carState;
 
 }
