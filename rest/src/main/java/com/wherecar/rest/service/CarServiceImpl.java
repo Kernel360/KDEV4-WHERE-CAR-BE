@@ -46,7 +46,7 @@ public class CarServiceImpl implements CarService {
 
         CarStatus carStatus = CarStatus.builder()
                 .car(car)
-                .carstate(CarState.NOT_REGISTERED)
+                .carState(CarState.NOT_REGISTERED)
                 .mileage(carRegisterRequest.getMileage())
                 .batteryVoltage(carRegisterRequest.getBatteryVoltage())
                 .build();
@@ -99,7 +99,7 @@ public class CarServiceImpl implements CarService {
                         .make(car.getMake())
                         .ownerType(car.getOwnerType())
                         .acquisitionType(car.getAcquisitionType())
-                        .carState(car.getCarStatus().getCarstate())
+                        .carState(car.getCarStatus().getCarState())
                         .batteryVoltage(car.getCarStatus().getBatteryVoltage())
                         .mileage(car.getCarStatus().getMileage())
 //                      Todo: Company 추가되면 반영, CompanyName을 추가할 건지 결정
@@ -123,7 +123,7 @@ public class CarServiceImpl implements CarService {
                 .acquisitionType(car.getAcquisitionType())
                 .mileage(car.getCarStatus().getMileage())
                 .batteryVoltage(car.getCarStatus().getBatteryVoltage())
-                .carState(car.getCarStatus().getCarstate())
+                .carState(car.getCarStatus().getCarState())
 //                Todo: Company 추가되면 반영
 //                .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
                 .build();
