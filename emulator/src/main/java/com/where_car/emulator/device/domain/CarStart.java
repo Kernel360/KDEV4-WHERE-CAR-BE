@@ -35,12 +35,12 @@ public class CarStart {
 
   @Override
   public String toString() {
-    return "CarStart {\n" +
-        " carIdentity = { " + "mdn=" + carIdentity.getMdn() + ", " + "vrp=" + carIdentity.getVrp() + " }" +
-        "\n carDevice = { " + "tid=" + carDevice.getTid() + ", " + "mid=" + carDevice.getMid() + ", " + "pv=" + carDevice.getPv() + ", " + "did=" + carDevice.getDid() + " }" +
-        "\n onTime=" + onTime +
-        "\n offTime=" + offTime +
-        "\n cycleInfo=" + cycleInfo +
-        "\n}";
+    return "CarStart= {" +
+        " carIdentity= { " + "mdn=" + carIdentity.getMdn() + ", " + "vrp=" + carIdentity.getVrp() + " }" +
+        ", carDevice= { " + "tid=" + carDevice.getTid() + ", " + "mid=" + carDevice.getMid() + ", " + "pv=" + carDevice.getPv() + ", " + "did=" + carDevice.getDid() + " }" +
+        ", onTime=" + onTime +
+        ", offTime=" + offTime +
+        ", cycleInfo= { " + "sec=" + cycleInfo.getSec() + ", " + "gcd=" + cycleInfo.getGcd() + ", " + "lat=" + cycleInfo.getLat() + ", " + "lon=" + cycleInfo.getLon() + ", " +  "ang=" + cycleInfo.getAng() + ", " + "spd=" + cycleInfo.getSpd() + ", " + "sum=" + cycleInfo.getSum() + ", " + "bat=" + cycleInfo.getBat() + " }" +
+        " }";
   }
 }
