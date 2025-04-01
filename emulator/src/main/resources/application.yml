@@ -13,6 +13,8 @@ spring:
       check-template-location: false # 타임리프 검사 비활성화
 
 wherecar:
+  server:
+    url: https://jsonplaceholder.typicode.com/posts
   emulator:
     car-mdn: 01234567890
     car-vrp: 12가3456
