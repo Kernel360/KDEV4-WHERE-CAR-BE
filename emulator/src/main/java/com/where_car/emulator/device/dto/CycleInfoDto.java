@@ -1,6 +1,8 @@
 package com.where_car.emulator.device.dto;
 
+import com.where_car.emulator.device.domain.common.CarCycleInfo;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,38 +12,28 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarStartDto {
+public class CycleInfoDto {
 
   private String mdn;
   private String tid;
   private Integer mid;
   private Integer pv;
   private Integer did;
-  private LocalDateTime onTime;
-  private LocalDateTime offTime;
-  private String gcd;
-  private Integer lat;
-  private Integer lon;
-  private Integer ang;
-  private Integer spd;
-  private Integer sum;
+  private LocalDateTime oTime;
+  private Integer cCnt;
+  private List<CarCycleInfo> cList;
 
   @Override
   public String toString() {
-    return "시동 ON 정보= {" +
+    return "주기 정보= {" +
         " mdn='" + mdn +
         ", tid='" + tid +
         ", mid=" + mid +
         ", pv=" + pv +
         ", did=" + did +
-        ", onTime=" + onTime +
-        ", offTime=" + offTime +
-        ", gcd='" + gcd +
-        ", lat=" + lat +
-        ", lon=" + lon +
-        ", ang=" + ang +
-        ", spd=" + spd +
-        ", sum=" + sum +
+        ", oTime=" + oTime +
+        ", cCnt=" + cCnt +
+        ", cList=" + cList.toString() +
         " }";
   }
 }

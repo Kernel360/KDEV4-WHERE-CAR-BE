@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarStartDto {
+public class CarStopDto {
 
   private String mdn;
   private String tid;
@@ -28,7 +28,7 @@ public class CarStartDto {
 
   @Override
   public String toString() {
-    return "시동 ON 정보= {" +
+    return "시동 OFF 정보= {" +
         " mdn='" + mdn +
         ", tid='" + tid +
         ", mid=" + mid +
