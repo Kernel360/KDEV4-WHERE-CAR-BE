@@ -43,7 +43,7 @@ public class CarLogServiceImpl implements CarLogService {
         Page<CarLog> carLogPage = carLogRepository.findByCompanyId(userCompanyId, pageRequest);
 
         return carLogPage.stream().map(carLog -> CarLogsResponse.builder()
-                        .LogId(carLog.getId())
+                        .logId(carLog.getId())
                         .mdn(carLog.getCar().getMdn())
                         .onTime(carLog.getOnTime())
                         .offTime(carLog.getOffTime())
@@ -72,7 +72,7 @@ public class CarLogServiceImpl implements CarLogService {
         }
 
         return carLogPage.stream().map(carLog -> CarLogsResponse.builder()
-                        .LogId(carLog.getId())
+                        .logId(carLog.getId())
                         .mdn(carLog.getCar().getMdn())
                         .onTime(carLog.getOnTime())
                         .offTime(carLog.getOffTime())
@@ -94,7 +94,7 @@ public class CarLogServiceImpl implements CarLogService {
         CarLog carLog = carLogRepository.findById(logId).orElseThrow(() -> new RuntimeException("해당 차량의 일지를 찾을 수 없습니다."));
 
         return CarLogDetailResponse.builder()
-                .LogId(carLog.getId())
+                .logId(carLog.getId())
                 .onTime(carLog.getOnTime())
                 .offTime(carLog.getOffTime())
                 .onMileage(carLog.getOnMileage())
