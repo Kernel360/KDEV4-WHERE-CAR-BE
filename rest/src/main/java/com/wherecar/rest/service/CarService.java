@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CarService {
 
-    void registerCar(CarRegisterRequest carRegisterRequest);
+    void createCar(CarRegisterRequest carRegisterRequest);
     void updateCar(Long id, CarRegisterRequest carRegisterRequest);
     void deleteCar(Long id);
     List<CarResponse> getAllCars(int page, int size);
