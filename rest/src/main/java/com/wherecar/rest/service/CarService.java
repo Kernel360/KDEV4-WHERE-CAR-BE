@@ -12,4 +12,5 @@ public interface CarService {
     void deleteCar(Long id);
     List<CarResponse> getAllCars(int page, int size);
     CarResponse getCarDetails(Long id);
+
 }
