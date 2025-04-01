@@ -20,7 +20,7 @@ class CarLogController {
 
     private final CarLogService carLogService;
 
-    //운행일지 차량 목록 조회
+    //운행일지 목록 조회
     @GetMapping
     public ResponseEntity<List<CarLogsResponse>> carLogsGet(
             @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
@@ -30,25 +30,36 @@ class CarLogController {
         return ResponseEntity.ok(carLogs);
     }
 
-    //운행일지 차량 상세 정보 조회
+    //차량 아이디로 운행일지 목록 조회
+    @GetMapping("/cars/{carId}")
+    public ResponseEntity<List<CarLogsResponse>> carLogsGetByCarId(
+            @PathVariable Long carId,
+            @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
+            @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size) {
+
+        List<CarLogsResponse> carLogs = carLogService.getCarLogsByCarId(carId, page, size);
+        return ResponseEntity.ok(carLogs);
+    }
+
+    //운행일지 상세 정보 조회
     @GetMapping("/{logId}")
     public ResponseEntity<CarLogDetailResponse> carLogsGetDetails(@PathVariable Long logId) {
         CarLogDetailResponse carLogs = carLogService.getCarLogsDetails(logId);
         return ResponseEntity.ok(carLogs);
     }
 
-    //운행일지 차량 상세 정보 수정
-    @PutMapping("/{id}")
-    public ResponseEntity<String> carLogUpdateDetails(@PathVariable Long id, @RequestBody CarLogsUpdateRequest carLogsUpdateRequest) {
-        carLogService.updateCarLogDetails(id, carLogsUpdateRequest);
+    //운행일지 상세 정보 수정
+    @PutMapping("/{logId}")
+    public ResponseEntity<String> carLogUpdateDetails(@PathVariable Long logId, @RequestBody CarLogsUpdateRequest carLogsUpdateRequest) {
+        carLogService.updateCarLogDetails(logId, carLogsUpdateRequest);
         return ResponseEntity.ok("수정되었습니다.");
     }
 
 
-    //운행일지 차량 상세 정보 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> carLogDeleteDetails(@PathVariable Long id) {
-        carLogService.deleteCarLogDetails(id);
+    //운행일지 상세 정보 삭제
+    @DeleteMapping("/{logId}")
+    public ResponseEntity<String> carLogDeleteDetails(@PathVariable Long logId) {
+        carLogService.deleteCarLogDetails(logId);
         return ResponseEntity.ok("삭제되었습니다.");
     }
 
