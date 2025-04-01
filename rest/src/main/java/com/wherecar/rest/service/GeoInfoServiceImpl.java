@@ -1,6 +1,7 @@
 package com.wherecar.rest.service;
 
 import com.wherecar.rest.domain.GeoInfo;
+import com.wherecar.rest.dto.GeoFenceResponse;
 import com.wherecar.rest.dto.GeoInfoRegistRequest;
 import com.wherecar.rest.dto.GeoInfoRequest;
 import com.wherecar.rest.dto.GeoInfoResponse;
@@ -26,8 +27,8 @@ public class GeoInfoServiceImpl implements GeoInfoService {
         GeoInfo geoInfo = GeoInfo.builder()
                 .geoEventType(geoInfoRegistRequest.getGeoEventType())
                 .geoRange(geoInfoRegistRequest.getGeoRange())
-                .latitude(Integer.valueOf(geoInfoRegistRequest.getLatitude()))
-                .longitude(Integer.valueOf(geoInfoRegistRequest.getLongitude()))
+                .latitude(Double.valueOf(geoInfoRegistRequest.getLatitude()))
+                .longitude(Double.valueOf(geoInfoRegistRequest.getLongitude()))
                 .onTime(geoInfoRegistRequest.getOnTime())
                 .offTime(geoInfoRegistRequest.getOffTime())
                 .build();
@@ -40,10 +41,19 @@ public class GeoInfoServiceImpl implements GeoInfoService {
 
     @Override
     @Transactional(readOnly = true)
-    public GeoInfo getGeoInfo (Long id) {
-
-        return geoInfoRepository.findById(id)
+    public GeoFenceResponse getGeoInfo (Long id) {
+        GeoInfo geoInfo = geoInfoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 조건의 지오펜스 정보를 찾을 수 없습니다."));
+
+        return GeoFenceResponse.builder()
+                .id(geoInfo.getId())
+                .geoEventType(geoInfo.getGeoEventType())
+                .geoRange(geoInfo.getGeoRange())
+                .latitude(geoInfo.getLatitude())
+                .longitude(geoInfo.getLongitude())
+                .onTime(geoInfo.getOnTime())
+                .offTime(geoInfo.getOffTime())
+                .build();
 
     }
 
@@ -54,8 +64,9 @@ public class GeoInfoServiceImpl implements GeoInfoService {
 
         geoInfo.changeGeoEventType(geoInfoRegistRequest.getGeoEventType());
         geoInfo.changeGeoRange(geoInfoRegistRequest.getGeoRange());
-        geoInfo.changeLatitude(Integer.valueOf(geoInfoRegistRequest.getLatitude()));
-        geoInfo.changeLongitude(Integer.valueOf(geoInfoRegistRequest.getLongitude()));
+        // todo: Double -> Integer 변경예정
+        geoInfo.changeLatitude(Double.valueOf(geoInfoRegistRequest.getLatitude()));
+        geoInfo.changeLongitude(Double.valueOf(geoInfoRegistRequest.getLongitude()));
 
         geoInfoRepository.save(geoInfo);
 

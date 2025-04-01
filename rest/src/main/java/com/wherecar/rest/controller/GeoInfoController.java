@@ -1,10 +1,7 @@
 package com.wherecar.rest.controller;
 
 import com.wherecar.rest.domain.GeoInfo;
-import com.wherecar.rest.dto.GeoInfoRegistRequest;
-import com.wherecar.rest.dto.GeoInfoRequest;
-import com.wherecar.rest.dto.GeoInfoResponse;
-import com.wherecar.rest.dto.GeoList;
+import com.wherecar.rest.dto.*;
 import com.wherecar.rest.service.GeoInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GeoInfoController {
 
-    private GeoInfoService geoInfoService;
+    private final GeoInfoService geoInfoService;
 
     // GeoFence 정보 등록
     @PostMapping("/create")
@@ -37,11 +34,11 @@ public class GeoInfoController {
 
     // GeoInfo 조회
     @GetMapping("/{id}")
-    public ResponseEntity<GeoInfo> geoInfoRead(@PathVariable Long id) {
+    public ResponseEntity<GeoFenceResponse> geoInfoRead(@PathVariable Long id) {
 
-        GeoInfo geoInfoList = geoInfoService.getGeoInfo(id);
+        GeoFenceResponse geoFenceResponse = geoInfoService.getGeoInfo(id);
 
-        return ResponseEntity.ok(geoInfoList);
+        return ResponseEntity.ok(geoFenceResponse);
 
     }
 

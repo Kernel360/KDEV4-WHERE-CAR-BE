@@ -1,15 +1,13 @@
 package com.wherecar.rest.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Table(name="geo_infos")
 @Entity
+@Getter
 @Builder
 @ToString
 @NoArgsConstructor
@@ -22,8 +20,9 @@ public class GeoInfo extends BaseEntity{
 
     private String geoEventType;
     private String geoRange;
-    private Integer latitude;
-    private Integer longitude;
+    // todo: Double -> Integer
+    private Double latitude;
+    private Double longitude;
     private LocalDateTime onTime;
     private LocalDateTime offTime;
 
@@ -35,11 +34,11 @@ public class GeoInfo extends BaseEntity{
         this.geoRange = geoRange;
     }
 
-    public void changeLatitude(Integer latitude) {
+    public void changeLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public void changeLongitude(Integer longitude) {
+    public void changeLongitude(Double longitude) {
         this.longitude = longitude;
     }
 }
