@@ -26,7 +26,6 @@ public class GeoLog extends BaseEntity{
     @JoinColumn(name="car_id")
     private Car car;
 
-
     private LocalDateTime oTime;
 
     private String gpsCondition;

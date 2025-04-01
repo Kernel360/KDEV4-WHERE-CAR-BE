@@ -22,8 +22,24 @@ public class GeoInfo extends BaseEntity{
 
     private String geoEventType;
     private String geoRange;
-    private String latitude;
-    private String longitude;
+    private Integer latitude;
+    private Integer longitude;
     private LocalDateTime onTime;
     private LocalDateTime offTime;
+
+    public void changeGeoEventType(String geoEventType) {
+        this.geoEventType = geoEventType;
+    }
+
+    public void changeGeoRange(String geoRange) {
+        this.geoRange = geoRange;
+    }
+
+    public void changeLatitude(Integer latitude) {
+        this.latitude = latitude;
+    }
+
+    public void changeLongitude(Integer longitude) {
+        this.longitude = longitude;
+    }
 }
