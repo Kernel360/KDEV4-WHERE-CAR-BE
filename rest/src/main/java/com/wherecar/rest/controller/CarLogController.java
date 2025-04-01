@@ -31,13 +31,9 @@ class CarLogController {
     }
 
     //운행일지 차량 상세 정보 조회
-    @GetMapping("/{carId}")
-    public ResponseEntity<List<CarLogDetailResponse>> carLogsGetDetails(
-            @PathVariable Long carId,
-            @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
-            @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size) {
-
-        List<CarLogDetailResponse> carLogs = carLogService.getCarLogsDetails(carId, page, size);
+    @GetMapping("/{logId}")
+    public ResponseEntity<CarLogDetailResponse> carLogsGetDetails(@PathVariable Long logId) {
+        CarLogDetailResponse carLogs = carLogService.getCarLogsDetails(logId);
         return ResponseEntity.ok(carLogs);
     }
 

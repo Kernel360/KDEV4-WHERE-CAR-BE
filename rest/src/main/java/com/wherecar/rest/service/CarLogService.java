@@ -8,7 +8,7 @@ public interface CarLogService {
 
     List<CarLogsResponse> getCarLogs(int page, int size);
 
-    List<CarLogDetailResponse> getCarLogsDetails(Long carId, int page, int size );
+    CarLogDetailResponse getCarLogsDetails(Long logId);
 
     void updateCarLogDetails(Long id, CarLogsUpdateRequest carLogsUpdateRequest);
 

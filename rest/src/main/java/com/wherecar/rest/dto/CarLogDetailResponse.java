@@ -1,7 +1,6 @@
 package com.wherecar.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wherecar.rest.domain.CarStatus;
 import com.wherecar.rest.domain.DriveType;
 import lombok.*;
 
@@ -27,6 +26,5 @@ public class CarLogDetailResponse {
     private DriveType driveType;
     private String driver;
     private String description;
-    private CarStatus carStatus;
 
 }
