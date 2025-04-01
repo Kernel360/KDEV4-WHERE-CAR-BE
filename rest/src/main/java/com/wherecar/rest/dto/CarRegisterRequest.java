@@ -17,11 +17,11 @@ public class CarRegisterRequest {
     private String make;
     private String model;
     private String year;
-    private Double mileage;
+    private Integer mileage;
     private OwnerType ownerType;
     private AcquisitionType acquisitionType;
     private Long companyId;
-    private Double batteryVoltage;
+    private Integer batteryVoltage;
 
     //private GeoInfo geoInfo;
 }

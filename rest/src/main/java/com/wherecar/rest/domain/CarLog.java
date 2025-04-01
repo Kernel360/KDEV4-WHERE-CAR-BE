@@ -23,21 +23,21 @@ public class CarLog extends BaseEntity{
     private Car car;
 
     private GpsConditionType onGpsCondition;
-    private Double onLatitude;
-    private Double onLongitude;
-    private Double onAngle;
-    private Double onSpeed;
-    private Double onSum;
-    private Double onMileage;
+    private Integer onLatitude;
+    private Integer onLongitude;
+    private Integer onAngle;
+    private Integer onSpeed;
+    private Integer onSum;
+    private Integer onMileage;
     private LocalDateTime onTime;
 
     private GpsConditionType offGpsCondition;
-    private Double offLatitude;
-    private Double offLongitude;
-    private Double offAngle;
-    private Double offSpeed;
-    private Double offSum;
-    private Double offMileage;
+    private Integer offLatitude;
+    private Integer offLongitude;
+    private Integer offAngle;
+    private Integer offSpeed;
+    private Integer offSum;
+    private Integer offMileage;
     private LocalDateTime offTime;
 
     private String driver;

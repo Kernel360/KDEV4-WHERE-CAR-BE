@@ -26,7 +26,7 @@ public class CarLogServiceImpl implements CarLogService {
     private final CarRepository carRepository;
     private final CarLogRepository carLogRepository;
 
-    private static final double METER_TO_KILOMETER = 1000.0;
+    private static final Integer METER_TO_KILOMETER = 1000;
 
 
     // (운행일지 + 차량) 목록

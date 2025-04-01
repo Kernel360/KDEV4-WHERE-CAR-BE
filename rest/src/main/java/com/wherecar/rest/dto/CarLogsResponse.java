@@ -26,9 +26,9 @@ public class CarLogsResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime offTime;
 
-    private Double onMileage;
-    private Double offMileage;
-    private Double totalMileage;
+    private Integer onMileage;
+    private Integer offMileage;
+    private Integer totalMileage;
     private DriveType driveType;
     private String driver;
     private String description;
