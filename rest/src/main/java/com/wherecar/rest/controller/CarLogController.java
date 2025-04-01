@@ -31,13 +31,13 @@ class CarLogController {
     }
 
     //차량 아이디로 운행일지 목록 조회
-    @GetMapping("/cars/{carId}")
+    @GetMapping("/cars/{mdn}")
     public ResponseEntity<List<CarLogsResponse>> carLogsGetByCarId(
-            @PathVariable Long carId,
+            @PathVariable String mdn,
             @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size) {
 
-        List<CarLogsResponse> carLogs = carLogService.getCarLogsByCarId(carId, page, size);
+        List<CarLogsResponse> carLogs = carLogService.getCarLogsByCarId(mdn, page, size);
         return ResponseEntity.ok(carLogs);
     }
 

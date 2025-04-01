@@ -25,4 +25,5 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     @Query("SELECT c FROM Car c WHERE c.company.id = :userCompanyId OR :userCompanyId IS NULL")
     Page<Car> findByCompanyIdWithCarStatus(@Param("userCompanyId") Long userCompanyId, Pageable pageable);
 
+    Optional<Car> findByMdn(String mdn);
 }

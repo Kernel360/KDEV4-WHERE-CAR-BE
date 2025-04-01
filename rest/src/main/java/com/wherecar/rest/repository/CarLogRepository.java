@@ -21,7 +21,7 @@ public interface CarLogRepository extends JpaRepository<CarLog, Long> {
 
     //Todo: company 연결 후 NULL 허용 제거
     @EntityGraph(attributePaths = {"car"})
-    @Query("SELECT cl FROM CarLog cl WHERE (cl.company.id = :userCompanyId OR cl.company IS NULL) AND cl.car.id = :carId")
-    Page<CarLog> findByCompanyIdAndCarId(@Param("userCompanyId") Long userCompanyId, @Param("carId") Long carId, Pageable pageable);
+    @Query("SELECT cl FROM CarLog cl WHERE (cl.company.id = :userCompanyId OR cl.company IS NULL) AND cl.car.mdn = :mdn")
+    Page<CarLog> findByCompanyIdAndCarId(@Param("userCompanyId") Long userCompanyId, @Param("mdn") String mdn, Pageable pageable);
 
 }
