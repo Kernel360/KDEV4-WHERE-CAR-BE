@@ -68,6 +68,10 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
                     // 로그를 저장하는 서비스 호출
                     carLogSaveService.saveCarLog(carLog);
                 }
+
+                if (previousCarLog.getOffSum() != onLogRequest.getSum()) {
+                    // TODO (시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)일 때 어떻게 처리할지 생각해 보기
+                }
             }
 
             // 차는 Repository에 저장되어 있지만 최초 출고인 상황
