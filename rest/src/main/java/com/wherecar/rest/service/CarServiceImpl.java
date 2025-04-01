@@ -29,26 +29,26 @@ public class CarServiceImpl implements CarService {
 //    private final CompanyRepository companyRepository;
 
     @Override
-    public void registerCar(CarRegisterRequest registerCarRequest) {
+    public void registerCar(CarRegisterRequest carRegisterRequest) {
 
 //        Company company = companyRepository.findById(registerCarRequest.getCompanyId())
 //                .orElseThrow(() -> new RuntimeException("Company 정보가 존재하지 않습니다."));
 
         Car car = Car.builder()
-                .make(registerCarRequest.getMake())
-                .model(registerCarRequest.getModel())
-                .year(registerCarRequest.getYear())
-                .mdn(registerCarRequest.getMdn())
-                .ownerType(registerCarRequest.getOwnerType())
-                .acquisitionType(registerCarRequest.getAcquisitionType())
+                .make(carRegisterRequest.getMake())
+                .model(carRegisterRequest.getModel())
+                .year(carRegisterRequest.getYear())
+                .mdn(carRegisterRequest.getMdn())
+                .ownerType(carRegisterRequest.getOwnerType())
+                .acquisitionType(carRegisterRequest.getAcquisitionType())
 //                .company(company)
                 .build();
 
         CarStatus carStatus = CarStatus.builder()
                 .car(car)
                 .carstate(CarState.NOT_REGISTERED)
-                .mileage(registerCarRequest.getMileage())
-                .batteryVoltage(registerCarRequest.getBatteryVoltage())
+                .mileage(carRegisterRequest.getMileage())
+                .batteryVoltage(carRegisterRequest.getBatteryVoltage())
                 .build();
 
         carRepository.save(car);
@@ -57,22 +57,19 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void updateCar(Long id, CarRegisterRequest registerCarRequest) {
+    public void updateCar(Long id, CarRegisterRequest carRegisterRequest) {
         Car car = carRepository.findById(id).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
 
         //carStatus, mileage, batteryVoltage 수정 불가
-        Car updatedCar = Car.builder()
-                .id(car.getId())
-                .make(registerCarRequest.getMake())
-                .model(registerCarRequest.getModel())
-                .year(registerCarRequest.getYear())
-                .mdn(registerCarRequest.getMdn())
-                .ownerType(registerCarRequest.getOwnerType())
-                .acquisitionType(registerCarRequest.getAcquisitionType())
-                .company(car.getCompany())
-                .build();
+        //Todo: geoInfo 수정 기능 추가
+        car.changeMake(carRegisterRequest.getMake());
+        car.changeModel(carRegisterRequest.getModel());
+        car.changeYear(carRegisterRequest.getYear());
+        car.changeMdn(carRegisterRequest.getMdn());
+        car.changeOwnerType(carRegisterRequest.getOwnerType());
+        car.changeAcquisitionType(carRegisterRequest.getAcquisitionType());
 
-        carRepository.save(updatedCar);
+        carRepository.save(car);
     }
 
     @Override

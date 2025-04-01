@@ -41,4 +41,32 @@ public class Car extends BaseEntity{
     @JoinColumn(name="geoinfo_id")
     private GeoInfo geoInfo;
 
+    public void changeMake(String make) {
+        this.make = make;
+    }
+
+    public void changeModel(String model) {
+        this.model = model;
+    }
+
+    public void changeYear(String year) {
+        this.year = year;
+    }
+
+    public void changeMdn(String mdn) {
+        this.mdn = mdn;
+    }
+
+    public void changeOwnerType(OwnerType ownerType) {
+        this.ownerType = ownerType;
+    }
+
+    public void changeAcquisitionType(AcquisitionType acquisitionType) {
+        this.acquisitionType = acquisitionType;
+    }
+
+    public void changeGeoInfo(GeoInfo geoInfo) {
+        this.geoInfo = geoInfo;
+    }
+
 }
