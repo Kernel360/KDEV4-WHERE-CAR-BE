@@ -23,7 +23,6 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
     private final CarLogRepository carLogRepository;
     private final CarRepository carRepository;
 
-
     /*
      TODO
      시동 ON 데이터 전송 시, 만일 GPS 미수신 상태라면 하기로 설정하여 전송한다.
@@ -95,7 +94,7 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
         }
 
         if (optionalCar.isEmpty()) {
-            // TODO 차가 저장되어 있지 않으면 예외 발생?
+            throw new RuntimeException("존재하지 않는 차입니다.");
         }
 
     }
@@ -169,7 +168,7 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
         }
 
         if (optionalCar.isEmpty()) {
-            // TODO 차가 저장되어 있지 않으면 예외 발생?
+            throw new RuntimeException("존재하지 않는 차입니다.");
         }
 
     }

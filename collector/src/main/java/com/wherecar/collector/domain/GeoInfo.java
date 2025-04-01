@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+// GeoInfo는 내 쪽에서 안 할지도
 public class GeoInfo extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
