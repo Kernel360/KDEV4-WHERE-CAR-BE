@@ -1,9 +1,12 @@
 package com.wherecar.rest.service;
 
 import com.wherecar.rest.domain.Car;
+import com.wherecar.rest.domain.CarState;
+import com.wherecar.rest.domain.CarStatus;
 import com.wherecar.rest.dto.CarResponse;
 import com.wherecar.rest.dto.CarRegisterRequest;
 import com.wherecar.rest.repository.CarRepository;
+import com.wherecar.rest.repository.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
+    private final CarStatusRepository carStatusRepository;
 //    TODO: company 정보가 추가되면, companyId를 이용해 조회 후 설정할 것
 //    private final CompanyRepository companyRepository;
 
@@ -34,31 +38,37 @@ public class CarServiceImpl implements CarService {
                 .make(registerCarRequest.getMake())
                 .model(registerCarRequest.getModel())
                 .year(registerCarRequest.getYear())
-                .mileage(registerCarRequest.getMileage())
                 .mdn(registerCarRequest.getMdn())
                 .ownerType(registerCarRequest.getOwnerType())
                 .acquisitionType(registerCarRequest.getAcquisitionType())
-                .batteryVoltage(registerCarRequest.getBatteryVoltage())
 //                .company(company)
                 .build();
 
+        CarStatus carStatus = CarStatus.builder()
+                .car(car)
+                .carstate(CarState.NOT_REGISTERED)
+                .mileage(registerCarRequest.getMileage())
+                .batteryVoltage(registerCarRequest.getBatteryVoltage())
+                .build();
+
         carRepository.save(car);
+        carStatusRepository.save(carStatus);
+
     }
 
     @Override
     public void updateCar(Long id, CarRegisterRequest registerCarRequest) {
         Car car = carRepository.findById(id).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
 
+        //carStatus, mileage, batteryVoltage 수정 불가
         Car updatedCar = Car.builder()
                 .id(car.getId())
                 .make(registerCarRequest.getMake())
                 .model(registerCarRequest.getModel())
                 .year(registerCarRequest.getYear())
-                .mileage(registerCarRequest.getMileage())
                 .mdn(registerCarRequest.getMdn())
                 .ownerType(registerCarRequest.getOwnerType())
                 .acquisitionType(registerCarRequest.getAcquisitionType())
-                .batteryVoltage(registerCarRequest.getBatteryVoltage())
                 .company(car.getCompany())
                 .build();
 
@@ -83,22 +93,20 @@ public class CarServiceImpl implements CarService {
 
         PageRequest pageRequest = PageRequest.of(page,size);
 
-        Page<Car> carPage = carRepository.findByCompanyId(userCompanyId, pageRequest);
+        Page<Car> carPage = carRepository.findByCompanyIdWithCarStatus(userCompanyId, pageRequest);
 
+        //TODO: 필요한 데이터만 남기기
         return carPage.stream().map(car -> CarResponse.builder()
                         .id(car.getId())
                         .mdn(car.getMdn())
                         .make(car.getMake())
-                        .model(car.getModel())
-                        .year(car.getYear())
-                        .mileage(car.getMileage())
                         .ownerType(car.getOwnerType())
                         .acquisitionType(car.getAcquisitionType())
-
+                        .carState(car.getCarStatus().getCarstate())
+                        .batteryVoltage(car.getCarStatus().getBatteryVoltage())
+                        .mileage(car.getCarStatus().getMileage())
 //                      Todo: Company 추가되면 반영, CompanyName을 추가할 건지 결정
 //                      .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
-
-                        .batteryVoltage(car.getBatteryVoltage())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -106,7 +114,7 @@ public class CarServiceImpl implements CarService {
     @Override
     @Transactional(readOnly = true)
     public CarResponse getCarDetails(Long id) {
-        Car car = carRepository.findById(id).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
+        Car car = carRepository.findCarWithStatus(id).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
 
         return CarResponse.builder()
                 .id(car.getId())
@@ -114,14 +122,13 @@ public class CarServiceImpl implements CarService {
                 .make(car.getMake())
                 .model(car.getModel())
                 .year(car.getYear())
-                .mileage(car.getMileage())
                 .ownerType(car.getOwnerType())
                 .acquisitionType(car.getAcquisitionType())
-
+                .mileage(car.getCarStatus().getMileage())
+                .batteryVoltage(car.getCarStatus().getBatteryVoltage())
+                .carState(car.getCarStatus().getCarstate())
 //                Todo: Company 추가되면 반영
 //                .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
-
-                .batteryVoltage(car.getBatteryVoltage())
                 .build();
     }
 

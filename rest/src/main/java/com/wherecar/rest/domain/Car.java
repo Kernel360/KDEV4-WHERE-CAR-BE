@@ -7,7 +7,7 @@ import lombok.*;
 @Entity
 @Getter
 @Builder
-@ToString(exclude = {"company", "geoInfo"})
+@ToString(exclude = {"company", "geoInfo","carStatus"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Car extends BaseEntity{
@@ -16,11 +16,13 @@ public class Car extends BaseEntity{
     @Column(name="car_id")
     private long id;
 
+    @OneToOne(mappedBy = "car", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private CarStatus carStatus;
+
     // Todo: make Enum 만들자
     private String make;
     private String model;
     private String year;
-    private Double mileage;
     private String mdn;
 
     @Enumerated(EnumType.STRING)
@@ -38,7 +40,5 @@ public class Car extends BaseEntity{
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="geoinfo_id")
     private GeoInfo geoInfo;
-
-    private Double batteryVoltage;
 
 }
