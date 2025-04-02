@@ -14,31 +14,18 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
-    // todo: 해당 주석은 remote CompanyController 파일 복구를 위한 주석으로 삭제 예정입니다.
-
-    // test 업체 등록
-//    @PostMapping("/create")
-//    public ResponseEntity<String> companyCreate(@RequestBody CompanyRequest companyRequest){
-//        System.out.println("companyRequest: "+companyRequest);
-//        companyService.createCompany(companyRequest);
-//        return ResponseEntity.ok("등록되었습니다.");
-//    }
-
-    // 업체 상세정보 조회
     @GetMapping("/{id}")
     public ResponseEntity<CompanyResponse> companyDetailsGet(@PathVariable Long id) {
         CompanyResponse company = companyService.getCompanyDetails(id);
         return ResponseEntity.ok(company);
     }
 
-    // 업체 수정
     @PutMapping("/{id}")
     public ResponseEntity<String> companyUpdate(@PathVariable Long id, @RequestBody CompanyRequest companyRequest) {
         companyService.updateCompany(id, companyRequest);
         return ResponseEntity.ok("수정되었습니다.");
     }
 
-    // 업체 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<String> companyDelete(@PathVariable Long id) {
         companyService.deleteCompany(id);
