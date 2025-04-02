@@ -38,8 +38,6 @@ public class GpsLogServiceImpl implements GpsLogService {
     public GpsRouteResponse getRoute(String mdn, LocalDateTime startTime, LocalDateTime endTime) {
         List<GpsLog> gpsLogs = gpsLogRepository.findByCar_MdnAndTimestampBetweenOrderByTimestamp(mdn, startTime, endTime);
 
-
-
         List<GpsPoint> route = gpsLogs.stream()
                 .map(gpsLog -> GpsPoint.builder()
                         .latitude(gpsLog.getLatitude())
