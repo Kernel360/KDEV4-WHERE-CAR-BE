@@ -1,10 +1,7 @@
 package com.wherecar.rest.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -12,6 +9,7 @@ import java.time.LocalDateTime;
 @Table(name="gps_logs")
 @Entity
 @Builder
+@Getter
 @ToString(exclude = "car")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,10 +31,10 @@ public class GpsLog extends BaseEntity{
     private String gpsCondition;
 
     @Column(name = "latitude")
-    private Integer latitude;
+    private Double latitude;
 
     @Column(name = "longitude")
-    private Integer longitude;
+    private Double longitude;
 
     @Column(name = "angle")
     private Integer angle;
