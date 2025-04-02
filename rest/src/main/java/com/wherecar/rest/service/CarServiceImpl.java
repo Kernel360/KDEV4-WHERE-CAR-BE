@@ -83,13 +83,11 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CarResponse> getAllCars(int page, int size) {
-
-        Long userCompanyId = null;
+    public List<CarResponse> getAllCars(Long companyId, int page, int size) {
 
         PageRequest pageRequest = PageRequest.of(page,size);
 
-        Page<Car> carPage = carRepository.findByCompanyIdWithCarStatus(userCompanyId, pageRequest);
+        Page<Car> carPage = carRepository.findByCompanyIdWithCarStatus(companyId, pageRequest);
 
         //TODO: 필요한 데이터만 남기기
         return carPage.stream().map(car -> CarResponse.builder()

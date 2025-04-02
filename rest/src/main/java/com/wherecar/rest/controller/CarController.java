@@ -44,7 +44,8 @@ public class CarController {
             @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size) {
 
-        List<CarResponse> cars = carService.getAllCars(page, size);
+        Long companyId = AuthUtil.getCompanyId();
+        List<CarResponse> cars = carService.getAllCars(companyId, page, size);
         return ResponseEntity.ok(cars);
     }
 

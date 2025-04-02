@@ -10,7 +10,7 @@ public interface CarService {
     void createCar(Long companyId, CarRegisterRequest carRegisterRequest);
     void updateCar(Long id, CarRegisterRequest carRegisterRequest);
     void deleteCar(Long id);
-    List<CarResponse> getAllCars(int page, int size);
+    List<CarResponse> getAllCars(Long companyId, int page, int size);
     CarResponse getCarDetails(Long id);
 
 }
