@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -22,7 +23,6 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
 
     private final CarLogRepository carLogRepository;
     private final CarRepository carRepository;
-
 
     /*
      TODO
@@ -48,7 +48,7 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
                 CarLog previousCarLog = optionalPreviousCarLog.get();
 
                 // 시동 ON 시 최초 누적 거리는 그 직전 시동 OFF일 때의 누적 거리 값과 일치해야 한다.
-                if (previousCarLog.getOffSum() == onLogRequest.getSum()) {
+                if (Objects.equals(previousCarLog.getOffSum(), onLogRequest.getSum())) {
 
                     // 시동 ON 시 mileage는 직전 시동 OFF 시 mileage
                     Integer onMileage = previousCarLog.getOffMileage();
@@ -68,6 +68,11 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
 
                     // 로그를 저장하는 서비스 호출
                     carLogSaveService.saveCarLog(carLog);
+                }
+
+                if (!Objects.equals(previousCarLog.getOffSum(), onLogRequest.getSum())) {
+                    // TODO (시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)일 때 어떻게 처리할지 생각해 보기
+                    log.info("(시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)");
                 }
             }
 
@@ -95,7 +100,7 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
         }
 
         if (optionalCar.isEmpty()) {
-            // TODO 차가 저장되어 있지 않으면 예외 발생?
+            throw new RuntimeException("존재하지 않는 차입니다.");
         }
 
     }
@@ -169,7 +174,7 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
         }
 
         if (optionalCar.isEmpty()) {
-            // TODO 차가 저장되어 있지 않으면 예외 발생?
+            throw new RuntimeException("존재하지 않는 차입니다.");
         }
 
     }

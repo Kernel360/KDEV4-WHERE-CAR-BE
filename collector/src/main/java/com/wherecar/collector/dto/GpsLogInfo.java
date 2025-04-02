@@ -1,12 +1,10 @@
 package com.wherecar.collector.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 // 주기 정보 리스트
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
