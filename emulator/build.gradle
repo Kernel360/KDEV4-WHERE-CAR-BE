@@ -29,7 +29,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'javax.annotation:javax.annotation-api:1.3.2' // gps module use
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3' // json data
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.13.4.2'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.4.2'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	//runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
