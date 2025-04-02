@@ -1,7 +1,7 @@
 package com.wherecar.rest.service;
 
 import com.wherecar.rest.domain.GpsLog;
-import com.wherecar.rest.dto.GpsLogResponse;
+import com.wherecar.rest.dto.*;
 import com.wherecar.rest.repository.GpsLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -29,6 +30,28 @@ public class GpsLogServiceImpl implements GpsLogService {
                 .longitude(gpsLog.getLongitude())
                 .latitude(gpsLog.getLatitude())
                 .timestamp(gpsLog.getTimestamp())
+                .build();
+
+    }
+
+    @Override
+    public GpsRouteResponse getRoute(String mdn, LocalDateTime startTime, LocalDateTime endTime) {
+        List<GpsLog> gpsLogs = gpsLogRepository.findByCar_MdnAndTimestampBetweenOrderByTimestamp(mdn, startTime, endTime);
+
+
+
+        List<GpsPoint> route = gpsLogs.stream()
+                .map(gpsLog -> GpsPoint.builder()
+                        .latitude(gpsLog.getLatitude())
+                        .longitude(gpsLog.getLongitude())
+                        .timestamp(gpsLog.getTimestamp())
+                        .build()
+                )
+                .toList();
+
+        return GpsRouteResponse.builder()
+                .mdn(mdn)
+                .route(route)
                 .build();
 
     }
