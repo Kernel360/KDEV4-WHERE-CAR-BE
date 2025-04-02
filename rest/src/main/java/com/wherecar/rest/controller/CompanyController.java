@@ -14,6 +14,8 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
+    // todo: 해당 주석은 remote CompanyController 파일 복구를 위한 주석으로 삭제 예정입니다.
+
     // test 업체 등록
 //    @PostMapping("/create")
 //    public ResponseEntity<String> companyCreate(@RequestBody CompanyRequest companyRequest){

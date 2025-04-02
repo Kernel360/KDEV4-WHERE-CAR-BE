@@ -27,8 +27,8 @@ public class CarCycleInfo {
 
   private String sec;
   private String gcd;
-  private Double lat;
-  private Double lon;
+  private Integer lat;
+  private Integer lon;
   private Integer ang;
   private Integer spd;
   private Integer sum;
