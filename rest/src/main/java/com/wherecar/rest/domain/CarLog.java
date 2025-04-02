@@ -18,9 +18,8 @@ public class CarLog extends BaseEntity{
     @Column(name="car_log_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="car_id")
-    private Car car;
+    //car
+    private String mdn;
 
     private GpsConditionType onGpsCondition;
     private Integer onLatitude;

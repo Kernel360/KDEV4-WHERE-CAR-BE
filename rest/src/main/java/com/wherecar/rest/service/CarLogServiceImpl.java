@@ -1,6 +1,5 @@
 package com.wherecar.rest.service;
 
-import com.wherecar.rest.domain.Car;
 import com.wherecar.rest.domain.CarLog;
 import com.wherecar.rest.dto.CarLogDetailResponse;
 import com.wherecar.rest.dto.CarLogsResponse;
@@ -32,19 +31,15 @@ public class CarLogServiceImpl implements CarLogService {
     // (운행일지 + 차량) 목록
     @Override
     @Transactional(readOnly = true)
-    public List<CarLogsResponse> getCarLogs(int page, int size) {
-        // Todo: 현재 사용자 정보 조회 (Admin, User에 따라 구분)
-        // Todo: 현재 사용자의 Company 아이디 조회
-
-        Long userCompanyId = null;
+    public List<CarLogsResponse> getCarLogs(Long companyId, int page, int size) {
 
         PageRequest pageRequest = PageRequest.of(page,size);
 
-        Page<CarLog> carLogPage = carLogRepository.findByCompanyId(userCompanyId, pageRequest);
+        Page<CarLog> carLogPage = carLogRepository.findByCompanyId(companyId, pageRequest);
 
         return carLogPage.stream().map(carLog -> CarLogsResponse.builder()
                         .logId(carLog.getId())
-                        .mdn(carLog.getCar().getMdn())
+                        .mdn(carLog.getMdn())
                         .onTime(carLog.getOnTime())
                         .offTime(carLog.getOffTime())
                         .onMileage(carLog.getOnMileage())
@@ -57,15 +52,11 @@ public class CarLogServiceImpl implements CarLogService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CarLogsResponse> getCarLogsByCarId(String mdn, int page, int size) {
-        // Todo: 현재 사용자 정보 조회 (Admin, User에 따라 구분)
-        // Todo: 현재 사용자의 Company 아이디 조회
-
-        Long userCompanyId = null;
+    public List<CarLogsResponse> getCarLogsByCarMdn(Long companyId, String mdn, int page, int size) {
 
         PageRequest pageRequest = PageRequest.of(page,size);
 
-        Page<CarLog> carLogPage = carLogRepository.findByCompanyIdAndCarId(userCompanyId, mdn, pageRequest);
+        Page<CarLog> carLogPage = carLogRepository.findByCompanyIdAndCarId(companyId, mdn, pageRequest);
 
         if (carLogPage.isEmpty()) {
             throw new RuntimeException("해당 차량의 운행일지를 찾을 수 없습니다.");
@@ -73,7 +64,7 @@ public class CarLogServiceImpl implements CarLogService {
 
         return carLogPage.stream().map(carLog -> CarLogsResponse.builder()
                         .logId(carLog.getId())
-                        .mdn(carLog.getCar().getMdn())
+                        .mdn(carLog.getMdn())
                         .onTime(carLog.getOnTime())
                         .offTime(carLog.getOffTime())
                         .onMileage(carLog.getOnMileage())
