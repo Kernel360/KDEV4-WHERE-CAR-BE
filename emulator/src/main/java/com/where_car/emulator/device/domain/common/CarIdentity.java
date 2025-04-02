@@ -1,6 +1,7 @@
 package com.where_car.emulator.device.domain.common;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,11 +18,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Getter
+@Setter
 public class CarIdentity {
 
   @Value("${wherecar.emulator.car-mdn}")
   private String mdn;
-
   @Value("${wherecar.emulator.car-vrp}")
   private String vrp;
+  private Integer totalDistance;
 }

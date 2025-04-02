@@ -3,7 +3,6 @@ package com.where_car.emulator.device.repository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.where_car.emulator.device.domain.CarEntity;
 import com.where_car.emulator.device.domain.common.CarIdentity;
 import java.io.File;
 import java.io.IOException;
@@ -17,10 +16,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JsonDatabase {
 
-  CarIdentity carIdentity;
-
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final File file;
+
+  @Value("${wherecar.emulator.car-mdn}")
+  private String mdn;
+
+  @Value("${wherecar.emulator.car-vrp}")
+  private String vrp;
 
   public JsonDatabase(@Value("${wherecar.db.file-name}") String fileName) {
     String jarDir = Paths.get("").toAbsolutePath().toString();
@@ -32,16 +35,16 @@ public class JsonDatabase {
     if (!file.exists()) {
       boolean isFileCreated = file.createNewFile();
       if (isFileCreated) {
-        CarEntity initialCarEntity = CarEntity.builder()
-            .carIdentity(carIdentity)
-            .totalDistance(0)
-            .build();
-        objectMapper.writeValue(file, List.of(initialCarEntity));
+        CarIdentity carIdentity = new CarIdentity();
+        carIdentity.setMdn(mdn);
+        carIdentity.setVrp(vrp);
+        carIdentity.setTotalDistance(0);
+        objectMapper.writeValue(file, List.of(carIdentity));
       }
     }
   }
 
-  public List<CarEntity> readData() throws IOException {
+  public List<CarIdentity> readData() throws IOException {
     if (!file.exists()) {
       boolean isFileCreated = file.createNewFile();
       if (isFileCreated) {
@@ -55,7 +58,7 @@ public class JsonDatabase {
     }
   }
 
-  public void writeData(List<CarEntity> data) throws IOException {
+  public void writeData(List<CarIdentity> data) throws IOException {
     try {
       objectMapper.writeValue(file, data);
     } catch (DatabindException e) {
@@ -63,32 +66,32 @@ public class JsonDatabase {
     }
   }
 
-  public void createCarEntity(CarEntity carEntity) throws IOException {
-    List<CarEntity> data = readData();
-    data.add(carEntity);
+  public void createCarIdentity(CarIdentity CarIdentity) throws IOException {
+    List<CarIdentity> data = readData();
+    data.add(CarIdentity);
     writeData(data);
   }
 
-  public Optional<CarEntity> getCarEntityByMdn(String mdn) throws IOException {
-    List<CarEntity> data = readData();
-    return data.stream().filter(car -> car.getCarIdentity().getMdn().equals(mdn)).findFirst();
+  public Optional<CarIdentity> getCarIdentityByMdn(String mdn) throws IOException {
+    List<CarIdentity> data = readData();
+    return data.stream().filter(car -> car.getMdn().equals(mdn)).findFirst();
   }
 
-  public void updateCarEntity(CarEntity updatedCarEntity) throws IOException {
-    List<CarEntity> data = readData();
+  public void updateCarIdentity(CarIdentity updatedCarIdentity) throws IOException {
+    List<CarIdentity> data = readData();
     for (int i = 0; i < data.size(); i++) {
-      if (data.get(i).getCarIdentity().getMdn().equals(updatedCarEntity.getCarIdentity().getMdn())) {
-        data.set(i, updatedCarEntity);
+      if (data.get(i).getMdn().equals(updatedCarIdentity.getMdn())) {
+        data.set(i, updatedCarIdentity);
         writeData(data);
         return;
       }
     }
-    throw new IOException("CarEntity with MDN " + updatedCarEntity.getCarIdentity().getMdn() + " not found");
+    throw new IOException("CarIdentity with MDN " + updatedCarIdentity.getMdn() + " not found");
   }
 
-  public void deleteCarEntityByMdn(String mdn) throws IOException {
-    List<CarEntity> data = readData();
-    data.removeIf(car -> car.getCarIdentity().getMdn().equals(mdn));
+  public void deleteCarIdentityByMdn(String mdn) throws IOException {
+    List<CarIdentity> data = readData();
+    data.removeIf(car -> car.getMdn().equals(mdn));
     writeData(data);
   }
 }
