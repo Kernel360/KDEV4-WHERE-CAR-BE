@@ -22,7 +22,7 @@ public class CarResponse {
     private Integer mileage;
     private OwnerType ownerType;
     private AcquisitionType acquisitionType;
-    private Long companyName;
+    private String companyName;
     private Integer batteryVoltage;
     private CarState carState;
 

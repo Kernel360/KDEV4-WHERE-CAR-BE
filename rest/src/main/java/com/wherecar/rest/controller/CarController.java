@@ -4,6 +4,7 @@ import com.wherecar.rest.constants.PaginationConstants;
 import com.wherecar.rest.dto.CarResponse;
 import com.wherecar.rest.dto.CarRegisterRequest;
 import com.wherecar.rest.service.CarService;
+import com.wherecar.rest.user.auth.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,8 @@ public class CarController {
 
     @PostMapping
     public ResponseEntity<String> CarCreate(@RequestBody CarRegisterRequest registerCarRequest) {
-        carService.createCar(registerCarRequest);
+        Long companyId = AuthUtil.getCompanyId();
+        carService.createCar(companyId, registerCarRequest);
         return ResponseEntity.ok("등록되었습니다.");
     }
 
