@@ -27,6 +27,17 @@ public class DeviceWebController {
 
   /**
    * <pre>
+   *   루트 주소를 입력하면 대시보드 페이지로 리다이렉트 합니다.
+   * </pre>
+   * @return 대시보드 페이지 템플릿 이름
+   */
+  @GetMapping("/")
+  public String redirectToDashboard() {
+    return "redirect:/dashboard";
+  }
+
+  /**
+   * <pre>
    *   에뮬레이터 대시보드
    *   대시보드 페이지를 반환합니다.
    * </pre>
