@@ -22,11 +22,11 @@ public class GpsLogServiceImpl implements GpsLogService {
     @Override
     public GpsLogResponse getLatestLocation(String mdn) {
 
-        GpsLog gpsLog = gpsLogRepository.findTopByCar_MdnOrderByTimestampDesc(mdn)
+        GpsLog gpsLog = gpsLogRepository.findTopByMdnOrderByTimestampDesc(mdn)
                 .orElseThrow(() -> new RuntimeException("해당 차량의 GPS 로그가 없습니다."));
 
         return GpsLogResponse.builder()
-                .mdn(gpsLog.getCar().getMdn())
+                .mdn(gpsLog.getMdn())
                 .longitude(gpsLog.getLongitude())
                 .latitude(gpsLog.getLatitude())
                 .timestamp(gpsLog.getTimestamp())
@@ -36,7 +36,7 @@ public class GpsLogServiceImpl implements GpsLogService {
 
     @Override
     public GpsRouteResponse getRoute(String mdn, LocalDateTime startTime, LocalDateTime endTime) {
-        List<GpsLog> gpsLogs = gpsLogRepository.findByCar_MdnAndTimestampBetweenOrderByTimestamp(mdn, startTime, endTime);
+        List<GpsLog> gpsLogs = gpsLogRepository.findByMdnAndTimestampBetweenOrderByTimestamp(mdn, startTime, endTime);
 
         List<GpsPoint> route = gpsLogs.stream()
                 .map(gpsLog -> GpsPoint.builder()

@@ -3,14 +3,12 @@ package com.wherecar.rest.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Table(name="gps_logs")
 @Entity
 @Builder
 @Getter
-@ToString(exclude = "car")
 @NoArgsConstructor
 @AllArgsConstructor
 public class GpsLog extends BaseEntity{
@@ -19,9 +17,7 @@ public class GpsLog extends BaseEntity{
     @Column(name ="gps_log_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="car_id")
-    private Car car;
+    private String mdn;
 
     //oTime+sec
     @Column(name = "timestamp")
