@@ -5,6 +5,7 @@ import com.wherecar.rest.dto.CarLogDetailResponse;
 import com.wherecar.rest.dto.CarLogsResponse;
 import com.wherecar.rest.dto.CarLogsUpdateRequest;
 import com.wherecar.rest.service.CarLogService;
+import com.wherecar.rest.user.auth.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,18 +27,22 @@ class CarLogController {
             @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size) {
 
-        List<CarLogsResponse> carLogs = carLogService.getCarLogs(page, size);
+        Long companyId = AuthUtil.getCompanyId();
+
+        List<CarLogsResponse> carLogs = carLogService.getCarLogs(companyId, page, size);
         return ResponseEntity.ok(carLogs);
     }
 
-    //차량 아이디로 운행일지 목록 조회
+    //차량 mdn으로 운행일지 목록 조회
     @GetMapping("/cars/{mdn}")
-    public ResponseEntity<List<CarLogsResponse>> carLogsGetByCarId(
+    public ResponseEntity<List<CarLogsResponse>> carLogsGetByCarMdn(
             @PathVariable String mdn,
             @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size) {
 
-        List<CarLogsResponse> carLogs = carLogService.getCarLogsByCarId(mdn, page, size);
+        Long companyId = AuthUtil.getCompanyId();
+
+        List<CarLogsResponse> carLogs = carLogService.getCarLogsByCarMdn(companyId, mdn, page, size);
         return ResponseEntity.ok(carLogs);
     }
 

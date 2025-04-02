@@ -3,10 +3,12 @@ package com.wherecar.rest.service;
 import com.wherecar.rest.domain.Car;
 import com.wherecar.rest.domain.CarState;
 import com.wherecar.rest.domain.CarStatus;
+import com.wherecar.rest.domain.Company;
 import com.wherecar.rest.dto.CarResponse;
 import com.wherecar.rest.dto.CarRegisterRequest;
 import com.wherecar.rest.repository.CarRepository;
 import com.wherecar.rest.repository.CarStatusRepository;
+import com.wherecar.rest.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,14 +27,13 @@ public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
     private final CarStatusRepository carStatusRepository;
-//    TODO: company 정보가 추가되면, companyId를 이용해 조회 후 설정할 것
-//    private final CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
 
     @Override
-    public void createCar(CarRegisterRequest carRegisterRequest) {
+    public void createCar(Long companyId, CarRegisterRequest carRegisterRequest) {
 
-//        Company company = companyRepository.findById(registerCarRequest.getCompanyId())
-//                .orElseThrow(() -> new RuntimeException("Company 정보가 존재하지 않습니다."));
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company 정보가 존재하지 않습니다."));
 
         Car car = Car.builder()
                 .make(carRegisterRequest.getMake())
@@ -41,7 +42,7 @@ public class CarServiceImpl implements CarService {
                 .mdn(carRegisterRequest.getMdn())
                 .ownerType(carRegisterRequest.getOwnerType())
                 .acquisitionType(carRegisterRequest.getAcquisitionType())
-//                .company(company)
+                .company(company)
                 .build();
 
         CarStatus carStatus = CarStatus.builder()
@@ -82,15 +83,11 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CarResponse> getAllCars(int page, int size) {
-        // Todo: 현재 사용자 정보 조회 (Admin, User에 따라 구분)
-        // Todo: 현재 사용자의 Company 아이디 조회
-
-        Long userCompanyId = null;
+    public List<CarResponse> getAllCars(Long companyId, int page, int size) {
 
         PageRequest pageRequest = PageRequest.of(page,size);
 
-        Page<Car> carPage = carRepository.findByCompanyIdWithCarStatus(userCompanyId, pageRequest);
+        Page<Car> carPage = carRepository.findByCompanyIdWithCarStatus(companyId, pageRequest);
 
         //TODO: 필요한 데이터만 남기기
         return carPage.stream().map(car -> CarResponse.builder()
@@ -102,8 +99,7 @@ public class CarServiceImpl implements CarService {
                         .carState(car.getCarStatus().getCarState())
                         .batteryVoltage(car.getCarStatus().getBatteryVoltage())
                         .mileage(car.getCarStatus().getMileage())
-//                      Todo: Company 추가되면 반영, CompanyName을 추가할 건지 결정
-//                      .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
+                        .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
                         .build())
                 .collect(Collectors.toList());
     }
@@ -124,8 +120,7 @@ public class CarServiceImpl implements CarService {
                 .mileage(car.getCarStatus().getMileage())
                 .batteryVoltage(car.getCarStatus().getBatteryVoltage())
                 .carState(car.getCarStatus().getCarState())
-//                Todo: Company 추가되면 반영
-//                .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
+                .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
                 .build();
     }
 

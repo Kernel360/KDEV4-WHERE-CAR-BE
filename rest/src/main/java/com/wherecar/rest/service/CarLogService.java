@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface CarLogService {
 
-    List<CarLogsResponse> getCarLogs(int page, int size);
+    List<CarLogsResponse> getCarLogs(Long companyId, int page, int size);
 
-    List<CarLogsResponse> getCarLogsByCarId(String mdn, int page, int size);
+    List<CarLogsResponse> getCarLogsByCarMdn(Long companyId, String mdn, int page, int size);
 
     CarLogDetailResponse getCarLogsDetails(Long logId);
 
