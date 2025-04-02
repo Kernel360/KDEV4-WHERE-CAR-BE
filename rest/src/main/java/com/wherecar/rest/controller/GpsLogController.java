@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/gps")
 @RequiredArgsConstructor
@@ -17,7 +20,7 @@ public class GpsLogController {
     private final GpsLogService gpsLogService;
 
     @GetMapping("/position")
-    public ResponseEntity<GpsLogResponse> getLatestLocation(@RequestParam String mdn) {
+    public ResponseEntity<GpsLogResponse> LatestLocationGet(@RequestParam String mdn) {
         GpsLogResponse gpsLogResponse = gpsLogService.getLatestLocation(mdn);
         return ResponseEntity.ok(gpsLogResponse);
     }
