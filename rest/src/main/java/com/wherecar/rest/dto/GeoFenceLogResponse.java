@@ -1,6 +1,5 @@
 package com.wherecar.rest.dto;
 
-import com.wherecar.rest.domain.GeoInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,14 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GeoFenceLogResponse {
     private Long id;
-    private Integer mdn;
+    private String mdn;
     private Double angle;
-    private String evaluate_value;
-    private String gps_condition;
+    private String evaluateValue;
+    private String gpsCondition;
     private Integer latitude;
     private Integer longitude;
-    private String o_time;
+    private String oTime;
     private Double speed;
     private Double sum;
-    private GeoInfo geoInfo;
+    private GeoInfoDTO geoInfoDTO;
 }

@@ -3,6 +3,7 @@ package com.wherecar.rest.service;
 import com.wherecar.rest.domain.GeoLog;
 import com.wherecar.rest.dto.GeoFenceLogRequest;
 import com.wherecar.rest.dto.GeoFenceLogResponse;
+import com.wherecar.rest.dto.GeoInfoDTO;
 import com.wherecar.rest.repository.GeoLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +28,22 @@ public class GeoLogServiceImpl implements GeoLogService {
         return GeoFenceLogResponse.builder()
                 .id(geoLog.getId())
                 .angle(Double.valueOf(geoLog.getAngle()))
-                .evaluate_value(geoLog.getEvaluateValue())
-                .gps_condition(geoLog.getGpsCondition())
+                .evaluateValue(geoLog.getEvaluateValue())
+                .gpsCondition(geoLog.getGpsCondition())
                 .latitude(geoLog.getLatitude())
                 .longitude(geoLog.getLongitude())
-                .o_time(String.valueOf(geoLog.getOTime()))
+                .oTime(String.valueOf(geoLog.getOTime()))
                 .speed(Double.valueOf(geoLog.getSpeed()))
                 .sum(Double.valueOf(geoLog.getSum()))
                 .mdn(geoLog.getMdn())
-                .geoInfo(geoLog.getGeoInfo())
+                .geoInfoDTO(GeoInfoDTO.builder()
+                        .geoEventType(geoLog.getGeoInfo().getGeoEventType())
+                        .geoRange(geoLog.getGeoInfo().getGeoRange())
+                        .latitude(geoLog.getGeoInfo().getLatitude())
+                        .longitude(geoLog.getGeoInfo().getLongitude())
+                        .onTime(geoLog.getGeoInfo().getOnTime())
+                        .offTime(geoLog.getGeoInfo().getOffTime())
+                        .build())
                 .build();
     }
 
@@ -46,8 +54,8 @@ public class GeoLogServiceImpl implements GeoLogService {
 
         geoLog.changeMdn(geoFenceLogRequest.getMdn());
         geoLog.changeAngle(geoFenceLogRequest.getAngle());
-        geoLog.changeEvaluate_value(String.valueOf(geoFenceLogRequest.getEvaluate_value()));
-        geoLog.changeGps_condition(geoFenceLogRequest.getGps_condition());
+        geoLog.changeEvaluate_value(String.valueOf(geoFenceLogRequest.getEvaluateValue()));
+        geoLog.changeGpsCondition(geoFenceLogRequest.getGpsCondition());
         geoLog.changeLatitude(geoFenceLogRequest.getLatitude());
         geoLog.changeLongitude(geoFenceLogRequest.getLongitude());
         geoLog.changeSpeed(geoFenceLogRequest.getSpeed());

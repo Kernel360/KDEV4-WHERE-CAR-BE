@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Builder
-@ToString(exclude = {"car", "geoInfo"})
+@ToString(exclude = {"car", "geoInfoDTO"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class GeoLog extends BaseEntity{
@@ -18,7 +18,7 @@ public class GeoLog extends BaseEntity{
     @Column(name="geo_log_id")
     private Long id;
 
-    private Integer mdn;
+    private String mdn;
 
     @Column(name = "o_time")
     private LocalDateTime oTime;
@@ -56,7 +56,7 @@ public class GeoLog extends BaseEntity{
         this.evaluateValue = evaluateValue;
     }
 
-    public void changeGps_condition(String gpsCondition) {
+    public void changeGpsCondition(String gpsCondition) {
         this.gpsCondition = gpsCondition;
     }
 
@@ -76,7 +76,7 @@ public class GeoLog extends BaseEntity{
         this.sum = sum;
     }
 
-    public void changeMdn(Integer mdn) {
+    public void changeMdn(String mdn) {
         this.mdn = mdn;
     }
 

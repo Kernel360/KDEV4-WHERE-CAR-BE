@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GeoFenceLogRequest {
     private Long id;
-    private Integer mdn;
+    private String mdn;
     private Integer angle;
-    private String evaluate_value;
-    private String gps_condition;
+    private String evaluateValue;
+    private String gpsCondition;
     private Integer latitude;
     private Integer longitude;
     private Integer speed;
