@@ -1,6 +1,5 @@
 package com.where_car.emulator.gps_module.service;
 
-import com.where_car.emulator.gps_module.dto.GpsPointDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -54,20 +53,5 @@ public class GpsService {
     double x = Math.cos(latitude1) * Math.sin(latitude2) - Math.sin(latitude1) * Math.cos(latitude2) * Math.cos(longDiff);
 
     return (Math.toDegrees(Math.atan2(y, x)) + 360) % 360; // 방위 (도 단위)
-  }
-
-  /**
-   * 여러 지점 간의 누적 거리를 계산합니다.
-   * @param gpsPoints GPS 지점 배열
-   * @return 누적 거리 (미터 단위)
-   */
-  public double calculateCumulativeDistance(GpsPointDto[] gpsPoints) {
-    double totalDistance = 0.0;
-    for (int i = 1; i < gpsPoints.length; i++) {
-      totalDistance += calculateDistance(
-          gpsPoints[i - 1].getCurLat(), gpsPoints[i - 1].getCurLon(),
-          gpsPoints[i].getCurLat(), gpsPoints[i].getCurLon());
-    }
-    return totalDistance; // 누적 거리 (미터 단위)
   }
 }
