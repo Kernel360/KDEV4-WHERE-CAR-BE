@@ -50,10 +50,10 @@ public class CarLog extends BaseEntity {
     private String offGpsCondition;
 
     @Column(name = "off_latitude")
-    private Integer offLatitude;
+    private Double offLatitude;
 
     @Column(name = "off_longitude")
-    private Integer offLongitude;
+    private Double offLongitude;
 
     @Column(name = "off_angle")
     private Integer offAngle;
