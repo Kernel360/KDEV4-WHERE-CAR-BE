@@ -10,7 +10,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GeoLogResponse {
-    private String rstCd;
-    private String rstMsg;
+    private Long id;
     private String mdn;
+    private Integer angle;
+    private String evaluateValue;
+    private String gpsCondition;
+    private Integer latitude;
+    private Integer longitude;
+    private String oTime;
+    private Double speed;
+    private Double sum;
+    private GeoInfoDTO geoInfoDTO;
 }
