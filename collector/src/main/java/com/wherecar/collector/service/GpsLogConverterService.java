@@ -1,8 +1,9 @@
 package com.wherecar.collector.service;
 
 import com.wherecar.collector.dto.GpsLogRequest;
+import com.wherecar.collector.dto.GpsLogResponse;
 
 public interface GpsLogConverterService {
 
-    void receiveGpsLog(GpsLogRequest gpsLogRequest);
+    GpsLogResponse receiveGpsLog(GpsLogRequest gpsLogRequest);
 }

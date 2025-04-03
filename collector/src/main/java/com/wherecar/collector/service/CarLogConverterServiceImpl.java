@@ -4,6 +4,8 @@ import com.wherecar.collector.domain.Car;
 import com.wherecar.collector.domain.CarLog;
 import com.wherecar.collector.domain.CarStatus;
 import com.wherecar.collector.dto.CarLogRequest;
+import com.wherecar.collector.dto.CarLogResponse;
+import com.wherecar.collector.dto.ResponseCode;
 import com.wherecar.collector.repository.CarLogRepository;
 import com.wherecar.collector.repository.CarRepository;
 import com.wherecar.collector.repository.CarStatusRepository;
@@ -37,7 +39,7 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
      시동 ON 시 GPS 상태가 정상적이지 않으면, GPS 상태 값(gcd)을 ‘P’로 설정하고, 직전 시동 OFF 때의 GPS 위치 정보를 보낸다.
     */
     @Override
-    public void receiveOnLog(CarLogRequest onLogRequest) {
+    public CarLogResponse receiveOnLog(CarLogRequest onLogRequest) {
 
         Car car = carRepository.findByMdn(onLogRequest.getMdn()).orElseThrow(() -> new RuntimeException("존재하지 않는 차입니다."));
 
@@ -80,11 +82,17 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
 
                 carStatusRepository.save(carStatus);    // mileage 최신화 후 자동차 상태 저장
 
+                // TODO 일단 무조건 성공한다고 가정하고 작성. 그 외의 경우도 생각해 보기
+                return CarLogResponse.builder()
+                        .rstCd(ResponseCode.SUCCESS.getCode())
+                        .rstMsg(ResponseCode.SUCCESS.getMessage())
+                        .mdn(onLogRequest.getMdn())
+                        .build();
             }
 
             if (!Objects.equals(previousCarLog.getOffSum(), onLogRequest.getSum())) {
                 // TODO (시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)일 때 어떻게 처리할지 생각해 보기
-                log.info("(시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)");
+                throw new RuntimeException("(시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)");
             }
         }
 
@@ -119,8 +127,16 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
             carStatus.changeMileage(onMileage);
 
             carStatusRepository.save(carStatus);    // mileage 최신화 후 자동차 상태 저장
+
+            // TODO 일단 무조건 성공한다고 가정하고 작성. 그 외의 경우도 생각해 보기
+            return CarLogResponse.builder()
+                    .rstCd(ResponseCode.SUCCESS.getCode())
+                    .rstMsg(ResponseCode.SUCCESS.getMessage())
+                    .mdn(onLogRequest.getMdn())
+                    .build();
         }
 
+        throw new RuntimeException("에러가 발생했습니다.");
     }
 
     /*
@@ -136,7 +152,7 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
     시동 OFF 시 GPS 상태가 정상적이지 않으면, GPS 상태 값(gcd)을 ‘P’로 설정한다.
     */
     @Override
-    public void receiveOffLog(CarLogRequest offLogRequest) {
+    public CarLogResponse receiveOffLog(CarLogRequest offLogRequest) {
 
         Car car = carRepository.findByMdn(offLogRequest.getMdn()).orElseThrow(() -> new RuntimeException("존재하지 않는 차입니다."));
 
@@ -191,5 +207,11 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
 
         carStatusRepository.save(carStatus);    // mileage 최신화 후 자동차 상태 저장
 
+        // TODO 일단 무조건 성공한다고 가정하고 작성. 그 외의 경우도 생각해 보기
+        return CarLogResponse.builder()
+                .rstCd(ResponseCode.SUCCESS.getCode())
+                .rstMsg(ResponseCode.SUCCESS.getMessage())
+                .mdn(offLogRequest.getMdn())
+                .build();
     }
 }

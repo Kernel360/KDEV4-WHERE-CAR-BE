@@ -23,14 +23,7 @@ public class GpsLogController {
     public ResponseEntity<GpsLogResponse> gpsLogReceive(
             @RequestBody GpsLogRequest gpsLogRequest
     ) {
-        gpsLogConverterService.receiveGpsLog(gpsLogRequest);
-
-        // TODO 일단 무조건 성공한다고 가정하고 작성. 그 외의 경우도 생각해 보기
-        GpsLogResponse gpsLogResponse = GpsLogResponse.builder()
-                .rstCd(ResponseCode.SUCCESS.getCode())
-                .rstMsg(ResponseCode.SUCCESS.getMessage())
-                .mdn(gpsLogRequest.getMdn())
-                .build();
+        GpsLogResponse gpsLogResponse = gpsLogConverterService.receiveGpsLog(gpsLogRequest);
 
         return ResponseEntity.ok(gpsLogResponse);
     }

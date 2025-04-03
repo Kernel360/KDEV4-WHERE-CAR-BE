@@ -2,7 +2,6 @@ package com.wherecar.collector.controller;
 
 import com.wherecar.collector.dto.CarLogRequest;
 import com.wherecar.collector.dto.CarLogResponse;
-import com.wherecar.collector.dto.ResponseCode;
 import com.wherecar.collector.service.CarLogConverterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,14 +24,7 @@ public class CarLogController {
     public ResponseEntity<CarLogResponse> onLogReceive(
             @RequestBody CarLogRequest onLogRequest
     ) {
-        carLogConverterService.receiveOnLog(onLogRequest);
-
-        // TODO 일단 무조건 성공한다고 가정하고 작성. 그 외의 경우도 생각해 보기
-        CarLogResponse onLogResponse = CarLogResponse.builder()
-                .rstCd(ResponseCode.SUCCESS.getCode())
-                .rstMsg(ResponseCode.SUCCESS.getMessage())
-                .mdn(onLogRequest.getMdn())
-                .build();
+        CarLogResponse onLogResponse = carLogConverterService.receiveOnLog(onLogRequest);
 
         return ResponseEntity.ok(onLogResponse);
     }
@@ -42,14 +34,7 @@ public class CarLogController {
     public ResponseEntity<CarLogResponse> OffLogReceive(
             @RequestBody CarLogRequest offLogRequest
     ) {
-        carLogConverterService.receiveOffLog(offLogRequest);
-
-        // TODO 일단 무조건 성공한다고 가정하고 작성. 그 외의 경우도 생각해 보기
-        CarLogResponse offLogResponse = CarLogResponse.builder()
-                .rstCd(ResponseCode.SUCCESS.getCode())
-                .rstMsg(ResponseCode.SUCCESS.getMessage())
-                .mdn(offLogRequest.getMdn())
-                .build();
+        CarLogResponse offLogResponse = carLogConverterService.receiveOffLog(offLogRequest);
 
         return ResponseEntity.ok(offLogResponse);
     }

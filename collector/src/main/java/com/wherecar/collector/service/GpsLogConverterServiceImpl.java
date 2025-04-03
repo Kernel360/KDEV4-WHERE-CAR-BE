@@ -5,6 +5,8 @@ import com.wherecar.collector.domain.CarStatus;
 import com.wherecar.collector.domain.GpsLog;
 import com.wherecar.collector.dto.GpsLogInfo;
 import com.wherecar.collector.dto.GpsLogRequest;
+import com.wherecar.collector.dto.GpsLogResponse;
+import com.wherecar.collector.dto.ResponseCode;
 import com.wherecar.collector.repository.CarRepository;
 import com.wherecar.collector.repository.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -38,7 +39,7 @@ public class GpsLogConverterServiceImpl implements GpsLogConverterService {
      주기 정보 전달을 요청할 경우, 요청 전문 헤더 부분의 Token 값이 필수로 설정한다.
      */
     @Override
-    public void receiveGpsLog(GpsLogRequest gpsLogRequest) {
+    public GpsLogResponse receiveGpsLog(GpsLogRequest gpsLogRequest) {
         Car car = carRepository.findByMdn(gpsLogRequest.getMdn()).orElseThrow(() -> new RuntimeException("존재하지 않는 차입니다."));
 
         List<GpsLogInfo> cList = gpsLogRequest.getCList();
@@ -81,5 +82,11 @@ public class GpsLogConverterServiceImpl implements GpsLogConverterService {
             carStatusRepository.save(carStatus);    // 배터리 최신화 후 자동차 상태 저장
         }
 
+        // TODO 일단 무조건 성공한다고 가정하고 작성. 그 외의 경우도 생각해 보기
+        return GpsLogResponse.builder()
+                .rstCd(ResponseCode.SUCCESS.getCode())
+                .rstMsg(ResponseCode.SUCCESS.getMessage())
+                .mdn(gpsLogRequest.getMdn())
+                .build();
     }
 }
