@@ -1,10 +1,13 @@
 package com.wherecar.rest.service;
 
-import com.wherecar.rest.dto.GeoFenceLogRequest;
-import com.wherecar.rest.dto.GeoFenceLogResponse;
+import com.wherecar.rest.dto.GeoLogRequest;
+import com.wherecar.rest.dto.GeoLogResponse;
+
+import java.util.List;
 
 public interface GeoLogService {
-    GeoFenceLogResponse getGeoLog(Long id);
-    void updateGeoLog(Long id, GeoFenceLogRequest geoFenceLogRequest);
+    List<GeoLogResponse> getGeoLogByCarId(Long carId);
+    GeoLogResponse getGeoLog(Long id);
+    void updateGeoLog(Long id, GeoLogRequest geoLogRequest);
     void deleteGeoLog(Long id);
 }
