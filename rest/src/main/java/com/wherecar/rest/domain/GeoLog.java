@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Builder
-@ToString(exclude = {"car", "geoInfoDTO"})
+@ToString(exclude = "geoInfo")
 @NoArgsConstructor
 @AllArgsConstructor
 public class GeoLog extends BaseEntity{

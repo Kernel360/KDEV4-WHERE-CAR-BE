@@ -28,6 +28,9 @@ public class GeoLogServiceImpl implements GeoLogService {
     public List<GeoLogResponse> getGeoLogByCarId(Long carId) {
         Car car = carRepository.findById(carId).orElseThrow();
         List<GeoLog> geoLogs = geoLogRepository.getGeoLogByMdn(car.getMdn());
+
+        log.info(geoLogs.toString());
+        
         List<GeoLogResponse> geoLogResponses = new ArrayList<>();
         for (GeoLog geoLog : geoLogs) {
             GeoLogResponse geoLogResponse = GeoLogResponse.builder()
