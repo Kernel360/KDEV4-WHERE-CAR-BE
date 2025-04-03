@@ -42,7 +42,7 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
             Car car = optionalCar.get();
 
             // 직전 시동 OFF일 때의 CarLog를 찾는 쿼리 메서드 호출
-            Optional<CarLog> optionalPreviousCarLog = carLogRepository.findTopByCarIdOrderByOffTimeDesc(car.getId());
+            Optional<CarLog> optionalPreviousCarLog = carLogRepository.findTopByMdnOrderByOffTimeDesc(car.getMdn());
 
             if (optionalPreviousCarLog.isPresent()) {
                 CarLog previousCarLog = optionalPreviousCarLog.get();
@@ -52,13 +52,15 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
 
                     // 시동 ON 시 mileage는 직전 시동 OFF 시 mileage
                     Integer onMileage = previousCarLog.getOffMileage();
+                    Double doubleLatitude = (double) onLogRequest.getLat() / 1000000;
+                    Double doubleLongitude = (double) onLogRequest.getLon() / 1000000;
 
                     // onLogRequest -> CarLog로 변환
                     CarLog carLog = CarLog.builder()
-                            .car(car)
+                            .mdn(onLogRequest.getMdn())
                             .onGpsCondition(onLogRequest.getGcd())
-                            .onLatitude(onLogRequest.getLat())
-                            .onLongitude(onLogRequest.getLon())
+                            .onLatitude(doubleLatitude)
+                            .onLongitude(doubleLongitude)
                             .onAngle(onLogRequest.getAng())
                             .onSpeed(onLogRequest.getSpd())
                             .onSum(onLogRequest.getSum())
@@ -79,13 +81,15 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
             // 차는 Repository에 저장되어 있지만 최초 출고인 상황
             if (optionalPreviousCarLog.isEmpty()) {
                 Integer onMileage = 0;
+                Double doubleLatitude = (double) onLogRequest.getLat() / 1000000;
+                Double doubleLongitude = (double) onLogRequest.getLon() / 1000000;
 
                 // onLogRequest -> CarLog로 변환
                 CarLog carLog = CarLog.builder()
-                        .car(car)
+                        .mdn(onLogRequest.getMdn())
                         .onGpsCondition(onLogRequest.getGcd())
-                        .onLatitude(onLogRequest.getLat())
-                        .onLongitude(onLogRequest.getLon())
+                        .onLatitude(doubleLatitude)
+                        .onLongitude(doubleLongitude)
                         .onAngle(onLogRequest.getAng())
                         .onSpeed(onLogRequest.getSpd())
                         .onSum(0)
@@ -126,7 +130,7 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
             Car car = optionalCar.get();
 
             // // 직전 시동 ON일 때의 CarLog를 찾는 쿼리 메서드 호출
-            Optional<CarLog> optionalPreviousCarLog = carLogRepository.findTopByCarIdOrderByOnTimeDesc(car.getId());
+            Optional<CarLog> optionalPreviousCarLog = carLogRepository.findTopByMdnOrderByOnTimeDesc(car.getMdn());
 
             if (optionalPreviousCarLog.isPresent()) {
                 CarLog previousCarLog = optionalPreviousCarLog.get();
@@ -144,10 +148,12 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
 
                 // TODO sumToSave / 1000에서의 잘리는 데이터 어떻게 할지, 그냥 둘지 고민하기
                 Integer offMileage = previousCarLog.getOnMileage() + sumToSave / 1000;
+                Double doubleLatitude = (double) offLogRequest.getLat() / 1000000;
+                Double doubleLongitude = (double) offLogRequest.getLon() / 1000000;
 
                 // offLogRequest -> CarLog로 변환
                 CarLog carLog = CarLog.builder()
-                        .car(car)
+                        .mdn(offLogRequest.getMdn())
                         .onGpsCondition(previousCarLog.getOnGpsCondition())
                         .onLatitude(previousCarLog.getOnLatitude())
                         .onLongitude(previousCarLog.getOnLongitude())
@@ -157,8 +163,8 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
                         .onMileage(previousCarLog.getOnMileage())
                         .onTime(offLogRequest.getOnTime())
                         .offGpsCondition(offLogRequest.getGcd())
-                        .offLatitude(offLogRequest.getLat())
-                        .offLongitude(offLogRequest.getLon())
+                        .offLatitude(doubleLatitude)
+                        .offLongitude(doubleLongitude)
                         .offAngle(offLogRequest.getAng())
                         .offSpeed(offLogRequest.getSpd())
                         .offSum(offLogRequest.getSum())

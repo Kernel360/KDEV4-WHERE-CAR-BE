@@ -1,10 +1,12 @@
 package com.wherecar.collector.service;
 
 import com.wherecar.collector.domain.Car;
+import com.wherecar.collector.domain.CarStatus;
 import com.wherecar.collector.domain.GpsLog;
 import com.wherecar.collector.dto.GpsLogInfo;
 import com.wherecar.collector.dto.GpsLogRequest;
 import com.wherecar.collector.repository.CarRepository;
+import com.wherecar.collector.repository.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class GpsLogConverterServiceImpl implements GpsLogConverterService {
     private final GpsLogSaveService gpsLogSaveService;
 
     private final CarRepository carRepository;
+    private final CarStatusRepository carStatusRepository;
 
     /*
       TODO
@@ -42,9 +45,7 @@ public class GpsLogConverterServiceImpl implements GpsLogConverterService {
             Car car = optionalCar.get();
 
             List<GpsLogInfo> cList = gpsLogRequest.getCList();
-            System.out.println("확인: " + gpsLogRequest.getOTime());
-            System.out.println("확인: " + gpsLogRequest.getCCnt());
-            System.out.println("확인: " + cList.toString());
+
             DateTimeFormatter oTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
             String oTimeString = gpsLogRequest.getOTime().format(oTimeFormatter);   // oTime을 String(yyyyMMddHHmm 형식)으로 변환
 
@@ -57,13 +58,16 @@ public class GpsLogConverterServiceImpl implements GpsLogConverterService {
                 String timestampString = oTimeString + sec;     // oTime(yyyyMMddHHmm 형식) + sec(ss 형식) 의 String
                 LocalDateTime timestamp = LocalDateTime.parse(timestampString, timestampFormatter); // String을 LocalDateTime으로 변환
 
+                Double doubleLatitude = (double) gpsLogInfo.getLat() / 1000000;
+                Double doubleLongitude = (double) gpsLogInfo.getLon() / 1000000;
+
                 // GpsLogInfo -> GpsLog로 변환
                 GpsLog gpsLog = GpsLog.builder()
-                        .car(car)
+                        .mdn(gpsLogRequest.getMdn())
                         .timestamp(timestamp)    // oTime + sec
                         .gpsCondition(gpsLogInfo.getGcd())
-                        .latitude(gpsLogInfo.getLat())
-                        .longitude(gpsLogInfo.getLon())
+                        .latitude(doubleLatitude)
+                        .longitude(doubleLongitude)
                         .angle(gpsLogInfo.getAng())
                         .speed(gpsLogInfo.getSpd())
                         .sum(gpsLogInfo.getSum())
@@ -73,8 +77,17 @@ public class GpsLogConverterServiceImpl implements GpsLogConverterService {
                 gpsLogSaveService.saveGpsLog(gpsLog);
 
                 // TODO 이렇게 하는 게 맞는지 확인하기(배터리 저장)
-                car.changeBatteryVoltage(gpsLogInfo.getBat());
-                carRepository.save(car);    // 배터리 최신화 후 자동차 저장
+                Optional<CarStatus> optionalCarStatus = carStatusRepository.findByCarId(car.getId());
+
+                if (optionalCarStatus.isPresent()) {
+                    CarStatus carStatus = optionalCarStatus.get();
+                    carStatus.changeBatteryVoltage(gpsLogInfo.getBat());
+
+                    carStatusRepository.save(carStatus);    // 배터리 최신화 후 자동차 상태 저장
+                }
+                if (optionalCarStatus.isEmpty()) {
+                    throw new RuntimeException("CarStatus가 없습니다.");
+                }
             }
         }
 

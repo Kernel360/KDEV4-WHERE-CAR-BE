@@ -32,10 +32,10 @@ public class GeoLog extends BaseEntity{
     private String gpsCondition;
 
     @Column(name = "latitude")
-    private Integer latitude;
+    private Double latitude;
 
     @Column(name = "longitude")
-    private Integer longitude;
+    private Double longitude;
 
     @Column(name = "angle")
     private Integer angle;

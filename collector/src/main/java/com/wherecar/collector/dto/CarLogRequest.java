@@ -1,6 +1,7 @@
 package com.wherecar.collector.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wherecar.collector.domain.GpsConditionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class CarLogRequest {
 
     @JsonProperty("offTime")
     private LocalDateTime offTime; // 차량 시동 Off 시간. 'yyyyMMddHHmmss'
-    private String gcd;     // GPS 상태.         'A': 정상, 'V': 비정상, '0': 미장착, 'P': 시동 ON 시 GPS 정보가 비정상
+    private GpsConditionType gcd;     // GPS 상태.         'A': 정상, 'V': 비정상, '0': 미장착, 'P': 시동 ON 시 GPS 정보가 비정상
     private Integer lat;     // GPS 위도.       위도 X 1000000 계산한 값(소수점 6자리)
     private Integer lon;     // GPS 경도.       경도 X 1000000 계산한 값(소수점 6자리)
     private Integer ang;     // 방향.           범위: 0 ~ 360
