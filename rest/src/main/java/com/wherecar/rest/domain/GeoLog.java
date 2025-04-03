@@ -26,6 +26,7 @@ public class GeoLog extends BaseEntity{
     @JoinColumn(name="car_id")
     private Car car;
 
+
     @Column(name = "o_time")
     private LocalDateTime oTime;
 
