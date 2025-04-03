@@ -39,60 +39,47 @@ public class GpsLogConverterServiceImpl implements GpsLogConverterService {
      */
     @Override
     public void receiveGpsLog(GpsLogRequest gpsLogRequest) {
-        Optional<Car> optionalCar = carRepository.findByMdn(gpsLogRequest.getMdn());
+        Car car = carRepository.findByMdn(gpsLogRequest.getMdn()).orElseThrow(() -> new RuntimeException("존재하지 않는 차입니다."));
 
-        if (optionalCar.isPresent()) {
-            Car car = optionalCar.get();
+        List<GpsLogInfo> cList = gpsLogRequest.getCList();
 
-            List<GpsLogInfo> cList = gpsLogRequest.getCList();
+        DateTimeFormatter oTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+        String oTimeString = gpsLogRequest.getOTime().format(oTimeFormatter);   // oTime을 String(yyyyMMddHHmm 형식)으로 변환
 
-            DateTimeFormatter oTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-            String oTimeString = gpsLogRequest.getOTime().format(oTimeFormatter);   // oTime을 String(yyyyMMddHHmm 형식)으로 변환
+        DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
-            DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        // 0 ~ 59초의 주기 정보 데이터 처리
+        for (GpsLogInfo gpsLogInfo : cList) {
+            String sec = gpsLogInfo.getSec();
 
-            // 0 ~ 59초의 주기 정보 데이터 처리
-            for (GpsLogInfo gpsLogInfo : cList) {
-                String sec = gpsLogInfo.getSec();
+            String timestampString = oTimeString + sec;     // oTime(yyyyMMddHHmm 형식) + sec(ss 형식) 의 String
+            LocalDateTime timestamp = LocalDateTime.parse(timestampString, timestampFormatter); // String을 LocalDateTime으로 변환
 
-                String timestampString = oTimeString + sec;     // oTime(yyyyMMddHHmm 형식) + sec(ss 형식) 의 String
-                LocalDateTime timestamp = LocalDateTime.parse(timestampString, timestampFormatter); // String을 LocalDateTime으로 변환
+            // 위도, 경도 Double로 변환
+            Double doubleLatitude = (double) gpsLogInfo.getLat() / 1000000;
+            Double doubleLongitude = (double) gpsLogInfo.getLon() / 1000000;
 
-                Double doubleLatitude = (double) gpsLogInfo.getLat() / 1000000;
-                Double doubleLongitude = (double) gpsLogInfo.getLon() / 1000000;
+            // GpsLogInfo -> GpsLog로 변환
+            GpsLog gpsLog = GpsLog.builder()
+                    .mdn(gpsLogRequest.getMdn())
+                    .timestamp(timestamp)    // oTime + sec
+                    .gpsCondition(gpsLogInfo.getGcd())
+                    .latitude(doubleLatitude)
+                    .longitude(doubleLongitude)
+                    .angle(gpsLogInfo.getAng())
+                    .speed(gpsLogInfo.getSpd())
+                    .sum(gpsLogInfo.getSum())
+                    .build();
 
-                // GpsLogInfo -> GpsLog로 변환
-                GpsLog gpsLog = GpsLog.builder()
-                        .mdn(gpsLogRequest.getMdn())
-                        .timestamp(timestamp)    // oTime + sec
-                        .gpsCondition(gpsLogInfo.getGcd())
-                        .latitude(doubleLatitude)
-                        .longitude(doubleLongitude)
-                        .angle(gpsLogInfo.getAng())
-                        .speed(gpsLogInfo.getSpd())
-                        .sum(gpsLogInfo.getSum())
-                        .build();
+            // 로그를 저장하는 서비스 호출
+            gpsLogSaveService.saveGpsLog(gpsLog);
 
-                // 로그를 저장하는 서비스 호출
-                gpsLogSaveService.saveGpsLog(gpsLog);
+            // TODO 이렇게 하는 게 맞는지 확인하기(배터리 저장)
+            CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
+            carStatus.changeBatteryVoltage(gpsLogInfo.getBat());
 
-                // TODO 이렇게 하는 게 맞는지 확인하기(배터리 저장)
-                Optional<CarStatus> optionalCarStatus = carStatusRepository.findByCarId(car.getId());
-
-                if (optionalCarStatus.isPresent()) {
-                    CarStatus carStatus = optionalCarStatus.get();
-                    carStatus.changeBatteryVoltage(gpsLogInfo.getBat());
-
-                    carStatusRepository.save(carStatus);    // 배터리 최신화 후 자동차 상태 저장
-                }
-                if (optionalCarStatus.isEmpty()) {
-                    throw new RuntimeException("CarStatus가 없습니다.");
-                }
-            }
+            carStatusRepository.save(carStatus);    // 배터리 최신화 후 자동차 상태 저장
         }
 
-        if (optionalCar.isEmpty()) {
-            throw new RuntimeException("존재하지 않는 차입니다.");
-        }
     }
 }

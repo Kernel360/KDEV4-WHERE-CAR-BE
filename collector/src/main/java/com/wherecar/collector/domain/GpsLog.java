@@ -25,8 +25,9 @@ public class GpsLog extends BaseEntity {
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "gps_condition")
-    private String gpsCondition;
+    private GpsConditionType gpsCondition;
 
     @Column(name = "latitude")
     private Double latitude;

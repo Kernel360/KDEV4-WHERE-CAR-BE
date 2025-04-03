@@ -2,9 +2,11 @@ package com.wherecar.collector.service;
 
 import com.wherecar.collector.domain.Car;
 import com.wherecar.collector.domain.CarLog;
+import com.wherecar.collector.domain.CarStatus;
 import com.wherecar.collector.dto.CarLogRequest;
 import com.wherecar.collector.repository.CarLogRepository;
 import com.wherecar.collector.repository.CarRepository;
+import com.wherecar.collector.repository.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
 
     private final CarLogRepository carLogRepository;
     private final CarRepository carRepository;
+    private final CarStatusRepository carStatusRepository;
 
     /*
      TODO
@@ -36,51 +39,22 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
     @Override
     public void receiveOnLog(CarLogRequest onLogRequest) {
 
-        Optional<Car> optionalCar = carRepository.findByMdn(onLogRequest.getMdn());
+        Car car = carRepository.findByMdn(onLogRequest.getMdn()).orElseThrow(() -> new RuntimeException("존재하지 않는 차입니다."));
 
-        if (optionalCar.isPresent()) {
-            Car car = optionalCar.get();
+        // 직전 시동 OFF일 때의 CarLog를 찾는 쿼리 메서드 호출
+        Optional<CarLog> optionalPreviousCarLog = carLogRepository.findTopByMdnOrderByOffTimeDesc(car.getMdn());
 
-            // 직전 시동 OFF일 때의 CarLog를 찾는 쿼리 메서드 호출
-            Optional<CarLog> optionalPreviousCarLog = carLogRepository.findTopByMdnOrderByOffTimeDesc(car.getMdn());
+        // 차가 최초 출고가 아닌 상황
+        if (optionalPreviousCarLog.isPresent()) {
+            CarLog previousCarLog = optionalPreviousCarLog.get();
 
-            if (optionalPreviousCarLog.isPresent()) {
-                CarLog previousCarLog = optionalPreviousCarLog.get();
+            // 시동 ON 시 최초 누적 거리는 그 직전 시동 OFF일 때의 누적 거리 값과 일치해야 한다.
+            if (Objects.equals(previousCarLog.getOffSum(), onLogRequest.getSum())) {
 
-                // 시동 ON 시 최초 누적 거리는 그 직전 시동 OFF일 때의 누적 거리 값과 일치해야 한다.
-                if (Objects.equals(previousCarLog.getOffSum(), onLogRequest.getSum())) {
+                // 시동 ON 시 mileage는 직전 시동 OFF 시 mileage
+                Integer onMileage = previousCarLog.getOffMileage();
 
-                    // 시동 ON 시 mileage는 직전 시동 OFF 시 mileage
-                    Integer onMileage = previousCarLog.getOffMileage();
-                    Double doubleLatitude = (double) onLogRequest.getLat() / 1000000;
-                    Double doubleLongitude = (double) onLogRequest.getLon() / 1000000;
-
-                    // onLogRequest -> CarLog로 변환
-                    CarLog carLog = CarLog.builder()
-                            .mdn(onLogRequest.getMdn())
-                            .onGpsCondition(onLogRequest.getGcd())
-                            .onLatitude(doubleLatitude)
-                            .onLongitude(doubleLongitude)
-                            .onAngle(onLogRequest.getAng())
-                            .onSpeed(onLogRequest.getSpd())
-                            .onSum(onLogRequest.getSum())
-                            .onMileage(onMileage)
-                            .onTime(onLogRequest.getOnTime())
-                            .build();
-
-                    // 로그를 저장하는 서비스 호출
-                    carLogSaveService.saveCarLog(carLog);
-                }
-
-                if (!Objects.equals(previousCarLog.getOffSum(), onLogRequest.getSum())) {
-                    // TODO (시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)일 때 어떻게 처리할지 생각해 보기
-                    log.info("(시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)");
-                }
-            }
-
-            // 차는 Repository에 저장되어 있지만 최초 출고인 상황
-            if (optionalPreviousCarLog.isEmpty()) {
-                Integer onMileage = 0;
+                // 위도, 경도 Double로 변환
                 Double doubleLatitude = (double) onLogRequest.getLat() / 1000000;
                 Double doubleLongitude = (double) onLogRequest.getLon() / 1000000;
 
@@ -92,19 +66,59 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
                         .onLongitude(doubleLongitude)
                         .onAngle(onLogRequest.getAng())
                         .onSpeed(onLogRequest.getSpd())
-                        .onSum(0)
+                        .onSum(onLogRequest.getSum())
                         .onMileage(onMileage)
                         .onTime(onLogRequest.getOnTime())
                         .build();
 
                 // 로그를 저장하는 서비스 호출
                 carLogSaveService.saveCarLog(carLog);
+
+                // TODO 이렇게 하는 게 맞는지 확인하기(mileage 저장)
+                CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
+                carStatus.changeMileage(onMileage);
+
+                carStatusRepository.save(carStatus);    // mileage 최신화 후 자동차 상태 저장
+
             }
 
+            if (!Objects.equals(previousCarLog.getOffSum(), onLogRequest.getSum())) {
+                // TODO (시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)일 때 어떻게 처리할지 생각해 보기
+                log.info("(시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)");
+            }
         }
 
-        if (optionalCar.isEmpty()) {
-            throw new RuntimeException("존재하지 않는 차입니다.");
+        // 차는 Repository에 저장되어 있지만 최초 출고인 상황
+        if (optionalPreviousCarLog.isEmpty()) {
+
+            // 최초 출고일 땐 mileage가 0
+            Integer onMileage = 0;
+
+            // 위도, 경도 Double로 변환
+            Double doubleLatitude = (double) onLogRequest.getLat() / 1000000;
+            Double doubleLongitude = (double) onLogRequest.getLon() / 1000000;
+
+            // onLogRequest -> CarLog로 변환
+            CarLog carLog = CarLog.builder()
+                    .mdn(onLogRequest.getMdn())
+                    .onGpsCondition(onLogRequest.getGcd())
+                    .onLatitude(doubleLatitude)
+                    .onLongitude(doubleLongitude)
+                    .onAngle(onLogRequest.getAng())
+                    .onSpeed(onLogRequest.getSpd())
+                    .onSum(0)
+                    .onMileage(onMileage)
+                    .onTime(onLogRequest.getOnTime())
+                    .build();
+
+            // 로그를 저장하는 서비스 호출
+            carLogSaveService.saveCarLog(carLog);
+
+            // TODO 이렇게 하는 게 맞는지 확인하기(mileage 저장)
+            CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
+            carStatus.changeMileage(onMileage);
+
+            carStatusRepository.save(carStatus);    // mileage 최신화 후 자동차 상태 저장
         }
 
     }
@@ -124,64 +138,58 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
     @Override
     public void receiveOffLog(CarLogRequest offLogRequest) {
 
-        Optional<Car> optionalCar = carRepository.findByMdn(offLogRequest.getMdn());
+        Car car = carRepository.findByMdn(offLogRequest.getMdn()).orElseThrow(() -> new RuntimeException("존재하지 않는 차입니다."));
 
-        if (optionalCar.isPresent()) {
-            Car car = optionalCar.get();
+        // // 직전 시동 ON일 때의 CarLog를 찾는 쿼리 메서드 호출
+        CarLog previousCarLog = carLogRepository.findTopByMdnOrderByOnTimeDesc(car.getMdn()).orElseThrow(() -> new RuntimeException("이전 ON 로그가 없습니다."));
 
-            // // 직전 시동 ON일 때의 CarLog를 찾는 쿼리 메서드 호출
-            Optional<CarLog> optionalPreviousCarLog = carLogRepository.findTopByMdnOrderByOnTimeDesc(car.getMdn());
+        Integer onSum = previousCarLog.getOnSum();    // 직전 ON 로그의 sum
+        Integer offSum = offLogRequest.getSum();      // OFF 로그의 sum
+        Integer sumToAdd = 0;
 
-            if (optionalPreviousCarLog.isPresent()) {
-                CarLog previousCarLog = optionalPreviousCarLog.get();
-
-                Integer onSum = previousCarLog.getOnSum();    // 직전 ON 로그의 sum
-                Integer offSum = offLogRequest.getSum();        // OFF 로그의 sum
-                Integer sumToSave = 0;
-
-                if (onSum <= offSum) {
-                    sumToSave = offSum - onSum;
-                }
-                if (onSum > offSum) {   // 주행 거리가 10,000km(10,000,000m)를 넘었을 경우
-                    sumToSave = (offSum + 10000000) - onSum;
-                }
-
-                // TODO sumToSave / 1000에서의 잘리는 데이터 어떻게 할지, 그냥 둘지 고민하기
-                Integer offMileage = previousCarLog.getOnMileage() + sumToSave / 1000;
-                Double doubleLatitude = (double) offLogRequest.getLat() / 1000000;
-                Double doubleLongitude = (double) offLogRequest.getLon() / 1000000;
-
-                // offLogRequest -> CarLog로 변환
-                CarLog carLog = CarLog.builder()
-                        .mdn(offLogRequest.getMdn())
-                        .onGpsCondition(previousCarLog.getOnGpsCondition())
-                        .onLatitude(previousCarLog.getOnLatitude())
-                        .onLongitude(previousCarLog.getOnLongitude())
-                        .onAngle(previousCarLog.getOnAngle())
-                        .onSpeed(previousCarLog.getOnSpeed())
-                        .onSum(onSum)
-                        .onMileage(previousCarLog.getOnMileage())
-                        .onTime(offLogRequest.getOnTime())
-                        .offGpsCondition(offLogRequest.getGcd())
-                        .offLatitude(doubleLatitude)
-                        .offLongitude(doubleLongitude)
-                        .offAngle(offLogRequest.getAng())
-                        .offSpeed(offLogRequest.getSpd())
-                        .offSum(offLogRequest.getSum())
-                        .offMileage(offMileage)
-                        .offTime(offLogRequest.getOffTime())
-                        .build();
-
-                // 로그를 저장하는 서비스 호출
-                carLogSaveService.saveCarLog(carLog);
-
-            }
-
+        if (onSum <= offSum) {
+            sumToAdd = offSum - onSum;
+        }
+        if (onSum > offSum) {   // 주행 거리가 10,000km(10,000,000m)를 넘었을 경우
+            sumToAdd = (offSum + 10000000) - onSum;
         }
 
-        if (optionalCar.isEmpty()) {
-            throw new RuntimeException("존재하지 않는 차입니다.");
-        }
+        // TODO sumToAdd / 1000에서의 잘리는 데이터 어떻게 할지, 그냥 둘지 고민하기
+        Integer offMileage = previousCarLog.getOnMileage() + sumToAdd / 1000;
+
+        // 위도, 경도 Double로 변환
+        Double doubleLatitude = (double) offLogRequest.getLat() / 1000000;
+        Double doubleLongitude = (double) offLogRequest.getLon() / 1000000;
+
+        // offLogRequest -> CarLog로 변환
+        CarLog carLog = CarLog.builder()
+                .mdn(offLogRequest.getMdn())
+                .onGpsCondition(previousCarLog.getOnGpsCondition())
+                .onLatitude(previousCarLog.getOnLatitude())
+                .onLongitude(previousCarLog.getOnLongitude())
+                .onAngle(previousCarLog.getOnAngle())
+                .onSpeed(previousCarLog.getOnSpeed())
+                .onSum(onSum)
+                .onMileage(previousCarLog.getOnMileage())
+                .onTime(offLogRequest.getOnTime())
+                .offGpsCondition(offLogRequest.getGcd())
+                .offLatitude(doubleLatitude)
+                .offLongitude(doubleLongitude)
+                .offAngle(offLogRequest.getAng())
+                .offSpeed(offLogRequest.getSpd())
+                .offSum(offLogRequest.getSum())
+                .offMileage(offMileage)
+                .offTime(offLogRequest.getOffTime())
+                .build();
+
+        // 로그를 저장하는 서비스 호출
+        carLogSaveService.saveCarLog(carLog);
+
+        // TODO 이렇게 하는 게 맞는지 확인하기(mileage 저장)
+        CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
+        carStatus.changeMileage(offMileage);
+
+        carStatusRepository.save(carStatus);    // mileage 최신화 후 자동차 상태 저장
 
     }
 }

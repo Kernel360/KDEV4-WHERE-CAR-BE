@@ -22,6 +22,7 @@ public class CarLog extends BaseEntity {
     @Column(name = "mdn")
     private String mdn;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "on_gps_condition")
     private GpsConditionType onGpsCondition;
 
@@ -46,6 +47,7 @@ public class CarLog extends BaseEntity {
     @Column(name = "on_time")
     private LocalDateTime onTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "off_gps_condition")
     private GpsConditionType offGpsCondition;
 

@@ -35,5 +35,9 @@ public class CarStatus  extends BaseEntity {
         this.batteryVoltage = batteryVoltage;
     }
 
+    public void changeMileage(Integer mileage) {
+        this.mileage = mileage;
+    }
+
 }
 
