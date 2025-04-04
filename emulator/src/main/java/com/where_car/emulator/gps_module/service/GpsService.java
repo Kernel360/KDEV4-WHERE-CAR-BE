@@ -42,7 +42,7 @@ public class GpsService {
    * @param lon2 두 번째 지점의 경도
    * @return 방위 (도 단위)
    */
-  public double calculateBearing(double lat1, double lon1, double lat2, double lon2) {
+  public int calculateBearing(double lat1, double lon1, double lat2, double lon2) {
     double longitude1 = Math.toRadians(lon1);
     double longitude2 = Math.toRadians(lon2);
     double latitude1 = Math.toRadians(lat1);
@@ -52,6 +52,6 @@ public class GpsService {
     double y = Math.sin(longDiff) * Math.cos(latitude2);
     double x = Math.cos(latitude1) * Math.sin(latitude2) - Math.sin(latitude1) * Math.cos(latitude2) * Math.cos(longDiff);
 
-    return (Math.toDegrees(Math.atan2(y, x)) + 360) % 360; // 방위 (도 단위)
+    return (int) ((Math.toDegrees(Math.atan2(y, x)) + 360) % 360); // 방위 (도 단위)
   }
 }

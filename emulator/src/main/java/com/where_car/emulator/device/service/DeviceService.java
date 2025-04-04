@@ -135,13 +135,11 @@ public class DeviceService {
     String preLat = allTrkpts.get(GPS_LIST_COUNT != 0 ? GPS_LIST_COUNT - 1 : GPS_LIST_COUNT).getAttribute("lat");
     String preLon = allTrkpts.get(GPS_LIST_COUNT != 0 ? GPS_LIST_COUNT - 1 : GPS_LIST_COUNT).getAttribute("lon");
 
-    int ang = convertToInteger(
-        gpsService.calculateBearing(
-            Double.parseDouble(preLat),
-            Double.parseDouble(preLon),
-            Double.parseDouble(curLat),
-            Double.parseDouble(curLon)
-        )
+    int ang = gpsService.calculateBearing(
+        Double.parseDouble(preLat),
+        Double.parseDouble(preLon),
+        Double.parseDouble(curLat),
+        Double.parseDouble(curLon)
     );
 
     int spd = (int) Math.round(gpsService.calculateSpeed(
@@ -359,13 +357,11 @@ public class DeviceService {
   }
 
   private int calculateAngleFromCoordinates(List<Element> firstTrkpt) {
-    return convertToInteger(
-        gpsService.calculateBearing(
-            Double.parseDouble(firstTrkpt.get(0).getAttribute("lat")),
-            Double.parseDouble(firstTrkpt.get(0).getAttribute("lon")),
-            Double.parseDouble(firstTrkpt.get(1).getAttribute("lat")),
-            Double.parseDouble(firstTrkpt.get(1).getAttribute("lon"))
-        )
+    return gpsService.calculateBearing(
+        Double.parseDouble(firstTrkpt.get(0).getAttribute("lat")),
+        Double.parseDouble(firstTrkpt.get(0).getAttribute("lon")),
+        Double.parseDouble(firstTrkpt.get(1).getAttribute("lat")),
+        Double.parseDouble(firstTrkpt.get(1).getAttribute("lon"))
     );
   }
 
