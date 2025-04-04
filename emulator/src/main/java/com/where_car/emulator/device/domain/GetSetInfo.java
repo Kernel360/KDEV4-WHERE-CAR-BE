@@ -3,7 +3,6 @@ package com.where_car.emulator.device.domain;
 import com.where_car.emulator.device.domain.common.CarDevice;
 import com.where_car.emulator.device.domain.common.CarIdentity;
 import com.where_car.emulator.global.constants.DomainConstant;
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,7 +22,7 @@ public class GetSetInfo {
   private CarIdentity carIdentity;
   private CarDevice carDevice;
 
-  private LocalDateTime onTime;
+  private String onTime;
 
   @Builder.Default
   private String dFWVer = DomainConstant.FIRMWARE_VERSION;

@@ -3,7 +3,6 @@ package com.where_car.emulator.device.domain;
 import com.where_car.emulator.device.domain.common.CarCycleInfo;
 import com.where_car.emulator.device.domain.common.CarDevice;
 import com.where_car.emulator.device.domain.common.CarIdentity;
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -28,8 +27,8 @@ public class CarStop {
   private CarIdentity carIdentity;
   private CarDevice carDevice;
 
-  private LocalDateTime onTime;
-  private LocalDateTime offTime;
+  private String onTime;
+  private String offTime;
 
   private CarCycleInfo cycleInfo;
 

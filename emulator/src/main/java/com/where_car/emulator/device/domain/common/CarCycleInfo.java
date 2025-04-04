@@ -27,12 +27,12 @@ public class CarCycleInfo {
 
   private String sec;
   private String gcd;
-  private Integer lat;
-  private Integer lon;
-  private Integer ang;
-  private Integer spd;
-  private Integer sum;
-  private Integer bat;
+  private String lat;
+  private String lon;
+  private String ang;
+  private String spd;
+  private String sum;
+  private String bat;
 
   @Override
   public String toString() {

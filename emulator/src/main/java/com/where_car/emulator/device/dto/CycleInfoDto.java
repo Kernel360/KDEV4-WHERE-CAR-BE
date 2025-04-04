@@ -1,7 +1,6 @@
 package com.where_car.emulator.device.dto;
 
 import com.where_car.emulator.device.domain.common.CarCycleInfo;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,11 +15,11 @@ public class CycleInfoDto {
 
   private String mdn;
   private String tid;
-  private Integer mid;
-  private Integer pv;
-  private Integer did;
-  private LocalDateTime oTime;
-  private Integer cCnt;
+  private String mid;
+  private String pv;
+  private String did;
+  private String oTime;
+  private String cCnt;
   private List<CarCycleInfo> cList;
 
   @Override
