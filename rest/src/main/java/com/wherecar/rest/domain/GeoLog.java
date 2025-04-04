@@ -1,19 +1,15 @@
 package com.wherecar.rest.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-
-
 @Table(name="geo_logs")
 @Entity
+@Getter
 @Builder
-@ToString(exclude = {"car", "geoInfo"})
+@ToString(exclude = "geoInfo")
 @NoArgsConstructor
 @AllArgsConstructor
 public class GeoLog extends BaseEntity{
@@ -22,9 +18,7 @@ public class GeoLog extends BaseEntity{
     @Column(name="geo_log_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="car_id")
-    private Car car;
+    private String mdn;
 
 
     @Column(name = "o_time")
@@ -54,4 +48,37 @@ public class GeoLog extends BaseEntity{
 
     @Column(name = "evaluate_value")
     private String evaluateValue;
+
+    public void changeAngle(Integer angle) {
+        this.angle = angle;
+    }
+
+    public void changeEvaluate_value(String evaluateValue) {
+        this.evaluateValue = evaluateValue;
+    }
+
+    public void changeGpsCondition(String gpsCondition) {
+        this.gpsCondition = gpsCondition;
+    }
+
+    public void changeLatitude(Integer latitude) {
+        this.latitude = latitude;
+    }
+
+    public void changeLongitude(Integer longitude) {
+        this.longitude = longitude;
+    }
+
+    public void changeSpeed(Integer speed) {
+        this.speed = speed;
+    }
+
+    public void changeSum(Integer sum) {
+        this.sum = sum;
+    }
+
+    public void changeMdn(String mdn) {
+        this.mdn = mdn;
+    }
+
 }
