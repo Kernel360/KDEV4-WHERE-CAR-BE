@@ -25,11 +25,11 @@ public class CarDevice {
   private String tid = DomainConstant.TERMINAL_ID;
 
   @Builder.Default
-  private Integer mid = DomainConstant.MAKE_ID;
+  private String mid = DomainConstant.MAKE_ID;
 
   @Builder.Default
-  private Integer pv = DomainConstant.PACKET_ID;
+  private String pv = DomainConstant.PACKET_ID;
 
   @Builder.Default
-  private Integer did = DomainConstant.DEVICE_ID;
+  private String did = DomainConstant.DEVICE_ID;
 }

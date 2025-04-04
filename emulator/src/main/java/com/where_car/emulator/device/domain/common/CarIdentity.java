@@ -27,5 +27,5 @@ public class CarIdentity {
   @Value("${wherecar.emulator.car-vrp}")
   private String vrp;
 
-  private Integer totalDistance;
+  private String totalDistance;
 }
