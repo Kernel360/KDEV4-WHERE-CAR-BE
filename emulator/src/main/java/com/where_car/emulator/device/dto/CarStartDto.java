@@ -1,6 +1,5 @@
 package com.where_car.emulator.device.dto;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,17 +13,17 @@ public class CarStartDto {
 
   private String mdn;
   private String tid;
-  private Integer mid;
-  private Integer pv;
-  private Integer did;
-  private LocalDateTime onTime;
-  private LocalDateTime offTime;
+  private String mid;
+  private String pv;
+  private String did;
+  private String onTime;
+  private String offTime;
   private String gcd;
-  private Integer lat;
-  private Integer lon;
-  private Integer ang;
-  private Integer spd;
-  private Integer sum;
+  private String lat;
+  private String lon;
+  private String ang;
+  private String spd;
+  private String sum;
 
   @Override
   public String toString() {
