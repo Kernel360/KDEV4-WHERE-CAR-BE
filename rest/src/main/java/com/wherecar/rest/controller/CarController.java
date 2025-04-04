@@ -4,6 +4,7 @@ import com.wherecar.rest.constants.PaginationConstants;
 import com.wherecar.rest.dto.CarResponse;
 import com.wherecar.rest.dto.CarRegisterRequest;
 import com.wherecar.rest.service.CarService;
+import com.wherecar.rest.user.auth.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,9 @@ public class CarController {
     private final CarService carService;
 
     @PostMapping
-    public ResponseEntity<String> CarRegister(@RequestBody CarRegisterRequest registerCarRequest) {
-        carService.registerCar(registerCarRequest);
+    public ResponseEntity<String> CarCreate(@RequestBody CarRegisterRequest registerCarRequest) {
+        Long companyId = AuthUtil.getCompanyId();
+        carService.createCar(companyId, registerCarRequest);
         return ResponseEntity.ok("등록되었습니다.");
     }
 
@@ -42,7 +44,8 @@ public class CarController {
             @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size) {
 
-        List<CarResponse> cars = carService.getAllCars(page, size);
+        Long companyId = AuthUtil.getCompanyId();
+        List<CarResponse> cars = carService.getAllCars(companyId, page, size);
         return ResponseEntity.ok(cars);
     }
 

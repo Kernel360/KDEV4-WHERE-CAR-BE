@@ -1,0 +1,18 @@
+name: Review Assign
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hkusu/review-assign-action@v1
+        with:
+          assignees: ${{ github.actor }} # assign pull request author
+          reviewers: laterre39, hyeonjinan096, codingjjh0515, ijjung365, rjk0103
+          github-token: ${{ secrets.LATERRE_TK }}
+      - name: Show result
+        if: always()
+        run: echo '${{ steps.assign.outputs.result }}' # success or failure

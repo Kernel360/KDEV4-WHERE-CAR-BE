@@ -23,7 +23,7 @@ public class CarIdentity {
 
   @Value("${wherecar.emulator.car-mdn}")
   private String mdn;
+
   @Value("${wherecar.emulator.car-vrp}")
   private String vrp;
-  private Integer totalDistance;
 }

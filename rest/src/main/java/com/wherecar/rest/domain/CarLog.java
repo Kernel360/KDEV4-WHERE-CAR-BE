@@ -1,14 +1,12 @@
 package com.wherecar.rest.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Table(name = "car_logs")
+@Getter
 @Entity
 @Builder
 @ToString(exclude = "car")
@@ -20,26 +18,25 @@ public class CarLog extends BaseEntity{
     @Column(name="car_log_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="car_id")
-    private Car car;
+    //car
+    private String mdn;
 
-    private String onGpsCondition;
-    private Double onLatitude;
-    private Double onLongitude;
-    private Double onAngle;
-    private Double onSpeed;
-    private Double onSum;
-    private Double onMileage;
+    private GpsConditionType onGpsCondition;
+    private Integer onLatitude;
+    private Integer onLongitude;
+    private Integer onAngle;
+    private Integer onSpeed;
+    private Integer onSum;
+    private Integer onMileage;
     private LocalDateTime onTime;
 
-    private String offGpsCondition;
-    private Double offLatitude;
-    private Double offLongitude;
-    private Double offAngle;
-    private Double offSpeed;
-    private Double offSum;
-    private Double offMileage;
+    private GpsConditionType offGpsCondition;
+    private Integer offLatitude;
+    private Integer offLongitude;
+    private Integer offAngle;
+    private Integer offSpeed;
+    private Integer offSum;
+    private Integer offMileage;
     private LocalDateTime offTime;
 
     private String driver;
@@ -47,4 +44,16 @@ public class CarLog extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private DriveType driveType;
+
+    public void changeDriver(String driver) {
+        this.driver = driver;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description;
+    }
+
+    public void changeDriveType(DriveType driveType) {
+        this.driveType = driveType;
+    }
 }
