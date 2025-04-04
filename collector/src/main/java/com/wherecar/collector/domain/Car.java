@@ -7,7 +7,7 @@ import lombok.*;
 @Entity
 @Getter
 @Builder
-@ToString(exclude = {"company", "geoInfo"})
+@ToString(exclude = {"company", "geoInfo", "carStatus"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class Car extends BaseEntity {
@@ -15,6 +15,9 @@ public class Car extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="car_id")
     private Long id;
+
+    @OneToOne(mappedBy = "car", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private CarStatus carStatus;
 
     // Todo: make Enum 만들자
     @Column(name = "make")
@@ -25,9 +28,6 @@ public class Car extends BaseEntity {
 
     @Column(name = "year")
     private String year;
-
-    @Column(name = "mileage")
-    private Integer mileage;
 
     @Column(name = "mdn")
     private String mdn;
@@ -48,9 +48,6 @@ public class Car extends BaseEntity {
     @JoinColumn(name="geo_info_id")
     private GeoInfo geoInfo;
 
-    @Column(name = "battery_voltage")
-    private Integer batteryVoltage;
-
     public void changeMake(String make) {
         this.make = make;
     }
@@ -63,10 +60,6 @@ public class Car extends BaseEntity {
         this.year = year;
     }
 
-    public void changeMileage(Integer mileage) {
-        this.mileage = mileage;
-    }
-
     public void changeMdn(String mdn) {
         this.mdn = mdn;
     }
@@ -77,10 +70,6 @@ public class Car extends BaseEntity {
 
     public void changeAcquisitionType(AcquisitionType acquisitionType) {
         this.acquisitionType = acquisitionType;
-    }
-
-    public void changeBatteryVoltage(Integer batteryVoltage) {
-        this.batteryVoltage = batteryVoltage;
     }
 
     public void changeGeoInfo(GeoInfo geoInfo) {

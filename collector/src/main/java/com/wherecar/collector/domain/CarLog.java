@@ -18,18 +18,19 @@ public class CarLog extends BaseEntity {
     @Column(name="car_log_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="car_id")
-    private Car car;
+    // car
+    @Column(name = "mdn")
+    private String mdn;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "on_gps_condition")
-    private String onGpsCondition;
+    private GpsConditionType onGpsCondition;
 
     @Column(name = "on_latitude")
-    private Integer onLatitude;
+    private Double onLatitude;
 
     @Column(name = "on_longitude")
-    private Integer onLongitude;
+    private Double onLongitude;
 
     @Column(name = "on_angle")
     private Integer onAngle;
@@ -46,14 +47,15 @@ public class CarLog extends BaseEntity {
     @Column(name = "on_time")
     private LocalDateTime onTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "off_gps_condition")
-    private String offGpsCondition;
+    private GpsConditionType offGpsCondition;
 
     @Column(name = "off_latitude")
-    private Integer offLatitude;
+    private Double offLatitude;
 
     @Column(name = "off_longitude")
-    private Integer offLongitude;
+    private Double offLongitude;
 
     @Column(name = "off_angle")
     private Integer offAngle;
@@ -80,4 +82,15 @@ public class CarLog extends BaseEntity {
     @Column(name = "drive_type")
     private DriveType driveType;
 
+    public void changeDriver(String driver) {
+        this.driver = driver;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description;
+    }
+
+    public void changeDriveType(DriveType driveType) {
+        this.driveType = driveType;
+    }
 }

@@ -1,11 +1,12 @@
 package com.wherecar.collector.service;
 
 import com.wherecar.collector.dto.CarLogRequest;
+import com.wherecar.collector.dto.CarLogResponse;
 
 public interface CarLogConverterService {
 
-    void receiveOnLog(CarLogRequest onLogRequest);
+    CarLogResponse receiveOnLog(CarLogRequest onLogRequest);
 
-    void receiveOffLog(CarLogRequest offLogRequest);
+    CarLogResponse receiveOffLog(CarLogRequest offLogRequest);
 
 }

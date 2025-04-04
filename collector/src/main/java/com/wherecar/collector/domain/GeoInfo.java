@@ -27,10 +27,10 @@ public class GeoInfo extends BaseEntity{
     private String geoRange;
 
     @Column(name = "latitude")
-    private Integer latitude;
+    private Double latitude;
 
     @Column(name = "longitude")
-    private Integer longitude;
+    private Double longitude;
 
     @Column(name = "on_time")
     private LocalDateTime onTime;

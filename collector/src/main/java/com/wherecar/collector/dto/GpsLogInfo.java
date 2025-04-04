@@ -1,19 +1,18 @@
 package com.wherecar.collector.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.wherecar.collector.domain.GpsConditionType;
+import lombok.*;
 
 // 주기 정보 리스트
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class GpsLogInfo {
 
     private String sec;     // 발생 시간 '초'
-    private String gcd;     // GPS 상태.       'A': 정상, 'V': 비정상, '0': 미장착
+    private GpsConditionType gcd;     // GPS 상태.       'A': 정상, 'V': 비정상, '0': 미장착
     private Integer lat;     // GPS 위도.       위도 X 1000000 계산한 값(소수점 6자리)
     private Integer lon;     // GPS 경도.       경도 X 1000000 계산한 값(소수점 6자리)
     private Integer ang;     // 방향.           범위: 0 ~ 360
