@@ -21,18 +21,22 @@ public class CarLog extends BaseEntity{
     //car
     private String mdn;
 
+    @Enumerated(EnumType.STRING)
     private GpsConditionType onGpsCondition;
-    private Integer onLatitude;
-    private Integer onLongitude;
+
+    private Double onLatitude;
+    private Double onLongitude;
     private Integer onAngle;
     private Integer onSpeed;
     private Integer onSum;
     private Integer onMileage;
     private LocalDateTime onTime;
 
+    @Enumerated(EnumType.STRING)
     private GpsConditionType offGpsCondition;
-    private Integer offLatitude;
-    private Integer offLongitude;
+
+    private Double offLatitude;
+    private Double offLongitude;
     private Integer offAngle;
     private Integer offSpeed;
     private Integer offSum;
