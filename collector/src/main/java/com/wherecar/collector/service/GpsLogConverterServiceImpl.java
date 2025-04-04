@@ -2,6 +2,7 @@ package com.wherecar.collector.service;
 
 import com.wherecar.collector.domain.Car;
 import com.wherecar.collector.domain.CarStatus;
+import com.wherecar.collector.domain.GpsConditionType;
 import com.wherecar.collector.domain.GpsLog;
 import com.wherecar.collector.dto.GpsLogInfo;
 import com.wherecar.collector.dto.GpsLogRequest;
@@ -44,37 +45,42 @@ public class GpsLogConverterServiceImpl implements GpsLogConverterService {
 
         List<GpsLogInfo> cList = gpsLogRequest.getCList();
 
-        DateTimeFormatter oTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-        String oTimeString = gpsLogRequest.getOTime().format(oTimeFormatter);   // oTime을 String(yyyyMMddHHmm 형식)으로 변환
-
         DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
         // 0 ~ 59초의 주기 정보 데이터 처리
         for (GpsLogInfo gpsLogInfo : cList) {
             String sec = gpsLogInfo.getSec();
 
-            String timestampString = oTimeString + sec;     // oTime(yyyyMMddHHmm 형식) + sec(ss 형식) 의 String
+            String timestampString = gpsLogRequest.getOTime() + sec;     // oTime(yyyyMMddHHmm 형식) + sec(ss 형식) 의 String
             LocalDateTime timestamp = LocalDateTime.parse(timestampString, timestampFormatter); // String을 LocalDateTime으로 변환
 
             // 위도, 경도 Double로 변환
-            Double doubleLatitude = (double) gpsLogInfo.getLat() / 1000000;
-            Double doubleLongitude = (double) gpsLogInfo.getLon() / 1000000;
+            Double doubleLatitude = (double) Integer.parseInt(gpsLogInfo.getLat()) / 1000000;
+            Double doubleLongitude = (double) Integer.parseInt(gpsLogInfo.getLon()) / 1000000;
+
+            GpsConditionType gpsCondition;
+
+            try {
+                gpsCondition = GpsConditionType.valueOf(gpsLogInfo.getGcd());
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("잘못된 값입니다. 유효한 값은 A, V, O입니다.");
+            }
 
             // GpsLogInfo -> GpsLog로 변환
             GpsLog gpsLog = GpsLog.builder()
                     .mdn(gpsLogRequest.getMdn())
                     .timestamp(timestamp)    // oTime + sec
-                    .gpsCondition(gpsLogInfo.getGcd())
+                    .gpsCondition(gpsCondition)
                     .latitude(doubleLatitude)
                     .longitude(doubleLongitude)
-                    .angle(gpsLogInfo.getAng())
-                    .speed(gpsLogInfo.getSpd())
-                    .sum(gpsLogInfo.getSum())
+                    .angle(Integer.parseInt(gpsLogInfo.getAng()))
+                    .speed(Integer.parseInt(gpsLogInfo.getSpd()))
+                    .sum(Integer.parseInt(gpsLogInfo.getSum()))
                     .build();
 
             // TODO 이렇게 하는 게 맞는지 확인하기(배터리 저장)
             CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
-            carStatus.changeBatteryVoltage(gpsLogInfo.getBat());
+            carStatus.changeBatteryVoltage(Integer.parseInt(gpsLogInfo.getBat()));
 
             // 로그와 차 상태를 저장하는 서비스 호출
             gpsLogSaveService.saveGpsLog(gpsLog, carStatus);
