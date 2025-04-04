@@ -42,7 +42,7 @@ public class JsonDatabase {
           CarIdentity carIdentity = new CarIdentity();
           carIdentity.setMdn(mdn);
           carIdentity.setVrp(vrp);
-          carIdentity.setTotalDistance(0);
+          carIdentity.setTotalDistance(String.valueOf(0));
           objectMapper.writeValue(file, List.of(carIdentity));
         }
       }
