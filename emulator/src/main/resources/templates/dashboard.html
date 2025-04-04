@@ -159,30 +159,38 @@
     <div class="flex flex-col space-y-2 p-8">
       <div class="flex items-center gap-3">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-route text-primary"><path d="M3 19V5c0-1.1.9-2 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M7 9h10"/><path d="M7 15h10"/></svg>
-        <h3 class="text-2xl font-semibold leading-none tracking-tight dark:text-white">여정 정보</h3>
+        <h3 class="text-2xl font-semibold leading-none tracking-tight dark:text-white">경로 정보</h3>
       </div>
       <p class="text-base text-muted-foreground dark:text-gray-400 ml-9">
-        현재 차량의 여정 정보를 확인하세요.
+        현재 차량의 경로 정보를 확인하세요.
       </p>
     </div>
     <div class="p-8">
-      <div class="relative flex items-center gap-3 bg-white dark:bg-gray-700 rounded-lg border border-input p-4 shadow-sm">
-        <div class="flex-1 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin text-primary"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
-          <div class="flex-1">
-            <div class="text-sm text-gray-500 dark:text-gray-400">출발지</div>
-            <div class="text-base font-medium dark:text-white" th:text="${departure != null ? departure : '출발지 정보 없음'}">출발지</div>
+      <div class="bg-white dark:bg-gray-700 rounded-lg border border-input p-4 shadow-sm">
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plane-takeoff"><path d="M2 22h20"/><path d="M6.36 17.4 4 17l-2-4 1.1-.55a2 2 0 0 1 1.8 0l17 8.5a2 2 0 0 0 1.8 0L22 18l-4-6-5.5 1.5"/><path d="M18.4 3.6a2 2 0 0 1 2.8 2.8L15 10l-4-2-1.4 3.6L6 13l-2-2 2-4 3 1.4Z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm text-gray-500 dark:text-gray-400">출발지</div>
+              <div class="text-lg font-medium dark:text-white truncate" th:text="${departure != null ? departure : '출발지 정보 없음'}">출발지</div>
+            </div>
           </div>
-        </div>
-        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </div>
-        <div class="flex-1 flex items-center gap-2 justify-end">
-          <div class="flex-1 text-right">
-            <div class="text-sm text-gray-500 dark:text-gray-400">도착지</div>
-            <div class="text-base font-medium dark:text-white" th:text="${destination != null ? destination : '도착지 정보 없음'}">도착지</div>
+          <div class="flex items-center justify-center">
+            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </div>
           </div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin text-primary"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+          <div class="flex items-center gap-4">
+            <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plane-landing"><path d="M2 22h20"/><path d="M3.77 10.77 2 9l2-4.5 1.1.55c.55.28.89.84.98 1.45C6.27 7.12 6.72 7.58 7 8l5 3-5 3c-.28.42-.73.88-1.92 1.95-.5.5-1.2.58-1.79.24L3.77 10.77Z"/><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2Z"/><path d="M13.5 7.5 19 10l-5.5 2.5L8 12l5.5-4.5Z"/></svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm text-gray-500 dark:text-gray-400">도착지</div>
+              <div class="text-lg font-medium dark:text-white truncate" th:text="${destination != null ? destination : '도착지 정보 없음'}">도착지</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
