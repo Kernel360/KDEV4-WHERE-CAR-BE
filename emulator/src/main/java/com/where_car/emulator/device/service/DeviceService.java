@@ -420,4 +420,8 @@ public class DeviceService {
   public CarIdentity fetchCarIdentity() {
     return carIdentity;
   }
+
+  public String getFilename() {
+    return gpsPathService.getRandomGpxFile().getFilename();
+  }
 }
