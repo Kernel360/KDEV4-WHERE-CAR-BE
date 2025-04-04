@@ -34,4 +34,15 @@ public class CycleInfo {
   private Integer cCnt;
 
   private List<CarCycleInfo> cList;
+
+  @Override
+  public String toString() {
+    return "CycleInfo= {" +
+        " carIdentity = { " + "mdn=" + carIdentity.getMdn() + ", " + "vrp=" + carIdentity.getVrp() + " }" +
+        ", carDevice = { " + "tid=" + carDevice.getTid() + ", " + "mid=" + carDevice.getMid() + ", " + "pv=" + carDevice.getPv() + ", " + "did=" + carDevice.getDid() + " }" +
+        ", onTime=" + oTime +
+        ", cCnt=" + cCnt +
+        ", cList=" + cList +
+        " }";
+  }
 }

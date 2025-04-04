@@ -1,5 +1,6 @@
 package com.where_car.emulator.device.domain;
 
+import com.where_car.emulator.device.domain.common.CarCycleInfo;
 import com.where_car.emulator.device.domain.common.CarDevice;
 import com.where_car.emulator.device.domain.common.CarIdentity;
 import java.time.LocalDateTime;
@@ -29,4 +30,17 @@ public class CarStop {
 
   private LocalDateTime onTime;
   private LocalDateTime offTime;
+
+  private CarCycleInfo cycleInfo;
+
+  @Override
+  public String toString() {
+    return "CarStop= {" +
+        " carIdentity = { " + "mdn=" + carIdentity.getMdn() + ", " + "vrp=" + carIdentity.getVrp() + " }" +
+        ", carDevice = { " + "tid=" + carDevice.getTid() + ", " + "mid=" + carDevice.getMid() + ", " + "pv=" + carDevice.getPv() + ", " + "did=" + carDevice.getDid() + " }" +
+        ", onTime=" + onTime +
+        ", offTime=" + offTime +
+        ", cycleInfo=" + cycleInfo +
+        " }";
+  }
 }
