@@ -73,14 +73,12 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
                         .onTime(onLogRequest.getOnTime())
                         .build();
 
-                // 로그를 저장하는 서비스 호출
-                carLogSaveService.saveCarLog(carLog);
-
                 // TODO 이렇게 하는 게 맞는지 확인하기(mileage 저장)
                 CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
                 carStatus.changeMileage(onMileage);
 
-                carStatusRepository.save(carStatus);    // mileage 최신화 후 자동차 상태 저장
+                // 로그와 차 상태를 저장하는 서비스 호출
+                carLogSaveService.saveCarLog(carLog, carStatus);
 
                 // TODO 일단 무조건 성공한다고 가정하고 작성. 그 외의 경우도 생각해 보기
                 return CarLogResponse.builder()
@@ -119,14 +117,12 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
                     .onTime(onLogRequest.getOnTime())
                     .build();
 
-            // 로그를 저장하는 서비스 호출
-            carLogSaveService.saveCarLog(carLog);
-
             // TODO 이렇게 하는 게 맞는지 확인하기(mileage 저장)
             CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
             carStatus.changeMileage(onMileage);
 
-            carStatusRepository.save(carStatus);    // mileage 최신화 후 자동차 상태 저장
+            // 로그와 차 상태를 저장하는 서비스 호출
+            carLogSaveService.saveCarLog(carLog, carStatus);
 
             // TODO 일단 무조건 성공한다고 가정하고 작성. 그 외의 경우도 생각해 보기
             return CarLogResponse.builder()
@@ -198,14 +194,12 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
                 .offTime(offLogRequest.getOffTime())
                 .build();
 
-        // 로그를 저장하는 서비스 호출
-        carLogSaveService.saveCarLog(carLog);
-
         // TODO 이렇게 하는 게 맞는지 확인하기(mileage 저장)
         CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
         carStatus.changeMileage(offMileage);
 
-        carStatusRepository.save(carStatus);    // mileage 최신화 후 자동차 상태 저장
+        // 로그와 차 상태를 저장하는 서비스 호출
+        carLogSaveService.saveCarLog(carLog, carStatus);
 
         // TODO 일단 무조건 성공한다고 가정하고 작성. 그 외의 경우도 생각해 보기
         return CarLogResponse.builder()
