@@ -9,6 +9,7 @@ import com.wherecar.rest.service.CarLogService;
 import com.wherecar.rest.user.auth.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,14 +26,17 @@ class CarLogController {
 
     //운행일지 목록 조회 (filter 추가)
     @PostMapping
-    public ResponseEntity<List<CarLogsResponse>> carLogsGetWithFilter(
+    public ResponseEntity<Page<CarLogsResponse>> carLogsGetWithFilter(
             @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size,
             @RequestBody(required = false) CarLogFilterRequest filterRequest) {
 
         Long companyId = AuthUtil.getCompanyId();
 
-        List<CarLogsResponse> carLogs = carLogService.getCarLogsFiltered(
+        CarLogFilterRequest request = filterRequest != null ? filterRequest : new CarLogFilterRequest();
+
+
+        Page<CarLogsResponse> carLogs = carLogService.getCarLogsFiltered(
                 companyId,
                 filterRequest.getMdn(),
                 filterRequest.getStartTime(),
