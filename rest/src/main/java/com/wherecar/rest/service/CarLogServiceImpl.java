@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,17 +47,18 @@ public class CarLogServiceImpl implements CarLogService {
                         .offMileage(carLog.getOffMileage())
                         .driver(carLog.getDriver())
                         .driveType(carLog.getDriveType())
+                        .description(carLog.getDescription())
                         .build())
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CarLogsResponse> getCarLogsByCarMdn(Long companyId, String mdn, int page, int size) {
+    public List<CarLogsResponse> getCarLogsByCarMdn(Long companyId, String mdn, LocalDateTime startTime, LocalDateTime endTime, int page, int size) {
 
         PageRequest pageRequest = PageRequest.of(page,size);
 
-        Page<CarLog> carLogPage = carLogRepository.findByCompanyIdAndCarId(companyId, mdn, pageRequest);
+        Page<CarLog> carLogPage = carLogRepository.findByCompanyIdAndMdnAndPeriod(companyId, mdn, startTime, endTime, pageRequest);
 
         if (carLogPage.isEmpty()) {
             throw new RuntimeException("해당 차량의 운행일지를 찾을 수 없습니다.");
@@ -71,6 +73,7 @@ public class CarLogServiceImpl implements CarLogService {
                         .offMileage(carLog.getOffMileage())
                         .driver(carLog.getDriver())
                         .driveType(carLog.getDriveType())
+                        .description(carLog.getDescription())
                         .build())
                 .collect(Collectors.toList());
 
