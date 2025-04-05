@@ -102,7 +102,7 @@ public class DeviceService {
   private void startScheduler() {
     scheduler = Executors.newScheduledThreadPool(2);
     scheduler.scheduleAtFixedRate(this::generateCarCycleInfo, 0, 1, TimeUnit.SECONDS);
-    scheduler.scheduleAtFixedRate(this::generateCycleInfo, 60, 60, TimeUnit.SECONDS);
+    //scheduler.scheduleAtFixedRate(this::generateCycleInfo, 60, 60, TimeUnit.SECONDS);
   }
 
   private void stopScheduler() {
@@ -176,6 +176,10 @@ public class DeviceService {
     GPS_LIST_COUNT++;
 
     log.info("CarCycleInfo 생성: {}", carCycleInfo);
+
+    if (carCycleInfoList.size() == 60) {
+      generateCycleInfo();
+    }
   }
 
   public void generateCycleInfo() {
@@ -183,7 +187,7 @@ public class DeviceService {
     CycleInfo cycleInfo = createCycleInfo();
     CycleInfoDto cycleInfoDto = createCycleInfoDto(cycleInfo);
 
-    log.info("CycleInfo 생성 ({}): {}", cycleInfoDto.getCCnt(), cycleInfoDto);
+    log.info("CycleInfo 생성 ({}): {}", carCycleInfoList.size(), cycleInfoDto);
     sendRequestWithRetry("/api/gps", cycleInfoDto, "주기 정보 API");
     carCycleInfoList.clear();
   }
