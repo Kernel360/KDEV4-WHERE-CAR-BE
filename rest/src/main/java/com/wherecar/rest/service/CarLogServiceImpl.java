@@ -28,17 +28,15 @@ public class CarLogServiceImpl implements CarLogService {
 
     private static final Integer METER_TO_KILOMETER = 1000;
 
-
-    // (운행일지 + 차량) 목록
+    //차량 목록 조회(필터 추가)
     @Override
-    @Transactional(readOnly = true)
-    public List<CarLogsResponse> getCarLogs(Long companyId, int page, int size) {
+    public List<CarLogsResponse> getCarLogsFiltered(Long companyId, String mdn, LocalDateTime startTime, LocalDateTime endTime, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
 
-        PageRequest pageRequest = PageRequest.of(page,size);
+        Page<CarLog> logs = carLogRepository.findCarLogsFiltered(companyId, mdn, startTime, endTime, pageRequest);
 
-        Page<CarLog> carLogPage = carLogRepository.findByCompanyId(companyId, pageRequest);
-
-        return carLogPage.stream().map(carLog -> CarLogsResponse.builder()
+        return logs.stream()
+                .map(carLog -> CarLogsResponse.builder()
                         .logId(carLog.getId())
                         .mdn(carLog.getMdn())
                         .onTime(carLog.getOnTime())
@@ -52,32 +50,6 @@ public class CarLogServiceImpl implements CarLogService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<CarLogsResponse> getCarLogsByCarMdn(Long companyId, String mdn, LocalDateTime startTime, LocalDateTime endTime, int page, int size) {
-
-        PageRequest pageRequest = PageRequest.of(page,size);
-
-        Page<CarLog> carLogPage = carLogRepository.findByCompanyIdAndMdnAndPeriod(companyId, mdn, startTime, endTime, pageRequest);
-
-        if (carLogPage.isEmpty()) {
-            throw new RuntimeException("해당 차량의 운행일지를 찾을 수 없습니다.");
-        }
-
-        return carLogPage.stream().map(carLog -> CarLogsResponse.builder()
-                        .logId(carLog.getId())
-                        .mdn(carLog.getMdn())
-                        .onTime(carLog.getOnTime())
-                        .offTime(carLog.getOffTime())
-                        .onMileage(carLog.getOnMileage())
-                        .offMileage(carLog.getOffMileage())
-                        .driver(carLog.getDriver())
-                        .driveType(carLog.getDriveType())
-                        .description(carLog.getDescription())
-                        .build())
-                .collect(Collectors.toList());
-
-    }
 
 
     //운행일지 상세 정보

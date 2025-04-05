@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarLogTimeFilterRequest {
+public class CarLogFilterRequest {
+    private String mdn;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 }

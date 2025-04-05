@@ -2,7 +2,7 @@ package com.wherecar.rest.controller;
 
 import com.wherecar.rest.constants.PaginationConstants;
 import com.wherecar.rest.dto.CarLogDetailResponse;
-import com.wherecar.rest.dto.CarLogTimeFilterRequest;
+import com.wherecar.rest.dto.CarLogFilterRequest;
 import com.wherecar.rest.dto.CarLogsResponse;
 import com.wherecar.rest.dto.CarLogsUpdateRequest;
 import com.wherecar.rest.service.CarLogService;
@@ -23,35 +23,26 @@ class CarLogController {
 
     private final CarLogService carLogService;
 
-    //운행일지 목록 조회
-    @GetMapping
-    public ResponseEntity<List<CarLogsResponse>> carLogsGet(
-            @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
-            @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size) {
-
-        Long companyId = AuthUtil.getCompanyId();
-
-        List<CarLogsResponse> carLogs = carLogService.getCarLogs(companyId, page, size);
-        return ResponseEntity.ok(carLogs);
-    }
-
-    //차량 mdn으로 운행일지 목록 조회
-    @PostMapping("/cars/{mdn}")
-    public ResponseEntity<List<CarLogsResponse>> carLogsGetByCarMdn(
-            @PathVariable String mdn,
+    //운행일지 목록 조회 (filter 추가)
+    @PostMapping
+    public ResponseEntity<List<CarLogsResponse>> carLogsGetWithFilter(
             @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size,
-            @RequestBody(required = false) CarLogTimeFilterRequest timeFilter) {
+            @RequestBody(required = false) CarLogFilterRequest filterRequest) {
 
         Long companyId = AuthUtil.getCompanyId();
 
-        LocalDateTime startTime = timeFilter != null ? timeFilter.getStartTime() : null;
-        LocalDateTime endTime = timeFilter != null ? timeFilter.getEndTime() : null;
+        List<CarLogsResponse> carLogs = carLogService.getCarLogsFiltered(
+                companyId,
+                filterRequest.getMdn(),
+                filterRequest.getStartTime(),
+                filterRequest.getEndTime(),
+                page,
+                size
+        );
 
-        List<CarLogsResponse> carLogs = carLogService.getCarLogsByCarMdn(companyId, mdn, startTime, endTime, page, size);
         return ResponseEntity.ok(carLogs);
     }
-
 
     //운행일지 상세 정보 조회
     @GetMapping("/{logId}")
