@@ -3,6 +3,7 @@ package com.wherecar.collector.service;
 import com.wherecar.collector.domain.Car;
 import com.wherecar.collector.domain.CarLog;
 import com.wherecar.collector.domain.CarStatus;
+import com.wherecar.collector.domain.GpsConditionType;
 import com.wherecar.collector.dto.CarLogRequest;
 import com.wherecar.collector.dto.CarLogResponse;
 import com.wherecar.collector.dto.ResponseCode;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -51,26 +54,40 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
             CarLog previousCarLog = optionalPreviousCarLog.get();
 
             // 시동 ON 시 최초 누적 거리는 그 직전 시동 OFF일 때의 누적 거리 값과 일치해야 한다.
-            if (Objects.equals(previousCarLog.getOffSum(), onLogRequest.getSum())) {
+            if (Objects.equals(previousCarLog.getOffSum(), Integer.parseInt(onLogRequest.getSum()))) {
 
                 // 시동 ON 시 mileage는 직전 시동 OFF 시 mileage
                 Integer onMileage = previousCarLog.getOffMileage();
 
                 // 위도, 경도 Double로 변환
-                Double doubleLatitude = (double) onLogRequest.getLat() / 1000000;
-                Double doubleLongitude = (double) onLogRequest.getLon() / 1000000;
+                Double doubleLatitude = (double) Integer.parseInt(onLogRequest.getLat()) / 1000000;
+                Double doubleLongitude = (double) Integer.parseInt(onLogRequest.getLon()) / 1000000;
+
+                // DateTimeFormatter를 사용하여 형식 지정
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+                // 문자열을 LocalDateTime으로 변환
+                LocalDateTime onTime = LocalDateTime.parse(onLogRequest.getOnTime(), formatter);
+
+                GpsConditionType onGpsCondition;
+
+                try {
+                    onGpsCondition = GpsConditionType.valueOf(onLogRequest.getGcd());
+                } catch (IllegalArgumentException e) {
+                    throw new RuntimeException("잘못된 값입니다. 유효한 값은 A, V, O입니다.");
+                }
 
                 // onLogRequest -> CarLog로 변환
                 CarLog carLog = CarLog.builder()
                         .mdn(onLogRequest.getMdn())
-                        .onGpsCondition(onLogRequest.getGcd())
+                        .onGpsCondition(onGpsCondition)
                         .onLatitude(doubleLatitude)
                         .onLongitude(doubleLongitude)
-                        .onAngle(onLogRequest.getAng())
-                        .onSpeed(onLogRequest.getSpd())
-                        .onSum(onLogRequest.getSum())
+                        .onAngle(Integer.parseInt(onLogRequest.getAng()))
+                        .onSpeed(Integer.parseInt(onLogRequest.getSpd()))
+                        .onSum(Integer.parseInt(onLogRequest.getSum()))
                         .onMileage(onMileage)
-                        .onTime(onLogRequest.getOnTime())
+                        .onTime(onTime)
                         .build();
 
                 // TODO 이렇게 하는 게 맞는지 확인하기(mileage 저장)
@@ -88,7 +105,7 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
                         .build();
             }
 
-            if (!Objects.equals(previousCarLog.getOffSum(), onLogRequest.getSum())) {
+            if (!Objects.equals(previousCarLog.getOffSum(), Integer.parseInt(onLogRequest.getSum()))) {
                 // TODO (시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)일 때 어떻게 처리할지 생각해 보기
                 throw new RuntimeException("(시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)");
             }
@@ -101,20 +118,34 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
             Integer onMileage = 0;
 
             // 위도, 경도 Double로 변환
-            Double doubleLatitude = (double) onLogRequest.getLat() / 1000000;
-            Double doubleLongitude = (double) onLogRequest.getLon() / 1000000;
+            Double doubleLatitude = (double) Integer.parseInt(onLogRequest.getLat()) / 1000000;
+            Double doubleLongitude = (double) Integer.parseInt(onLogRequest.getLon()) / 1000000;
+
+            // DateTimeFormatter를 사용하여 형식 지정
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+            // 문자열을 LocalDateTime으로 변환
+            LocalDateTime onTime = LocalDateTime.parse(onLogRequest.getOnTime(), formatter);
+
+            GpsConditionType onGpsCondition;
+
+            try {
+                onGpsCondition = GpsConditionType.valueOf(onLogRequest.getGcd());
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("잘못된 값입니다. 유효한 값은 A, V, O입니다.");
+            }
 
             // onLogRequest -> CarLog로 변환
             CarLog carLog = CarLog.builder()
                     .mdn(onLogRequest.getMdn())
-                    .onGpsCondition(onLogRequest.getGcd())
+                    .onGpsCondition(onGpsCondition)
                     .onLatitude(doubleLatitude)
                     .onLongitude(doubleLongitude)
-                    .onAngle(onLogRequest.getAng())
-                    .onSpeed(onLogRequest.getSpd())
+                    .onAngle(Integer.parseInt(onLogRequest.getAng()))
+                    .onSpeed(Integer.parseInt(onLogRequest.getSpd()))
                     .onSum(0)
                     .onMileage(onMileage)
-                    .onTime(onLogRequest.getOnTime())
+                    .onTime(onTime)
                     .build();
 
             // TODO 이렇게 하는 게 맞는지 확인하기(mileage 저장)
@@ -156,7 +187,7 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
         CarLog previousCarLog = carLogRepository.findTopByMdnOrderByOnTimeDesc(car.getMdn()).orElseThrow(() -> new RuntimeException("이전 ON 로그가 없습니다."));
 
         Integer onSum = previousCarLog.getOnSum();    // 직전 ON 로그의 sum
-        Integer offSum = offLogRequest.getSum();      // OFF 로그의 sum
+        Integer offSum = Integer.parseInt(offLogRequest.getSum());      // OFF 로그의 sum
         Integer sumToAdd = 0;
 
         if (onSum <= offSum) {
@@ -170,8 +201,23 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
         Integer offMileage = previousCarLog.getOnMileage() + sumToAdd / 1000;
 
         // 위도, 경도 Double로 변환
-        Double doubleLatitude = (double) offLogRequest.getLat() / 1000000;
-        Double doubleLongitude = (double) offLogRequest.getLon() / 1000000;
+        Double doubleLatitude = (double) Integer.parseInt(offLogRequest.getLat()) / 1000000;
+        Double doubleLongitude = (double) Integer.parseInt(offLogRequest.getLon()) / 1000000;
+
+        // DateTimeFormatter를 사용하여 형식 지정
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+        // 문자열을 LocalDateTime으로 변환
+        LocalDateTime onTime = LocalDateTime.parse(offLogRequest.getOnTime(), formatter);
+        LocalDateTime offTime = LocalDateTime.parse(offLogRequest.getOffTime(), formatter);
+
+        GpsConditionType offGpsCondition;
+
+        try {
+            offGpsCondition = GpsConditionType.valueOf(offLogRequest.getGcd());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("잘못된 값입니다. 유효한 값은 A, V, O입니다.");
+        }
 
         // offLogRequest -> CarLog로 변환
         CarLog carLog = CarLog.builder()
@@ -183,15 +229,15 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
                 .onSpeed(previousCarLog.getOnSpeed())
                 .onSum(onSum)
                 .onMileage(previousCarLog.getOnMileage())
-                .onTime(offLogRequest.getOnTime())
-                .offGpsCondition(offLogRequest.getGcd())
+                .onTime(onTime)
+                .offGpsCondition(offGpsCondition)
                 .offLatitude(doubleLatitude)
                 .offLongitude(doubleLongitude)
-                .offAngle(offLogRequest.getAng())
-                .offSpeed(offLogRequest.getSpd())
-                .offSum(offLogRequest.getSum())
+                .offAngle(Integer.parseInt(offLogRequest.getAng()))
+                .offSpeed(Integer.parseInt(offLogRequest.getSpd()))
+                .offSum(Integer.parseInt(offLogRequest.getSum()))
                 .offMileage(offMileage)
-                .offTime(offLogRequest.getOffTime())
+                .offTime(offTime)
                 .build();
 
         // TODO 이렇게 하는 게 맞는지 확인하기(mileage 저장)
