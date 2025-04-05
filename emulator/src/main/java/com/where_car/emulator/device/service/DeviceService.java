@@ -77,6 +77,7 @@ public class DeviceService {
   @PostConstruct
   public void init() {
     initializeTotalDistance();
+    log.info("에뮬레이터의 주행 경로를 선택했습니다: {}", gpsPathService.getRandomGpxFile().getFilename());
   }
 
   /**
@@ -86,7 +87,6 @@ public class DeviceService {
    */
   public void toggleDevice() {
     if (!isDeviceStatus()) {
-      log.info("주행 경로를 선택했습니다 : {}", gpsPathService.getRandomGpxFile().getFilename());
       log.info("차량의 Key-On 신호가 감지되었습니다, 스케줄러를 작동합니다.");
       setDeviceStatus(true);
       generateCarStart();
@@ -102,7 +102,7 @@ public class DeviceService {
   private void startScheduler() {
     scheduler = Executors.newScheduledThreadPool(2);
     scheduler.scheduleAtFixedRate(this::generateCarCycleInfo, 0, 1, TimeUnit.SECONDS);
-    scheduler.scheduleAtFixedRate(this::generateCycleInfo, 60, 60, TimeUnit.SECONDS);
+    //scheduler.scheduleAtFixedRate(this::generateCycleInfo, 60, 60, TimeUnit.SECONDS);
   }
 
   private void stopScheduler() {
@@ -121,7 +121,7 @@ public class DeviceService {
     }
 
     log.info("CarStartData 생성: {}", carStartDto);
-    //sendRequestWithRetry("/api/on", carStartDto, "시동 ON 정보");
+    sendRequestWithRetry("/api/on", carStartDto, "시동 ON 정보 API");
   }
 
   public void generateCarCycleInfo() {
@@ -176,6 +176,10 @@ public class DeviceService {
     GPS_LIST_COUNT++;
 
     log.info("CarCycleInfo 생성: {}", carCycleInfo);
+
+    if (carCycleInfoList.size() == 60) {
+      generateCycleInfo();
+    }
   }
 
   public void generateCycleInfo() {
@@ -183,8 +187,8 @@ public class DeviceService {
     CycleInfo cycleInfo = createCycleInfo();
     CycleInfoDto cycleInfoDto = createCycleInfoDto(cycleInfo);
 
-    log.info("CycleInfo 생성 ({}): {}", cycleInfoDto.getCCnt(), cycleInfoDto);
-    //sendRequestWithRetry("/api/gps", cycleInfoDto, "주기 정보");
+    log.info("CycleInfo 생성 ({}): {}", carCycleInfoList.size(), cycleInfoDto);
+    sendRequestWithRetry("/api/gps", cycleInfoDto, "주기 정보 API");
     carCycleInfoList.clear();
   }
 
@@ -197,7 +201,7 @@ public class DeviceService {
     }
 
     log.info("CarStopData 생성: {}", carStopDto);
-    //sendRequestWithRetry("/api/off", carStopDto, "시동 OFF 정보");
+    sendRequestWithRetry("/api/off", carStopDto, "시동 OFF 정보 API");
   }
 
   private CarStart createCarStart() {
@@ -212,7 +216,7 @@ public class DeviceService {
         .carIdentity(carIdentity)
         .carDevice(CarDevice.builder().build())
         .onTime(LocalDateTime.now().format(DateConstant.DATE_TIME_FORMATTER))
-        .offTime(null)
+        .offTime("")
         .cycleInfo(CarCycleInfo.builder()
             .gcd("A")
             .lat(formatCoordinate(firstTrkpt.get(0).getAttribute("lat")))
