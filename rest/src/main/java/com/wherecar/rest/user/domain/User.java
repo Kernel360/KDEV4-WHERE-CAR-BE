@@ -12,14 +12,25 @@ import java.util.Set;
 @Table(name="users")
 @Entity
 @Getter
-@Builder
 @ToString(exclude = "company")
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
 
+    @Builder
+    public User(Long id, Company company, String name, String email, String password, String phone, String jobTitle) {
+        this.id = id;
+        this.company = company;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.jobTitle = jobTitle;
+        this.userPermissions = new HashSet<>();
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")
     private Long id;
 
@@ -28,7 +39,7 @@ public class User extends BaseEntity {
     private Company company;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserPermission> userPermissions = new HashSet<>();
+    private Set<UserPermission> userPermissions;
 
     private String name;
     private String email;
@@ -54,23 +65,17 @@ public class User extends BaseEntity {
         this.jobTitle = newJobTitle;
     }
 
-    public void addPermission(Permission permission) {
-        if(userPermissions == null) {
-            this.userPermissions = new HashSet<>();
-        }
-        UserPermission userPermission = UserPermission.builder()
-                .user(this)
-                .permission(permission)
-                .build();
-        this.userPermissions.add(userPermission);
-    }
 
-    public void removePermission(Permission permission) {
-        for (UserPermission userPermission : this.userPermissions) {
-            if (userPermission.getPermission().equals(permission)) {
-                this.userPermissions.remove(userPermission);
-                break;
-            }
+    public void changeUserPermissions(Permission... newUserPermissions) {
+        for(UserPermission userPermission : this.userPermissions) {
+            this.userPermissions.remove(userPermission);
+        }
+        for(Permission permission : newUserPermissions) {
+            UserPermission userPermission = UserPermission.builder()
+                    .user(this)
+                    .permission(permission)
+                    .build();
+            this.userPermissions.add(userPermission);
         }
     }
 

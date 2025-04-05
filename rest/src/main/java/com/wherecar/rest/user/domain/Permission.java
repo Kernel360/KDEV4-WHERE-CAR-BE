@@ -12,7 +12,7 @@ import lombok.*;
 @ToString
 public class Permission {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="permission_id")
     private Long id;
 

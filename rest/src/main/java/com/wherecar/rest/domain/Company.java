@@ -12,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 public class Company extends BaseEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="company_id")
     private Long id;
 
@@ -30,4 +30,6 @@ public class Company extends BaseEntity{
 
     @Column(name = "website")
     private String website;
+
+    private String description;
 }

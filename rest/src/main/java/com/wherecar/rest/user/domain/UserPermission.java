@@ -14,7 +14,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class UserPermission {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
