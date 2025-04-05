@@ -18,18 +18,21 @@ public class GeoInfo extends BaseEntity{
     @Column(name="geo_info_id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
     @Column(name = "geo_event_type")
     private String geoEventType;
 
     @Column(name = "geo_range")
     private String geoRange;
 
-
     @Column(name = "latitude")
-    private Integer latitude;
+    private Double latitude;
 
     @Column(name = "longitude")
-    private Integer longitude;
+    private Double longitude;
 
     @Column(name = "on_time")
     private LocalDateTime onTime;
@@ -45,11 +48,11 @@ public class GeoInfo extends BaseEntity{
         this.geoRange = geoRange;
     }
 
-    public void changeLatitude(Integer latitude) {
+    public void changeLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public void changeLongitude(Integer longitude) {
+    public void changeLongitude(Double longitude) {
         this.longitude = longitude;
     }
 }

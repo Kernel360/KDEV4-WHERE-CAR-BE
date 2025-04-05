@@ -1,5 +1,6 @@
 package com.wherecar.rest.dto;
 
+import com.wherecar.rest.domain.Company;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -9,11 +10,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class GeoInfoRegistRequest {
+public class GeoFenceRequest {
     private String geoEventType;
     private String geoRange;
-    private Integer latitude;
-    private Integer longitude;
+    private Double latitude;
+    private Double longitude;
     private LocalDateTime onTime;
     private LocalDateTime offTime;
 }

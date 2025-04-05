@@ -15,8 +15,8 @@ public class GeoFenceResponse {
     private Long id;
     private String geoEventType;
     private String geoRange;
-    private Integer latitude;
-    private Integer longitude;
+    private Double latitude;
+    private Double longitude;
     private LocalDateTime onTime;
     private LocalDateTime offTime;
 }
