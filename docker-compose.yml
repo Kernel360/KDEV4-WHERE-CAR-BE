@@ -1,12 +1,12 @@
 services:
 
   db:
-    image: mariadb:11.4.5-ubi9
+    image: mysql:8.0
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: password
-      MARIADB_DATABASE: wherecar
-      MARIADB_USER: user
-      MARIADB_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: wherecar
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
     ports:
       - 3306:3306
