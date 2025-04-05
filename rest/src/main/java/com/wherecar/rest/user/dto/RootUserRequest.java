@@ -4,7 +4,7 @@ import com.wherecar.rest.dto.CompanyRequest;
 import lombok.Data;
 
 @Data
-public class UserCompanyRequest {
+public class RootUserRequest {
     private UserRequest user;
     private CompanyRequest company;
 }

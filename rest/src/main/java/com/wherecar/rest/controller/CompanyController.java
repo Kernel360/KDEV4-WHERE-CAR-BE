@@ -3,32 +3,36 @@ package com.wherecar.rest.controller;
 import com.wherecar.rest.dto.CompanyRequest;
 import com.wherecar.rest.dto.CompanyResponse;
 import com.wherecar.rest.service.CompanyService;
+import com.wherecar.rest.user.auth.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/company")
+@RequestMapping("/api/companies")
 @RequiredArgsConstructor
 public class CompanyController {
 
     private final CompanyService companyService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CompanyResponse> companyDetailsGet(@PathVariable Long id) {
-        CompanyResponse company = companyService.getCompanyDetails(id);
+    @GetMapping("/my")
+    public ResponseEntity<CompanyResponse> myCompanyDetailsGet() {
+        Long companyId = AuthUtil.getCompanyId();
+        CompanyResponse company = companyService.getCompanyDetails(companyId);
         return ResponseEntity.ok(company);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> companyUpdate(@PathVariable Long id, @RequestBody CompanyRequest companyRequest) {
-        companyService.updateCompany(id, companyRequest);
+    @PutMapping("/my")
+    public ResponseEntity<String> myCompanyUpdate(@RequestBody CompanyRequest companyRequest) {
+        Long companyId = AuthUtil.getCompanyId();
+        companyService.updateCompany(companyId, companyRequest);
         return ResponseEntity.ok("수정되었습니다.");
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> companyDelete(@PathVariable Long id) {
-        companyService.deleteCompany(id);
+    @DeleteMapping("/my")
+    public ResponseEntity<String> myCompanyDelete() {
+        Long companyId = AuthUtil.getCompanyId();
+        companyService.deleteCompany(companyId);
         return ResponseEntity.ok("삭제되었습니다.");
     }
 }

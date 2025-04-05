@@ -26,7 +26,7 @@ public class PermissionCheckAspect {
         PermissionType[] requiredPermissions = requiredPermission.value();
 
         //루트 권한일때는 자동으로 패스
-        if (userPermissions.contains(PermissionType.ROOT)){
+        if (userPermissions.contains(PermissionType.PERM_ADMIN)){
             return joinPoint.proceed();
         }
         for (PermissionType required : requiredPermissions) {

@@ -67,9 +67,7 @@ public class User extends BaseEntity {
 
 
     public void changeUserPermissions(Permission... newUserPermissions) {
-        for(UserPermission userPermission : this.userPermissions) {
-            this.userPermissions.remove(userPermission);
-        }
+        this.userPermissions.clear();
         for(Permission permission : newUserPermissions) {
             UserPermission userPermission = UserPermission.builder()
                     .user(this)
