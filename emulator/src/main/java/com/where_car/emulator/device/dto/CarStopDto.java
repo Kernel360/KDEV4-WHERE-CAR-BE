@@ -1,5 +1,6 @@
 package com.where_car.emulator.device.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,9 @@ public class CarStopDto {
   private String mid;
   private String pv;
   private String did;
+  @JsonProperty("onTime")
   private String onTime;
+  @JsonProperty("offTime")
   private String offTime;
   private String gcd;
   private String lat;
