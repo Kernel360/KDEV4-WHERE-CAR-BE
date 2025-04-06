@@ -39,7 +39,7 @@ public class CycleInfo {
     return "CycleInfo= {" +
         " carIdentity = { " + "mdn=" + carIdentity.getMdn() + ", " + "vrp=" + carIdentity.getVrp() + " }" +
         ", carDevice = { " + "tid=" + carDevice.getTid() + ", " + "mid=" + carDevice.getMid() + ", " + "pv=" + carDevice.getPv() + ", " + "did=" + carDevice.getDid() + " }" +
-        ", onTime=" + oTime +
+        ", oTime=" + oTime +
         ", cCnt=" + cCnt +
         ", cList=" + cList +
         " }";

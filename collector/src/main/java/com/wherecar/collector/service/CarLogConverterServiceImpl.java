@@ -52,12 +52,16 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
         // 차가 최초 출고가 아닌 상황
         if (optionalPreviousCarLog.isPresent()) {
             CarLog previousCarLog = optionalPreviousCarLog.get();
+            log.info("CarLogConverterServiceImpl 로그");
+            log.info("receiveOnLog 호출");
+            log.info("receiveOnLog의 optionalPreviousCarLog.isPresent() 로직");
+            log.info("onLogRequest: {}", onLogRequest);
 
             // 시동 ON 시 최초 누적 거리는 그 직전 시동 OFF일 때의 누적 거리 값과 일치해야 한다.
             if (Objects.equals(previousCarLog.getOffSum(), Integer.parseInt(onLogRequest.getSum()))) {
 
                 // 시동 ON 시 mileage는 직전 시동 OFF 시 mileage
-                Integer onMileage = previousCarLog.getOffMileage();
+                Double onMileage = previousCarLog.getOffMileage();
 
                 // 위도, 경도 Double로 변환
                 Double doubleLatitude = (double) Integer.parseInt(onLogRequest.getLat()) / 1000000;
@@ -113,9 +117,14 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
 
         // 차는 Repository에 저장되어 있지만 최초 출고인 상황
         if (optionalPreviousCarLog.isEmpty()) {
+            log.info("CarLogConverterServiceImpl 로그");
+            log.info("receiveOnLog 호출");
+            log.info("receiveOnLog의 optionalPreviousCarLog.isEmpty() 로직");
+            log.info("onLogRequest: {}", onLogRequest);
+
 
             // 최초 출고일 땐 mileage가 0
-            Integer onMileage = 0;
+            Double onMileage = 0.0;
 
             // 위도, 경도 Double로 변환
             Double doubleLatitude = (double) Integer.parseInt(onLogRequest.getLat()) / 1000000;
@@ -185,9 +194,13 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
 
         // // 직전 시동 ON일 때의 CarLog를 찾는 쿼리 메서드 호출
         CarLog previousCarLog = carLogRepository.findTopByMdnOrderByOnTimeDesc(car.getMdn()).orElseThrow(() -> new RuntimeException("이전 ON 로그가 없습니다."));
+        log.info("CarLogConverterServiceImpl 로그");
+        log.info("receiveOffLog 호출");
+        log.info("offLogRequest: {}", offLogRequest);
 
         Integer onSum = previousCarLog.getOnSum();    // 직전 ON 로그의 sum
         Integer offSum = Integer.parseInt(offLogRequest.getSum());      // OFF 로그의 sum
+        log.info("offSum: {}", offSum);
         Integer sumToAdd = 0;
 
         if (onSum <= offSum) {
@@ -198,7 +211,8 @@ public class CarLogConverterServiceImpl implements CarLogConverterService {
         }
 
         // TODO sumToAdd / 1000에서의 잘리는 데이터 어떻게 할지, 그냥 둘지 고민하기
-        Integer offMileage = previousCarLog.getOnMileage() + sumToAdd / 1000;
+        Double offMileage = previousCarLog.getOnMileage() + (double) sumToAdd / 1000;
+        log.info("offMileage: {}", offMileage);
 
         // 위도, 경도 Double로 변환
         Double doubleLatitude = (double) Integer.parseInt(offLogRequest.getLat()) / 1000000;

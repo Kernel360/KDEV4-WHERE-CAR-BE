@@ -196,8 +196,8 @@ public class DeviceService {
     CarStop carStop = createCarStop();
     CarStopDto carStopDto = createCarStopDto(carStop);
 
-    if (START_TIME != null) {
-      START_TIME = null; // 시동 시간 초기화
+    if (START_TIME != "") {
+      START_TIME = ""; // 시동 시간 초기화
     }
 
     log.info("CarStopData 생성: {}", carStopDto);

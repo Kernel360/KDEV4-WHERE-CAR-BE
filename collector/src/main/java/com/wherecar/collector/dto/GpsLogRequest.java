@@ -30,4 +30,18 @@ public class GpsLogRequest {
 
     @JsonProperty("cList")
     private List<GpsLogInfo> cList = new ArrayList<>(); // 주기 정보 리스트
+
+    @Override
+    public String toString() {
+        return "GpsLogRequest{" +
+                "mdn='" + mdn + '\'' +
+                ", tid='" + tid + '\'' +
+                ", mid='" + mid + '\'' +
+                ", pv='" + pv + '\'' +
+                ", did='" + did + '\'' +
+                ", oTime='" + oTime + '\'' +
+                ", cCnt='" + cCnt + '\'' +
+                ", cList=" + cList +
+                '}';
+    }
 }
