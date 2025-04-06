@@ -106,11 +106,18 @@ public class UserController {
 
 //    @RequiredPermission(PermissionType.ROOT)
     @PutMapping("/permissions/{userId}")
-    public ResponseEntity<String> permissionUpdate(@PathVariable Long userId, @RequestBody PermissionRequest permissionRequest){
+    public ResponseEntity<Void> permissionUpdate(@PathVariable Long userId, @RequestBody PermissionRequest permissionRequest){
         log.info("Adding permission with id: {}", userId);
-        System.out.println("dkjlkdjlkfdjlkfdjlkdfjl");
         userService.updatePermission(userId, permissionRequest);
-        return ResponseEntity.ok("동작하는거맞지?");
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/permissions/my")
+    public ResponseEntity<PermissionResponse> myPermissionUpdate(@RequestBody PermissionRequest permissionRequest){
+        Long userId = AuthUtil.getUserId();
+        log.info("Retrieving my permission with id: {}", userId);
+        userService.updatePermission(userId, permissionRequest);
+        return ResponseEntity.ok().build();
     }
 
 //    @RequiredPermission(PermissionType.ROOT)
@@ -121,7 +128,6 @@ public class UserController {
         return ResponseEntity.ok(permissionResponse);
     }
 
-//    @RequiredPermission(PermissionType.ROOT)
     @GetMapping("/permissions/my")
     public ResponseEntity<PermissionResponse> myPermissionGet(){
         Long userId = AuthUtil.getUserId();
