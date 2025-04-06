@@ -32,7 +32,5 @@ public class CarLogsResponse {
     private DriveType driveType;
     private String driver;
     private String description;
-    private CarState carStatus;
-
 
 }
