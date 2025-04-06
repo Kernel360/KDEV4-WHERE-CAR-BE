@@ -94,6 +94,8 @@ public class CarServiceImpl implements CarService {
                         .id(car.getId())
                         .mdn(car.getMdn())
                         .make(car.getMake())
+                        .model(car.getModel())
+                        .year(car.getYear())
                         .ownerType(car.getOwnerType())
                         .acquisitionType(car.getAcquisitionType())
                         .carState(car.getCarStatus().getCarState())
