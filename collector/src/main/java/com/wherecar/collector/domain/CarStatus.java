@@ -22,7 +22,7 @@ public class CarStatus  extends BaseEntity {
     private Car car;
 
     @Column(name="mileage")
-    private Integer mileage;
+    private Double mileage;
 
     @Column(name="battery_voltage")
     private Integer batteryVoltage;
@@ -35,7 +35,7 @@ public class CarStatus  extends BaseEntity {
         this.batteryVoltage = batteryVoltage;
     }
 
-    public void changeMileage(Integer mileage) {
+    public void changeMileage(Double mileage) {
         this.mileage = mileage;
     }
 

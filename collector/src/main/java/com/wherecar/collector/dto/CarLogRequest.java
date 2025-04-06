@@ -32,4 +32,22 @@ public class CarLogRequest {
     private String spd;     // 속도.           범위: 0 ~ 255(단위: km/h)
     private String sum;     // 누적 주행 거리.  범위: 0 ~ 9999999(단위: m)
 
+    @Override
+    public String toString() {
+        return "CarLogRequest{" +
+                "mdn='" + mdn + '\'' +
+                ", tid='" + tid + '\'' +
+                ", mid='" + mid + '\'' +
+                ", pv='" + pv + '\'' +
+                ", did='" + did + '\'' +
+                ", onTime='" + onTime + '\'' +
+                ", offTime='" + offTime + '\'' +
+                ", gcd='" + gcd + '\'' +
+                ", lat='" + lat + '\'' +
+                ", lon='" + lon + '\'' +
+                ", ang='" + ang + '\'' +
+                ", spd='" + spd + '\'' +
+                ", sum='" + sum + '\'' +
+                '}';
+    }
 }

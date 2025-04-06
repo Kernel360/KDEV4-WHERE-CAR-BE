@@ -41,6 +41,11 @@ public class GpsLogConverterServiceImpl implements GpsLogConverterService {
      */
     @Override
     public GpsLogResponse receiveGpsLog(GpsLogRequest gpsLogRequest) {
+
+        log.info("GpsLogConverterServiceImpl 로그");
+        log.info("receiveGpsLog 호출");
+        log.info("gpsLogRequest: {}", gpsLogRequest);
+
         Car car = carRepository.findByMdn(gpsLogRequest.getMdn()).orElseThrow(() -> new RuntimeException("존재하지 않는 차입니다."));
 
         List<GpsLogInfo> cList = gpsLogRequest.getCList();
@@ -49,6 +54,7 @@ public class GpsLogConverterServiceImpl implements GpsLogConverterService {
 
         // 0 ~ 59초의 주기 정보 데이터 처리
         for (GpsLogInfo gpsLogInfo : cList) {
+            log.info("gpsLogInfo: {}", gpsLogInfo);
             String sec = gpsLogInfo.getSec();
 
             String timestampString = gpsLogRequest.getOTime() + sec;     // oTime(yyyyMMddHHmm 형식) + sec(ss 형식) 의 String

@@ -42,7 +42,7 @@ public class CarLog extends BaseEntity {
     private Integer onSum;
 
     @Column(name = "on_mileage")
-    private Integer onMileage;
+    private Double onMileage;
 
     @Column(name = "on_time")
     private LocalDateTime onTime;
@@ -67,7 +67,7 @@ public class CarLog extends BaseEntity {
     private Integer offSum;
 
     @Column(name = "off_mileage")
-    private Integer offMileage;
+    private Double offMileage;
 
     @Column(name = "off_time")
     private LocalDateTime offTime;

@@ -18,4 +18,18 @@ public class GpsLogInfo {
     private String spd;     // 속도.           범위: 0 ~ 255(단위: km/h)
     private String sum;     // 누적 주행 거리.  범위: 0 ~ 9999999(단위: m)
     private String bat;     // 배터리 전압.     범위: 0 ~ 9999(실제 값 X 10, 단위: V)
+
+    @Override
+    public String toString() {
+        return "GpsLogInfo{" +
+                "sec='" + sec + '\'' +
+                ", gcd='" + gcd + '\'' +
+                ", lat='" + lat + '\'' +
+                ", lon='" + lon + '\'' +
+                ", ang='" + ang + '\'' +
+                ", spd='" + spd + '\'' +
+                ", sum='" + sum + '\'' +
+                ", bat='" + bat + '\'' +
+                '}';
+    }
 }
