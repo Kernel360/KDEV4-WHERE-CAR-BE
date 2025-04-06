@@ -1,6 +1,7 @@
 package com.wherecar.rest.repository;
 
 import com.wherecar.rest.domain.Car;
+import com.wherecar.rest.domain.OwnerType;
 import jdk.jshell.Snippet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,4 +27,8 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     Page<Car> findByCompanyIdWithCarStatus(@Param("userCompanyId") Long userCompanyId, Pageable pageable);
 
     Optional<Car> findByMdn(String mdn);
+
+    long countByCompanyId(Long companyId);
+    long countByCompanyIdAndOwnerType(Long companyId, OwnerType ownerType);
+
 }

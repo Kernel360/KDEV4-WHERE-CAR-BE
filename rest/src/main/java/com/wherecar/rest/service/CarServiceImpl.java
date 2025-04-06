@@ -1,9 +1,7 @@
 package com.wherecar.rest.service;
 
-import com.wherecar.rest.domain.Car;
-import com.wherecar.rest.domain.CarState;
-import com.wherecar.rest.domain.CarStatus;
-import com.wherecar.rest.domain.Company;
+import com.wherecar.rest.domain.*;
+import com.wherecar.rest.dto.CarOverviewResponse;
 import com.wherecar.rest.dto.CarResponse;
 import com.wherecar.rest.dto.CarRegisterRequest;
 import com.wherecar.rest.repository.CarRepository;
@@ -123,6 +121,26 @@ public class CarServiceImpl implements CarService {
                 .batteryVoltage(car.getCarStatus().getBatteryVoltage())
                 .carState(car.getCarStatus().getCarState())
                 .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
+                .build();
+    }
+
+    @Override
+    public CarOverviewResponse getCarOverview(Long companyId) {
+        long totalCars = carRepository.countByCompanyId(companyId);
+        long totalCorporateCars = carRepository.countByCompanyIdAndOwnerType(companyId, OwnerType.CORPORATE);
+        long totalPrivateCars = carRepository.countByCompanyIdAndOwnerType(companyId, OwnerType.PERSONAL);
+
+        long activeCars = carStatusRepository.countByCompanyIdAndCarState(companyId, CarState.RUNNING);
+        long inactiveCars = carStatusRepository.countByCompanyIdAndCarState(companyId, CarState.STOPPED);
+        long untrackedCars = carStatusRepository.countByCompanyIdAndCarState(companyId, CarState.NOT_REGISTERED);
+
+        return CarOverviewResponse.builder()
+                .totalCars(totalCars)
+                .totalCorporateCars(totalCorporateCars)
+                .totalPrivateCars(totalPrivateCars)
+                .activeCars(activeCars)
+                .inactiveCars(inactiveCars)
+                .untrackedCars(untrackedCars)
                 .build();
     }
 
