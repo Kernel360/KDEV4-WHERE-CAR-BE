@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Builder
-@ToString(exclude = "car")
 @NoArgsConstructor
 @AllArgsConstructor
 public class CarLog extends BaseEntity {
