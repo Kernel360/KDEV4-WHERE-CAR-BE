@@ -21,22 +21,22 @@ public class CarController {
     private final CarService carService;
 
     @PostMapping
-    public ResponseEntity<String> CarCreate(@RequestBody CarRegisterRequest registerCarRequest) {
+    public ResponseEntity<Void> CarCreate(@RequestBody CarRegisterRequest registerCarRequest) {
         Long companyId = AuthUtil.getCompanyId();
         carService.createCar(companyId, registerCarRequest);
-        return ResponseEntity.ok("등록되었습니다.");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> CarUpdate(@PathVariable Long id, @RequestBody CarRegisterRequest registerCarRequest) {
+    public ResponseEntity<Void> CarUpdate(@PathVariable Long id, @RequestBody CarRegisterRequest registerCarRequest) {
         carService.updateCar(id, registerCarRequest);
-        return ResponseEntity.ok("수정되었습니다.");
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> CarDelete(@PathVariable Long id) {
+    public ResponseEntity<Void> CarDelete(@PathVariable Long id) {
         carService.deleteCar(id);
-        return ResponseEntity.ok("삭제되었습니다.");
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

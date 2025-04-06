@@ -18,11 +18,11 @@ public class GeoInfoController {
 
     // GeoFence 정보 등록
     @PostMapping("/create")
-    public ResponseEntity<String> geoInfoCreate(@RequestBody GeoInfoRegistRequest geoInfoRegistRequest) {
+    public ResponseEntity<Void> geoInfoCreate(@RequestBody GeoInfoRegistRequest geoInfoRegistRequest) {
 
         geoInfoService.createGeoInfo(geoInfoRegistRequest);
 
-        return ResponseEntity.ok("등록 완료되었습니다.");
+        return ResponseEntity.ok().build();
 
     }
 
@@ -44,20 +44,20 @@ public class GeoInfoController {
 
     // GeoInfo 수정
     @PutMapping("/{id}")
-    public ResponseEntity<String> geoInfoUpdate(@PathVariable Long id, @RequestBody GeoInfoRegistRequest geoInfoRegistRequest) {
+    public ResponseEntity<Void> geoInfoUpdate(@PathVariable Long id, @RequestBody GeoInfoRegistRequest geoInfoRegistRequest) {
 
         geoInfoService.updateGeoInfo(id, geoInfoRegistRequest);
 
-        return ResponseEntity.ok("수정 완료되었습니다.");
+        return ResponseEntity.ok().build();
     }
 
     // GeoInfo 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> geoInfoDelete(@PathVariable Long id) {
+    public ResponseEntity<Void> geoInfoDelete(@PathVariable Long id) {
 
         geoInfoService.deleteGeoInfo(id);
 
-        return ResponseEntity.ok("삭제 완료되었습니다.");
+        return ResponseEntity.ok().build();
 
     }
 }

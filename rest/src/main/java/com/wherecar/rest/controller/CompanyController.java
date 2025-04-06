@@ -23,16 +23,16 @@ public class CompanyController {
     }
 
     @PutMapping("/my")
-    public ResponseEntity<String> myCompanyUpdate(@RequestBody CompanyRequest companyRequest) {
+    public ResponseEntity<Void> myCompanyUpdate(@RequestBody CompanyRequest companyRequest) {
         Long companyId = AuthUtil.getCompanyId();
         companyService.updateCompany(companyId, companyRequest);
-        return ResponseEntity.ok("수정되었습니다.");
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/my")
-    public ResponseEntity<String> myCompanyDelete() {
+    public ResponseEntity<Void> myCompanyDelete() {
         Long companyId = AuthUtil.getCompanyId();
         companyService.deleteCompany(companyId);
-        return ResponseEntity.ok("삭제되었습니다.");
+        return ResponseEntity.ok().build();
     }
 }

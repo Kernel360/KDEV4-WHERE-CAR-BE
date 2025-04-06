@@ -31,15 +31,15 @@ public class GeoLogController {
     }
 
     @PutMapping("/{geoLogId}")
-    public ResponseEntity<String> geoLogUpdate(@PathVariable Long geoLogId, @RequestBody GeoLogRequest geoLogRequest) {
+    public ResponseEntity<Void> geoLogUpdate(@PathVariable Long geoLogId, @RequestBody GeoLogRequest geoLogRequest) {
         geoLogService.updateGeoLog(geoLogId, geoLogRequest);
-        return ResponseEntity.ok("수정되었습니다.");
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{geoLogId}")
-    public ResponseEntity<String> geoLogDelete(@PathVariable Long geoLogId) {
+    public ResponseEntity<Void> geoLogDelete(@PathVariable Long geoLogId) {
         geoLogService.deleteGeoLog(geoLogId);
-        return ResponseEntity.ok("삭제되었습니다.");
+        return ResponseEntity.ok().build();
     }
 
 }
