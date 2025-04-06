@@ -27,6 +27,7 @@ public class CompanyServiceImpl implements CompanyService {
                 .name(companyRequest.getName())
                 .phone(companyRequest.getPhone())
                 .website(companyRequest.getWebsite())
+                .description(companyRequest.getDescription())
                 .build();
 
         // 요청 데이터 저장
@@ -47,6 +48,7 @@ public class CompanyServiceImpl implements CompanyService {
                 .name(company.getName())
                 .phone(company.getPhone())
                 .website(company.getWebsite())
+                .description(company.getDescription())
                 .build();
     }
 
@@ -61,6 +63,7 @@ public class CompanyServiceImpl implements CompanyService {
                 .phone(companyRequest.getPhone())
                 .email(companyRequest.getEmail())
                 .website(companyRequest.getWebsite())
+                .description(companyRequest.getDescription())
                 .build();
 
         companyRepository.save(updateCompany);

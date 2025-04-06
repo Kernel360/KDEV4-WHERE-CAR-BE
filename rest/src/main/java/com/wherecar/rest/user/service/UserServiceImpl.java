@@ -32,9 +32,9 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void createRoot(UserCompanyRequest userCompanyRequest) {
-        emailExists(userCompanyRequest.getUser().getEmail());
-        CompanyRequest companyRequest = userCompanyRequest.getCompany();
+    public void createRoot(RootUserRequest rootUserRequest) {
+        emailExists(rootUserRequest.getUser().getEmail());
+        CompanyRequest companyRequest = rootUserRequest.getCompany();
         Company company = Company.builder()
                 .phone(companyRequest.getPhone())
                 .email(companyRequest.getEmail())
@@ -44,18 +44,20 @@ public class UserServiceImpl implements UserService {
                 .build();
         companyRepository.save(company);
 
-        UserRequest userRequest = userCompanyRequest.getUser();
+        UserRequest userRequest = rootUserRequest.getUser();
         User user = this.createUser(userRequest, company);
-        Permission rootPermission = permissionRepository.findByType(PermissionType.ROOT).orElseThrow();
-        user.addPermission(rootPermission);
+        Permission rootPermission = permissionRepository.findByType(PermissionType.PERM_ADMIN).orElseThrow();
+
+        user.changeUserPermissions(rootPermission);
         userRepository.save(user);
     }
 
     @Override
-    public void createSub(UserRequest userRequest, Long companyId) {
-        emailExists(userRequest.getEmail());
+    public void createSub(SubUserRequest subUserRequest, Long companyId) {
+        emailExists(subUserRequest.getUser().getEmail());
         Company company = companyRepository.findById(companyId).orElseThrow();
-        this.createUser(userRequest, company);
+        User user = this.createUser(subUserRequest.getUser(), company);
+        this.updatePermission(user.getId(), subUserRequest.getPermission());
     }
 
     @Override
@@ -70,6 +72,8 @@ public class UserServiceImpl implements UserService {
                     .phone(user.getPhone())
                     .email(user.getEmail())
                     .jobTitle(user.getJobTitle())
+                    .createdAt(user.getCreatedAt())
+                    .updatedAt(user.getUpdatedAt())
                     .build();
             userResponses.add(userResponse);
         }
@@ -86,6 +90,8 @@ public class UserServiceImpl implements UserService {
                 .phone(user.getPhone())
                 .email(user.getEmail())
                 .jobTitle(user.getJobTitle())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
                 .build();
     }
 
@@ -115,12 +121,15 @@ public class UserServiceImpl implements UserService {
     //권한
 
     @Override
-    public void addPermission(Long userId, PermissionRequest permissionRequest) {
+    public void updatePermission(Long userId, PermissionRequest permissionRequest) {
         User user = userRepository.findById(userId).orElseThrow();
+        List<Permission> permissions = new ArrayList<>();
+        log.info(permissionRequest.toString());
         for(PermissionType permissionType : permissionRequest.getPermissionTypes()){
             Permission permission = permissionRepository.findByType(permissionType).orElseThrow();
-            user.addPermission(permission);
+            permissions.add(permission);
         }
+        user.changeUserPermissions(permissions.toArray(new Permission[0]));
         log.info("Size: {}", user.getUserPermissions().size());
         userRepository.save(user);
     }
@@ -139,15 +148,6 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    @Override
-    public void deletePermissionById(Long userId, PermissionRequest permissionRequest) {
-        User user = userRepository.findById(userId).orElseThrow();
-        for(PermissionType permissionType : permissionRequest.getPermissionTypes()){
-            Permission permission = permissionRepository.findByType(permissionType).orElseThrow();
-            user.removePermission(permission);
-        }
-        userRepository.save(user);
-    }
 
     private User createUser(UserRequest userRequest, Company company) {
         User user = User.builder()
