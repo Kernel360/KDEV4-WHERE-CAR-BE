@@ -13,7 +13,7 @@ import lombok.*;
 public class CarStatus  extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="car_status_id")
     private Long id;
 
