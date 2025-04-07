@@ -18,6 +18,10 @@ public class Announcement extends BaseEntity {
     @Column(name="announcement_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name="announcement_type")
+    private AnnouncementType announcementType;
+
     @Column(name = "title")
     private String title;
 
@@ -30,6 +34,10 @@ public class Announcement extends BaseEntity {
 
     public void changeContent(String content) {
         this.content = content;
+    }
+
+    public void changeAnnouncementType(AnnouncementType announcementType) {
+        this.announcementType = announcementType;
     }
 
 }

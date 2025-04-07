@@ -1,6 +1,7 @@
 package com.wherecar.rest.announcement.service;
 
 import com.wherecar.rest.announcement.domain.Announcement;
+import com.wherecar.rest.announcement.domain.AnnouncementType;
 import com.wherecar.rest.announcement.dto.AnnouncementDetailResponse;
 import com.wherecar.rest.announcement.dto.AnnouncementRegisterRequest;
 import com.wherecar.rest.announcement.dto.AnnouncementUpdateRequest;
@@ -24,10 +25,18 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     public void createAnnouncement(AnnouncementRegisterRequest announcementRegisterRequest) {
 
-        // 요청 데이터를 엔터티로 변환
+        AnnouncementType announcementType;
+
+        try {
+            announcementType = AnnouncementType.valueOf(announcementRegisterRequest.getAnnouncementType());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("잘못된 공지 사항입니다.");
+        }
+
         Announcement announcement = Announcement.builder()
                 .title(announcementRegisterRequest.getTitle())
                 .content(announcementRegisterRequest.getContent())
+                .announcementType(announcementType)
                 .build();
 
         // 요청 데이터 저장
@@ -42,6 +51,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
         return announcements.map(announcement -> AnnouncementsResponse.builder()
                 .announcementId(announcement.getId())
+                .announcementType(announcement.getAnnouncementType().toString())
                 .title(announcement.getTitle())
                 .content(announcement.getContent())
                 .createdAt(announcement.getCreatedAt())
@@ -56,6 +66,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
         return AnnouncementDetailResponse.builder()
                 .announcementId(announcement.getId())
+                .announcementType(announcement.getAnnouncementType().toString())
                 .title(announcement.getTitle())
                 .content(announcement.getContent())
                 .createdAt(announcement.getCreatedAt())
@@ -67,9 +78,19 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         Announcement announcement = announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 공지 사항입니다."));
 
+        AnnouncementType announcementType;
+
+        try {
+            announcementType = AnnouncementType.valueOf(announcementUpdateRequest.getAnnouncementType());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("잘못된 공지 사항입니다.");
+        }
+
+
         // 공지 사항 수정
         announcement.changeTitle(announcementUpdateRequest.getTitle());
         announcement.changeContent(announcementUpdateRequest.getContent());
+        announcement.changeAnnouncementType(announcementType);
 
         announcementRepository.save(announcement);
     }
