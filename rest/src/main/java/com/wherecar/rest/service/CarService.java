@@ -1,5 +1,6 @@
 package com.wherecar.rest.service;
 
+import com.wherecar.rest.dto.CarOverviewResponse;
 import com.wherecar.rest.dto.CarResponse;
 import com.wherecar.rest.dto.CarRegisterRequest;
 
@@ -12,5 +13,6 @@ public interface CarService {
     void deleteCar(Long id);
     List<CarResponse> getAllCars(Long companyId, int page, int size);
     CarResponse getCarDetails(Long id);
+    CarOverviewResponse getCarOverview(Long companyId);
 
 }

@@ -1,6 +1,7 @@
 package com.wherecar.rest.controller;
 
 import com.wherecar.rest.constants.PaginationConstants;
+import com.wherecar.rest.dto.CarOverviewResponse;
 import com.wherecar.rest.dto.CarResponse;
 import com.wherecar.rest.dto.CarRegisterRequest;
 import com.wherecar.rest.service.CarService;
@@ -50,9 +51,17 @@ public class CarController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CarResponse> DetailsGetCar(@PathVariable Long id) {
+    public ResponseEntity<CarResponse> CarGetDetails(@PathVariable Long id) {
         CarResponse car = carService.getCarDetails(id);
         return ResponseEntity.ok(car);
+    }
+
+    //정보별 차량 수 반환
+    @GetMapping("/overview")
+    public ResponseEntity<CarOverviewResponse> CarGetOverview() {
+        Long companyId = AuthUtil.getCompanyId();
+        CarOverviewResponse info = carService.getCarOverview(companyId);
+        return ResponseEntity.ok(info);
     }
 
 }
