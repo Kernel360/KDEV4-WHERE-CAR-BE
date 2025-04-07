@@ -44,6 +44,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<AnnouncementsResponse> getAnnouncements(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
@@ -60,6 +61,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AnnouncementDetailResponse getAnnouncementDetail(Long announcementId) {
         Announcement announcement = announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 공지 사항입니다."));
