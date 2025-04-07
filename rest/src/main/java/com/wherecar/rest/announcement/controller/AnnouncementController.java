@@ -22,10 +22,10 @@ public class AnnouncementController {
 
     // 공지 사항 등록
     @PostMapping
-    public ResponseEntity<String> announcementCreate(@RequestBody AnnouncementRegisterRequest announcementRegisterRequest) {
+    public ResponseEntity<Void> announcementCreate(@RequestBody AnnouncementRegisterRequest announcementRegisterRequest) {
         announcementService.createAnnouncement(announcementRegisterRequest);
 
-        return ResponseEntity.ok("공지 사항 등록 완료되었습니다.");
+        return ResponseEntity.ok().build();
     }
 
     // 공지 사항 목록 조회
@@ -49,18 +49,18 @@ public class AnnouncementController {
 
     // 공지 사항 수정
     @PutMapping("/{announcementId}")
-    public ResponseEntity<String> announcementUpdate(@PathVariable Long announcementId, @RequestBody AnnouncementUpdateRequest announcementUpdateRequest) {
+    public ResponseEntity<Void> announcementUpdate(@PathVariable Long announcementId, @RequestBody AnnouncementUpdateRequest announcementUpdateRequest) {
         announcementService.updateAnnouncement(announcementId, announcementUpdateRequest);
 
-        return ResponseEntity.ok("수정되었습니다.");
+        return ResponseEntity.ok().build();
     }
 
     // 공지 사항 삭제
     @DeleteMapping("/{announcementId}")
-    public ResponseEntity<String> announcementDelete(@PathVariable Long announcementId) {
+    public ResponseEntity<Void> announcementDelete(@PathVariable Long announcementId) {
         announcementService.deleteAnnouncement(announcementId);
 
-        return ResponseEntity.ok("삭제되었습니다.");
+        return ResponseEntity.ok().build();
     }
 
 }
