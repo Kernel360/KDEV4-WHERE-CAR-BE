@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: dev # 'dev' 프로파일이 활성화될 때 이 설정을 사용합니다.
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://${DB_HOST_NAME}/${DB_STORAGE_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jwt:
+    secret: 1o23eoi21joiejoijsdoijoisdjfojafa # JWT 비밀 키
+
+server:
+  port: 8080
+  ssl:
+    key-store-password: ${KEY_STORE_PASSWORD}
+    #trust-store-password: ${TRUST_STORE_PASSWORD}
