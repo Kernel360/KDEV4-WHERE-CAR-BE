@@ -9,12 +9,13 @@ import java.time.LocalDateTime;
 @Table(name="gps_logs")
 @Entity
 @Builder
+@ToString
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class GpsLog extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name ="gps_log_id")
     private Long id;
 

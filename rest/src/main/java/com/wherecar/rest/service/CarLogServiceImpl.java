@@ -30,6 +30,7 @@ public class CarLogServiceImpl implements CarLogService {
 
     //차량 목록 조회(필터 추가)
     @Override
+    @Transactional(readOnly = true)
     public Page<CarLogsResponse> getCarLogsFiltered(
             Long companyId,
             String mdn,

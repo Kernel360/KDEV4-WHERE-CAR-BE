@@ -12,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 public class Car extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="car_id")
     private Long id;
 
