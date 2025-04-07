@@ -33,4 +33,7 @@ public class CarLogsResponse {
     private String driver;
     private String description;
 
+    // 대시보드 운행 통계 운행 건수
+    private String carLogsCount;
+
 }

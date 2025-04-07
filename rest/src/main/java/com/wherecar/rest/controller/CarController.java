@@ -47,6 +47,7 @@ public class CarController {
 
         Long companyId = AuthUtil.getCompanyId();
         List<CarResponse> cars = carService.getAllCars(companyId, page, size);
+        log.info("CarsGetAll cars size {}, companyId {}", cars.size(), companyId);
         return ResponseEntity.ok(cars);
     }
 

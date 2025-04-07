@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface CarLogRepository extends JpaRepository<CarLog, Long> {
 
@@ -31,6 +32,8 @@ public interface CarLogRepository extends JpaRepository<CarLog, Long> {
             Pageable pageable
     );
 
+
+    List<CarLog> findByMdnIn(List<String> mdns);
 
 
 }

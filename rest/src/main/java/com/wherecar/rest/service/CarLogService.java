@@ -16,4 +16,6 @@ public interface CarLogService {
 
     void deleteCarLogDetails(Long id);
 
+    CarLogsResponse getAllCarLogsStatics(Long companyId);
+
 }

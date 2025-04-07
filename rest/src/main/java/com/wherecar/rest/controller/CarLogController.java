@@ -70,4 +70,15 @@ class CarLogController {
         return ResponseEntity.ok().build();
     }
 
+    // 대시보드 운행 통계 달별 km 및 운행건수를 counting
+    @GetMapping("/statics")
+    public ResponseEntity<CarLogsResponse> carLogsStaticsGetAll() {
+
+        Long companyId = AuthUtil.getCompanyId();
+        log.info("companyId : ", companyId);
+        CarLogsResponse carLogsStaticsResponse = carLogService.getAllCarLogsStatics(companyId);
+
+        return ResponseEntity.ok(carLogsStaticsResponse);
+    }
+
 }

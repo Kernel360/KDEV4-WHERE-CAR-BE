@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -103,6 +104,44 @@ public class CarLogServiceImpl implements CarLogService {
         }
         carLogRepository.deleteById(id);
 
+    }
+
+    @Override
+    public CarLogsResponse getAllCarLogsStatics(Long companyId) {
+
+        List<String> mdns = carRepository.findMdnsByCompanyId(companyId);
+
+        List<CarLog> logs = carLogRepository.findByMdnIn(mdns);
+
+        LocalDate now = LocalDate.now();
+        int currentYear = now.getYear();
+        int currentMonth = now.getMonthValue();
+
+        // ✅ 당월 로그 필터링
+        List<CarLog> currentMonthLogs = logs.stream()
+                .filter(log -> {
+                    LocalDateTime onTime = log.getOnTime();
+                    return onTime != null
+                            && onTime.getYear() == currentYear
+                            && onTime.getMonthValue() == currentMonth;
+                })
+                .collect(Collectors.toList());
+
+        // ✅ 로그 건수
+        long count = currentMonthLogs.size();
+
+        // ✅ 총 주행 거리 계산
+        long totalMileage = currentMonthLogs.stream()
+                .mapToLong(log -> log.getOffMileage() - log.getOnMileage())
+                .sum();
+
+        log.info("count", count);
+        log.info("totalMileage", totalMileage);
+
+        return CarLogsResponse.builder()
+                .totalMileage((int) totalMileage)  // 필요 시 long → int 캐스팅
+                .carLogsCount(String.valueOf(count)) // count가 String이면 이렇게
+                .build();
     }
 
 }
