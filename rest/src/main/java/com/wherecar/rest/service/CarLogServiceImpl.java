@@ -4,6 +4,7 @@ import com.wherecar.rest.domain.CarLog;
 import com.wherecar.rest.dto.CarLogDetailResponse;
 import com.wherecar.rest.dto.CarLogsResponse;
 import com.wherecar.rest.dto.CarLogsUpdateRequest;
+import com.wherecar.rest.dto.MonthlyMileage;
 import com.wherecar.rest.repository.CarLogRepository;
 import com.wherecar.rest.repository.CarRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -110,14 +113,24 @@ public class CarLogServiceImpl implements CarLogService {
     public CarLogsResponse getAllCarLogsStatics(Long companyId) {
 
         List<String> mdns = carRepository.findMdnsByCompanyId(companyId);
+        System.out.println("mdnssssssssssssssssss : " + mdns);
 
         List<CarLog> logs = carLogRepository.findByMdnIn(mdns);
+        System.out.println("logs.size() = " + logs.size());
+
+        // 로그 하나 찍어보기
+        logs.stream().findFirst().ifPresent(log -> {
+            System.out.println("📝 Sample log: onTime=" + log.getOnTime() + ", onMileage=" + log.getOnMileage());
+        });
 
         LocalDate now = LocalDate.now();
         int currentYear = now.getYear();
         int currentMonth = now.getMonthValue();
 
-        // ✅ 당월 로그 필터링
+        System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYY : " + currentYear);
+        System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmm : " + currentMonth);
+
+        // 당월 로그 필터링
         List<CarLog> currentMonthLogs = logs.stream()
                 .filter(log -> {
                     LocalDateTime onTime = log.getOnTime();
@@ -127,21 +140,45 @@ public class CarLogServiceImpl implements CarLogService {
                 })
                 .collect(Collectors.toList());
 
-        // ✅ 로그 건수
+        // 로그 건수
         long count = currentMonthLogs.size();
 
-        // ✅ 총 주행 거리 계산
+        // 총 주행 거리 계산
         long totalMileage = currentMonthLogs.stream()
                 .mapToLong(log -> log.getOffMileage() - log.getOnMileage())
                 .sum();
 
-        log.info("count", count);
-        log.info("totalMileage", totalMileage);
+        // 최근 6개월간 총 주행거리 계산
+        Map<String, Integer> monthlyMileageMap = new LinkedHashMap<>();
+        for (int i = 5; i >= 0; i--) {
+            LocalDate targetDate = now.minusMonths(i);
+            int year = targetDate.getYear();
+            int month = targetDate.getMonthValue();
+
+            int mileage = logs.stream()
+                    .filter(log -> {
+                        LocalDateTime onTime = log.getOnTime();
+                        return onTime != null
+                                && onTime.getYear() == year
+                                && onTime.getMonthValue() == month;
+                    })
+                    .mapToInt(log -> log.getOffMileage() - log.getOnMileage())
+                    .sum();
+
+            String key = String.format("%d-%02d", year, month);
+            monthlyMileageMap.put(key, mileage);
+        }
+
+        List<MonthlyMileage> monthlyMileages = monthlyMileageMap.entrySet().stream()
+                .map(entry -> new MonthlyMileage(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
 
         return CarLogsResponse.builder()
-                .totalMileage((int) totalMileage)  // 필요 시 long → int 캐스팅
-                .carLogsCount(String.valueOf(count)) // count가 String이면 이렇게
+                .totalMileage((int) totalMileage)
+                .carLogsCount(String.valueOf(count))
+                .monthlyMileages(monthlyMileages)
                 .build();
     }
+
 
 }

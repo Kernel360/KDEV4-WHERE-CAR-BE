@@ -75,7 +75,7 @@ class CarLogController {
     public ResponseEntity<CarLogsResponse> carLogsStaticsGetAll() {
 
         Long companyId = AuthUtil.getCompanyId();
-        log.info("companyId : ", companyId);
+        System.out.println("companyId = " + companyId);
         CarLogsResponse carLogsStaticsResponse = carLogService.getAllCarLogsStatics(companyId);
 
         return ResponseEntity.ok(carLogsStaticsResponse);

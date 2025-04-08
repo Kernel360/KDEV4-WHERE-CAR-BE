@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -36,4 +37,6 @@ public class CarLogsResponse {
     // 대시보드 운행 통계 운행 건수
     private String carLogsCount;
 
+    // 대시보드 월별 월간 주행거리
+    private List<MonthlyMileage> monthlyMileages;
 }
