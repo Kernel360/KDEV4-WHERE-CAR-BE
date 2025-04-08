@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class PasswordRequest {
-    String oldPassword;
+    String currentPassword;
     String newPassword;
 }
