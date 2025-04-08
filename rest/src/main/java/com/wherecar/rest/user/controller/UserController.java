@@ -94,10 +94,10 @@ public class UserController {
 
 //    @RequiredPermission(PermissionType.ROOT)
     @PutMapping("/password")
-    public ResponseEntity<Void> passwordUpdate(@RequestBody String password){
+    public ResponseEntity<Void> passwordUpdate(@RequestBody PasswordRequest passwordRequest){
         Long userId = AuthUtil.getUserId();
         log.info("Updating password");
-        userService.updatePasswordById(userId, password);
+        userService.updatePasswordById(userId, passwordRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -113,7 +113,7 @@ public class UserController {
     }
 
     @PutMapping("/permissions/my")
-    public ResponseEntity<PermissionResponse> myPermissionUpdate(@RequestBody PermissionRequest permissionRequest){
+    public ResponseEntity<Void> myPermissionUpdate(@RequestBody PermissionRequest permissionRequest){
         Long userId = AuthUtil.getUserId();
         log.info("Retrieving my permission with id: {}", userId);
         userService.updatePermission(userId, permissionRequest);
