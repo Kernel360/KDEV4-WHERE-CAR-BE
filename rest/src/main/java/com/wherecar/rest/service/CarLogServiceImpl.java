@@ -113,22 +113,12 @@ public class CarLogServiceImpl implements CarLogService {
     public CarLogsResponse getAllCarLogsStatics(Long companyId) {
 
         List<String> mdns = carRepository.findMdnsByCompanyId(companyId);
-        System.out.println("mdnssssssssssssssssss : " + mdns);
 
         List<CarLog> logs = carLogRepository.findByMdnIn(mdns);
-        System.out.println("logs.size() = " + logs.size());
-
-        // 로그 하나 찍어보기
-        logs.stream().findFirst().ifPresent(log -> {
-            System.out.println("📝 Sample log: onTime=" + log.getOnTime() + ", onMileage=" + log.getOnMileage());
-        });
 
         LocalDate now = LocalDate.now();
         int currentYear = now.getYear();
         int currentMonth = now.getMonthValue();
-
-        System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYY : " + currentYear);
-        System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmm : " + currentMonth);
 
         // 당월 로그 필터링
         List<CarLog> currentMonthLogs = logs.stream()
