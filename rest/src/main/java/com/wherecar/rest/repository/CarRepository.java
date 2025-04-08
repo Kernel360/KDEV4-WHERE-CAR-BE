@@ -1,6 +1,7 @@
 package com.wherecar.rest.repository;
 
 import com.wherecar.rest.domain.Car;
+import com.wherecar.rest.domain.CarLog;
 import com.wherecar.rest.domain.OwnerType;
 import jdk.jshell.Snippet;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CarRepository extends JpaRepository<Car, Long> {
@@ -31,4 +33,7 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     long countByCompanyId(Long companyId);
     long countByCompanyIdAndOwnerType(Long companyId, OwnerType ownerType);
 
+    // 대시보드 운행통계관련 해당회사 보유 차량조회
+    @Query("SELECT c.mdn FROM Car c WHERE c.company.id = :companyId")
+    List<String> findMdnsByCompanyId(@Param("companyId") Long companyId);
 }
