@@ -112,9 +112,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePasswordById(Long userId, String password) {
+    public void updatePasswordById(Long userId, PasswordRequest passwordRequest) {
         User user = userRepository.findById(userId).orElseThrow();
-        user.changePassword(passwordEncoder.encode(password));
+        if (!passwordEncoder.matches(passwordRequest.getOldPassword(), user.getPassword())) {
+            user.changePassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
+        }
         userRepository.save(user);
     }
 
