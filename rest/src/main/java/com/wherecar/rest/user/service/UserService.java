@@ -11,7 +11,7 @@ public interface UserService {
     public UserResponse getUserById(Long userId);
     public void deleteUserById(Long userId);
     public void updateUserById(Long userId, UserRequest userRequest);
-    public void updatePasswordById(Long userId, String password);
+    public void updatePasswordById(Long userId, PasswordRequest passwordRequest);
 
     //permission
     public void updatePermission(Long userId, PermissionRequest permissionRequest);

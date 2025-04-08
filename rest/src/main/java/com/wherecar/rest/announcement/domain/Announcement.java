@@ -25,7 +25,8 @@ public class Announcement extends BaseEntity {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "content")
+    @Lob
+    @Column(name = "content", columnDefinition = "LONGTEXT")
     private String content;
 
     public void changeTitle(String title) {
