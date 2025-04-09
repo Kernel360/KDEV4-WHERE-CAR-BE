@@ -1,5 +1,6 @@
 package com.wherecar.rest.domain;
 
+import com.wherecar.rest.geo.domain.GeoInfo;
 import jakarta.persistence.*;
 import lombok.*;
 

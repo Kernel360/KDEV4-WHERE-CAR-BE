@@ -1,8 +1,7 @@
-package com.wherecar.rest.service;
+package com.wherecar.rest.geo.service;
 
-import com.wherecar.rest.domain.GeoInfo;
-import com.wherecar.rest.dto.GeoFenceResponse;
-import com.wherecar.rest.dto.GeoInfoRegistRequest;
+import com.wherecar.rest.geo.dto.GeoFenceResponse;
+import com.wherecar.rest.geo.dto.GeoInfoRegistRequest;
 
 public interface GeoInfoService {
 

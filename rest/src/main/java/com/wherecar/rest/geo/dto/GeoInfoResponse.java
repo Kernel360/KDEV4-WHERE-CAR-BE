@@ -1,5 +1,6 @@
-package com.wherecar.rest.dto;
+package com.wherecar.rest.geo.dto;
 
+import com.wherecar.rest.dto.ControlGeoList;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

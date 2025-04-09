@@ -1,12 +1,12 @@
-package com.wherecar.rest.service;
+package com.wherecar.rest.geo.service;
 
 import com.wherecar.rest.domain.Car;
-import com.wherecar.rest.domain.GeoLog;
-import com.wherecar.rest.dto.GeoLogRequest;
-import com.wherecar.rest.dto.GeoLogResponse;
-import com.wherecar.rest.dto.GeoInfoDTO;
+import com.wherecar.rest.geo.domain.GeoLog;
+import com.wherecar.rest.geo.dto.GeoLogRequest;
+import com.wherecar.rest.geo.dto.GeoLogResponse;
+import com.wherecar.rest.geo.dto.GeoInfoDTO;
 import com.wherecar.rest.repository.CarRepository;
-import com.wherecar.rest.repository.GeoLogRepository;
+import com.wherecar.rest.geo.repository.GeoLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

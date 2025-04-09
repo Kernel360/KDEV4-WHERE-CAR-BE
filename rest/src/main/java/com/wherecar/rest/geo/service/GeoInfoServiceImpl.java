@@ -1,17 +1,13 @@
-package com.wherecar.rest.service;
+package com.wherecar.rest.geo.service;
 
-import com.wherecar.rest.domain.GeoInfo;
-import com.wherecar.rest.dto.GeoFenceResponse;
-import com.wherecar.rest.dto.GeoInfoRegistRequest;
-import com.wherecar.rest.dto.GeoInfoRequest;
-import com.wherecar.rest.dto.GeoInfoResponse;
-import com.wherecar.rest.repository.GeoInfoRepository;
+import com.wherecar.rest.geo.domain.GeoInfo;
+import com.wherecar.rest.geo.dto.GeoFenceResponse;
+import com.wherecar.rest.geo.dto.GeoInfoRegistRequest;
+import com.wherecar.rest.geo.repository.GeoInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service

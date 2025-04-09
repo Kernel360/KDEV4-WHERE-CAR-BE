@@ -1,7 +1,7 @@
-package com.wherecar.rest.service;
+package com.wherecar.rest.geo.service;
 
-import com.wherecar.rest.dto.GeoLogRequest;
-import com.wherecar.rest.dto.GeoLogResponse;
+import com.wherecar.rest.geo.dto.GeoLogRequest;
+import com.wherecar.rest.geo.dto.GeoLogResponse;
 
 import java.util.List;
 

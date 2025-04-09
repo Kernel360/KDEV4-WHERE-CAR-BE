@@ -1,13 +1,11 @@
-package com.wherecar.rest.controller;
+package com.wherecar.rest.geo.controller;
 
-import com.wherecar.rest.domain.GeoInfo;
-import com.wherecar.rest.dto.*;
-import com.wherecar.rest.service.GeoInfoService;
+import com.wherecar.rest.geo.dto.GeoFenceResponse;
+import com.wherecar.rest.geo.dto.GeoInfoRegistRequest;
+import com.wherecar.rest.geo.service.GeoInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/geoInfo")

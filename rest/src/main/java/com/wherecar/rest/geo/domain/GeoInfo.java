@@ -1,5 +1,6 @@
-package com.wherecar.rest.domain;
+package com.wherecar.rest.geo.domain;
 
+import com.wherecar.rest.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class GeoInfo extends BaseEntity{
+public class GeoInfo extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="geo_info_id")

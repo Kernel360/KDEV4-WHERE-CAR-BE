@@ -1,6 +1,6 @@
-package com.wherecar.rest.repository;
+package com.wherecar.rest.geo.repository;
 
-import com.wherecar.rest.domain.GeoLog;
+import com.wherecar.rest.geo.domain.GeoLog;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 

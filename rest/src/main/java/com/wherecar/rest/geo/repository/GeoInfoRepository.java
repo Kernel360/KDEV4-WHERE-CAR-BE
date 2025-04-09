@@ -1,6 +1,6 @@
-package com.wherecar.rest.repository;
+package com.wherecar.rest.geo.repository;
 
-import com.wherecar.rest.domain.GeoInfo;
+import com.wherecar.rest.geo.domain.GeoInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
