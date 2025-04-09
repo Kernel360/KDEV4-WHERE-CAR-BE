@@ -1,11 +1,14 @@
 package com.wherecar.rest.geo.controller;
 
-import com.wherecar.rest.geo.dto.GeoFenceResponse;
-import com.wherecar.rest.geo.dto.GeoInfoRegistRequest;
+import com.wherecar.rest.geo.dto.GeoInfoRequest;
+import com.wherecar.rest.geo.dto.GeoInfoResponse;
 import com.wherecar.rest.geo.service.GeoInfoService;
+import com.wherecar.rest.user.auth.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/geoInfo")
@@ -16,9 +19,9 @@ public class GeoInfoController {
 
     // GeoFence 정보 등록
     @PostMapping("/create")
-    public ResponseEntity<Void> geoInfoCreate(@RequestBody GeoInfoRegistRequest geoInfoRegistRequest) {
-
-        geoInfoService.createGeoInfo(geoInfoRegistRequest);
+    public ResponseEntity<Void> geoInfoCreate(@RequestBody GeoInfoRequest geoInfoRequest) {
+        Long companyId = AuthUtil.getCompanyId();
+        geoInfoService.createGeoInfo(geoInfoRequest, companyId);
 
         return ResponseEntity.ok().build();
 
@@ -32,19 +35,19 @@ public class GeoInfoController {
 
     // GeoInfo 조회
     @GetMapping("/{id}")
-    public ResponseEntity<GeoFenceResponse> geoInfoRead(@PathVariable Long id) {
+    public ResponseEntity<GeoInfoResponse> geoInfoGet(@PathVariable Long id) {
 
-        GeoFenceResponse geoFenceResponse = geoInfoService.getGeoInfo(id);
+        GeoInfoResponse geoInfoResponse = geoInfoService.getGeoInfo(id);
 
-        return ResponseEntity.ok(geoFenceResponse);
+        return ResponseEntity.ok(geoInfoResponse);
 
     }
 
     // GeoInfo 수정
     @PutMapping("/{id}")
-    public ResponseEntity<Void> geoInfoUpdate(@PathVariable Long id, @RequestBody GeoInfoRegistRequest geoInfoRegistRequest) {
+    public ResponseEntity<Void> geoInfoUpdate(@PathVariable Long id, @RequestBody GeoInfoRequest geoInfoRequest) {
 
-        geoInfoService.updateGeoInfo(id, geoInfoRegistRequest);
+        geoInfoService.updateGeoInfo(id, geoInfoRequest);
 
         return ResponseEntity.ok().build();
     }
@@ -57,5 +60,12 @@ public class GeoInfoController {
 
         return ResponseEntity.ok().build();
 
+    }
+
+    @GetMapping("/companies/my")
+    public ResponseEntity<List<GeoInfoResponse>> geoInfoGetByMyCompany() {
+        Long companyId = AuthUtil.getCompanyId();
+        List<GeoInfoResponse> geoInfoResponses = geoInfoService.getGeoInfosByCompanyId(companyId);
+        return ResponseEntity.ok(geoInfoResponses);
     }
 }

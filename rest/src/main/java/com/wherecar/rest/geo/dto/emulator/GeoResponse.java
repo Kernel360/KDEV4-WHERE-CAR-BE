@@ -1,4 +1,4 @@
-package com.wherecar.rest.geo.dto;
+package com.wherecar.rest.geo.dto.emulator;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GeoList {
+public class GeoResponse {
     private String geoCtrId;        // 지오펜스 아이디
     private String upVal;           // 업데이트 값
     private String geoGrpId;        // 그룹 아이디
