@@ -28,6 +28,7 @@ public class GpsLogRequest {
     @JsonProperty("cCnt")
     private String cCnt;    // 주기 정보 개수
 
+    @Builder.Default
     @JsonProperty("cList")
     private List<GpsLogInfo> cList = new ArrayList<>(); // 주기 정보 리스트
 
