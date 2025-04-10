@@ -37,18 +37,38 @@ public class JsonDatabase {
   public void initialize() {
     try {
       if (!file.exists()) {
+        // 파일이 없는 경우 새 파일 생성
         boolean isFileCreated = file.createNewFile();
         if (isFileCreated) {
-          CarIdentity carIdentity = new CarIdentity();
-          carIdentity.setMdn(mdn);
-          carIdentity.setVrp(vrp);
-          carIdentity.setTotalDistance(String.valueOf(0));
+          CarIdentity carIdentity = createData();
           objectMapper.writeValue(file, List.of(carIdentity));
+          log.info("데이터베이스 파일 생성 및 MDN {} 초기 데이터 추가 완료", mdn);
+        }
+      } else {
+        // 파일은 존재하지만 해당 MDN을 가진 데이터가 없는지 확인
+        List<CarIdentity> existingData = readData();
+        boolean mdnExists = existingData.stream()
+            .anyMatch(car -> car.getMdn().equals(mdn));
+
+        if (!mdnExists) {
+          // MDN이 없으면 새 데이터 추가
+          CarIdentity carIdentity = createData();
+          existingData.add(carIdentity);
+          writeData(existingData);
+          log.info("MDN {}에 대한 데이터가 없어 새 데이터를 추가했습니다", mdn);
         }
       }
     } catch (IOException e) {
-      log.error("Failed to initialize database file", e);
+      log.error("데이터베이스 파일 초기화 실패", e);
     }
+  }
+
+  private CarIdentity createData() {
+    CarIdentity carIdentity = new CarIdentity();
+    carIdentity.setMdn(mdn);
+    carIdentity.setVrp(vrp);
+    carIdentity.setTotalDistance(String.valueOf(0));
+    return carIdentity;
   }
 
   public List<CarIdentity> readData() {
