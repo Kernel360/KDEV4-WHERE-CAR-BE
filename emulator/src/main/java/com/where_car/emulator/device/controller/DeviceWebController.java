@@ -23,11 +23,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class DeviceWebController {
 
   private final DeviceService deviceService;
-  private final FileNameUtil fileNameUtil;
 
-  public DeviceWebController(DeviceService deviceService, FileNameUtil fileNameUtil) {
+  public DeviceWebController(DeviceService deviceService) {
     this.deviceService = deviceService;
-    this.fileNameUtil = fileNameUtil;
   }
 
   /**
