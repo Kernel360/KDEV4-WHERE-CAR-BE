@@ -1,0 +1,3 @@
+INSERT INTO wherecar.car_statuses (car_status_id, created_at, updated_at, battery_voltage, car_state, mileage, car_id) VALUES (1, '2023-04-01 15:30:00.000000', '2023-04-01 15:30:00.000000', 13, 'RUNNING', 15.672, 1);
+INSERT INTO wherecar.car_statuses (car_status_id, created_at, updated_at, battery_voltage, car_state, mileage, car_id) VALUES (2, '2023-04-01 15:30:00.000000', '2023-04-01 15:30:00.000000', 11, 'RUNNING', 0, 2);
+INSERT INTO wherecar.car_statuses (car_status_id, created_at, updated_at, battery_voltage, car_state, mileage, car_id) VALUES (3, '2023-04-01 15:30:00.000000', '2023-04-01 15:30:00.000000', 13, 'RUNNING', 0, 3);
