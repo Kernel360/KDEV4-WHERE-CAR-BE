@@ -1,9 +1,11 @@
 package com.where_car.emulator.device.controller;
 
 import com.where_car.emulator.device.service.DeviceService;
+import com.where_car.emulator.global.error.DeviceException;
 import com.where_car.emulator.global.utill.FileNameUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -21,11 +23,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class DeviceWebController {
 
   private final DeviceService deviceService;
-  private final FileNameUtil fileNameUtil;
 
-  public DeviceWebController(DeviceService deviceService, FileNameUtil fileNameUtil) {
+  public DeviceWebController(DeviceService deviceService) {
     this.deviceService = deviceService;
-    this.fileNameUtil = fileNameUtil;
   }
 
   /**
@@ -65,13 +65,6 @@ public class DeviceWebController {
     return "dashboard";
   }
 
-  private String capitalizeFirstLetter(String str) {
-    if (str == null || str.isEmpty()) {
-      return str;
-    }
-    return str.substring(0, 1).toUpperCase() + str.substring(1);
-  }
-
   /**
    * <pre>
    *   에뮬레이터 활성화/비활성화
@@ -84,5 +77,13 @@ public class DeviceWebController {
   public String deviceUpdateStatus() {
     deviceService.toggleDevice();
     return "redirect:/dashboard";
+  }
+
+  @ExceptionHandler(DeviceException.class)
+  public String handleDeviceException(DeviceException e, Model model) {
+    model.addAttribute("errorCode", e.getErrorCode().getCode());
+    model.addAttribute("errorMessage", e.getErrorCode().getMessage());
+    model.addAttribute("exception", e.getClass().getName());
+    return "error/500";
   }
 }

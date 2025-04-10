@@ -1,14 +1,14 @@
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: prod
 
 server:
-  port: 8090
+  port: 8095
 
 wherecar:
   server:
-    url: http://localhost:8080
+    url: http://localhost:8090
   emulator:
     car-mdn: 01234567890
     car-vrp: 12가3456

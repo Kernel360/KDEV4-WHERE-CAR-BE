@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>어디카 에뮬레이터 - 500</title>
+  <title>서버 오류 - 어디카 에뮬레이터</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0'/><circle cx='12' cy='10' r='3'/></svg>">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -135,12 +135,18 @@
       </svg>
     </button>
   </header>
-
   <div class="relative mb-12 overflow-hidden rounded-xl bg-gradient-to-r from-destructive/10 to-destructive/5 dark:from-destructive/20 dark:to-destructive/10">
     <div class="relative p-8 text-center">
       <h2 class="text-2xl font-semibold text-destructive dark:text-destructive-foreground mb-2">서버 오류가 발생했습니다</h2>
-      <p class="text-base text-muted-foreground dark:text-gray-400 mb-8">일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.</p>
-      
+      <p class="text-base text-muted-foreground dark:text-gray-400 mb-8">
+        <span th:if="${errorMessage}" th:text="${errorMessage}">일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.</span>
+        <span th:unless="${errorMessage}">일시적인 서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.</span>
+      </p>
+      <p th:if="${errorCode}" class="text-sm font-mono bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded mb-8 inline-block">
+        에러 코드: <span th:text="${errorCode}" class="text-destructive font-semibold">E001</span>
+      </p>
+      <p th:unless="${errorCode}" class="mb-8"></p>
+
       <div class="flex justify-center">
         <svg class="w-32 h-32 text-destructive" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>
@@ -160,13 +166,12 @@
       </p>
     </div>
     <div class="p-8">
-      <a href="/dashboard" class="inline-flex items-center justify-center rounded-lg text-base font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-12 px-6 py-2 w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg transition-all duration-200">
+      <a href="/" class="inline-flex items-center justify-center rounded-lg text-base font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-12 px-6 py-2 w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg transition-all duration-200">
         대시보드로 돌아가기
       </a>
     </div>
   </div>
 </div>
-
 <footer class="bg-gray-200 dark:bg-gray-800 text-center py-6 mt-8 w-full">
   <p class="text-sm text-gray-600 dark:text-gray-400">&copy; 2025 WHERECAR. All rights reserved.</p>
 </footer>

@@ -12,6 +12,8 @@ import com.where_car.emulator.device.dto.CarStopDto;
 import com.where_car.emulator.device.dto.CycleInfoDto;
 import com.where_car.emulator.device.repository.JsonDatabase;
 import com.where_car.emulator.global.constants.DateConstant;
+import com.where_car.emulator.global.error.DeviceErrorCode;
+import com.where_car.emulator.global.error.DeviceException;
 import com.where_car.emulator.gps_module.service.GpsPathService;
 import com.where_car.emulator.gps_module.service.GpsService;
 import jakarta.annotation.PostConstruct;
@@ -87,15 +89,27 @@ public class DeviceService {
    */
   public void toggleDevice() {
     if (!isDeviceStatus()) {
-      log.info("차량의 Key-On 신호가 감지되었습니다, 스케줄러를 작동합니다.");
-      setDeviceStatus(true);
-      generateCarStart();
-      startScheduler();
+      try {
+        log.info("차량의 Key-On 신호가 감지되었습니다, 스케줄러를 작동합니다.");
+        setDeviceStatus(true);
+        generateCarStart();
+        startScheduler();
+      } catch (Exception e) {
+        setDeviceStatus(false); // 상태를 원래대로 되돌림
+        log.error("차량 시동 과정에서 오류 발생: {}", e.getMessage());
+        throw new DeviceException(DeviceErrorCode.DEVICE_START_FAILED, e);
+      }
     } else {
-      log.info("차량의 Key-Off 신호가 감지되었습니다, 스케줄러를 중지합니다.");
-      setDeviceStatus(false);
-      stopScheduler();
-      generateCarStop();
+      try {
+        log.info("차량의 Key-Off 신호가 감지되었습니다, 스케줄러를 중지합니다.");
+        setDeviceStatus(false);
+        stopScheduler();
+        generateCarStop();
+      } catch (Exception e) {
+        setDeviceStatus(true); // 상태를 원래대로 되돌림
+        log.error("차량 시동 종료 과정에서 오류 발생: {}", e.getMessage());
+        throw new DeviceException(DeviceErrorCode.DEVICE_STOP_FAILED, e);
+      }
     }
   }
 
@@ -196,7 +210,7 @@ public class DeviceService {
     CarStop carStop = createCarStop();
     CarStopDto carStopDto = createCarStopDto(carStop);
 
-    if (START_TIME != "") {
+    if (!Objects.equals(START_TIME, "")) {
       START_TIME = ""; // 시동 시간 초기화
     }
 
