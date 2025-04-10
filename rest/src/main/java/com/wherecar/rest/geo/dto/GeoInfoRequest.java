@@ -1,6 +1,5 @@
 package com.wherecar.rest.geo.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,8 +15,6 @@ public class GeoInfoRequest {
     private String geoRange;
     private Double latitude;
     private Double longitude;
-    @JsonFormat(pattern = "yyyyMMddHHmmss")
     private LocalDateTime onTime;
-    @JsonFormat(pattern = "yyyyMMddHHmmss")
     private LocalDateTime offTime;
 }
