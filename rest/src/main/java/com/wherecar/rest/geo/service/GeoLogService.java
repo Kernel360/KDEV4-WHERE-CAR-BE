@@ -1,12 +1,12 @@
-package com.wherecar.rest.service;
+package com.wherecar.rest.geo.service;
 
 import com.wherecar.rest.domain.Car;
-import com.wherecar.rest.domain.GeoLog;
-import com.wherecar.rest.dto.GeoLogRequest;
-import com.wherecar.rest.dto.GeoLogResponse;
-import com.wherecar.rest.dto.GeoInfoDTO;
+import com.wherecar.rest.geo.domain.GeoLog;
+import com.wherecar.rest.geo.dto.GeoLogRequest;
+import com.wherecar.rest.geo.dto.GeoLogResponse;
+import com.wherecar.rest.geo.dto.GeoInfoResponse;
 import com.wherecar.rest.repository.CarRepository;
-import com.wherecar.rest.repository.GeoLogRepository;
+import com.wherecar.rest.geo.repository.GeoLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,12 +19,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class GeoLogServiceImpl implements GeoLogService {
+public class GeoLogService {
 
     private final GeoLogRepository geoLogRepository;
     private final CarRepository carRepository;
 
-    @Override
+
     public List<GeoLogResponse> getGeoLogByCarId(Long carId) {
         Car car = carRepository.findById(carId).orElseThrow();
         List<GeoLog> geoLogs = geoLogRepository.getGeoLogByMdn(car.getMdn());
@@ -45,7 +45,7 @@ public class GeoLogServiceImpl implements GeoLogService {
                     .speed(Double.valueOf(geoLog.getSpeed()))
                     .sum(Double.valueOf(geoLog.getSum()))
                     .mdn(geoLog.getMdn())
-                    .geoInfoDTO(GeoInfoDTO.builder()
+                    .geoInfoResponse(GeoInfoResponse.builder()
                             .geoEventType(geoLog.getGeoInfo().getGeoEventType())
                             .geoRange(geoLog.getGeoInfo().getGeoRange())
                             .latitude(geoLog.getGeoInfo().getLatitude())
@@ -59,7 +59,7 @@ public class GeoLogServiceImpl implements GeoLogService {
         return geoLogResponses;
     }
 
-    @Override
+
     @Transactional(readOnly = true)
     public GeoLogResponse getGeoLog(Long id) {
         GeoLog geoLog =  geoLogRepository.findById(id).orElseThrow();
@@ -77,7 +77,7 @@ public class GeoLogServiceImpl implements GeoLogService {
                 .speed(Double.valueOf(geoLog.getSpeed()))
                 .sum(Double.valueOf(geoLog.getSum()))
                 .mdn(geoLog.getMdn())
-                .geoInfoDTO(GeoInfoDTO.builder()
+                .geoInfoResponse(GeoInfoResponse.builder()
                         .geoEventType(geoLog.getGeoInfo().getGeoEventType())
                         .geoRange(geoLog.getGeoInfo().getGeoRange())
                         .latitude(geoLog.getGeoInfo().getLatitude())
@@ -88,7 +88,7 @@ public class GeoLogServiceImpl implements GeoLogService {
                 .build();
     }
 
-    @Override
+
     public void updateGeoLog(Long id, GeoLogRequest geoLogRequest) {
 
         GeoLog geoLog =  geoLogRepository.findById(id).orElseThrow();
@@ -105,7 +105,7 @@ public class GeoLogServiceImpl implements GeoLogService {
         geoLogRepository.save(geoLog);
     }
 
-    @Override
+
     public void deleteGeoLog(Long id) {
         if(!geoLogRepository.existsById(id)){
             throw new RuntimeException("해당 로그에 대한 정보를 찾을 수 없습니다.");

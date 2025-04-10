@@ -1,4 +1,4 @@
-package com.wherecar.rest.dto;
+package com.wherecar.rest.geo.dto.emulator;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GeoInfoRequest {
+public class SetInfoRequest {
     private String mdn;     // 차량 번호
     private String tid;     // 터미널 아이디
     private String mid;     // 제조사 아이디

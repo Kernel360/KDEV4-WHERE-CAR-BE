@@ -1,8 +1,8 @@
-package com.wherecar.rest.controller;
+package com.wherecar.rest.geo.controller;
 
-import com.wherecar.rest.dto.GeoLogRequest;
-import com.wherecar.rest.dto.GeoLogResponse;
-import com.wherecar.rest.service.GeoLogService;
+import com.wherecar.rest.geo.dto.GeoLogRequest;
+import com.wherecar.rest.geo.dto.GeoLogResponse;
+import com.wherecar.rest.geo.service.GeoLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/geoLog")
+@RequestMapping("/api/geoLogs")
 @RequiredArgsConstructor
 public class GeoLogController {
 

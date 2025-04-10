@@ -1,4 +1,4 @@
-package com.wherecar.rest.dto;
+package com.wherecar.rest.geo.dto.emulator;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GeoInfoResponse {
+public class SetInfoResponse {
     private String rstCd;           // 결과 코드
     private String rstMsg;          // 결과 메시지
     private String mdn;             // 차량 번호
@@ -19,7 +19,7 @@ public class GeoInfoResponse {
     private String ctrCnt;          // 제어명령 개수
     private String geoCnt;          // 지오펜싱 설정 개수
 
-    private List<ControlGeoList> ctrList; // 제어 리스트
+    private List<ControlResponse> ctrList; // 제어 리스트
 
-    private List<GeoList> geoList;        // 지오펜스 리스트
+    private List<GeoResponse> geoList;        // 지오펜스 리스트
 }

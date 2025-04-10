@@ -1,5 +1,6 @@
-package com.wherecar.rest.domain;
+package com.wherecar.rest.geo.domain;
 
+import com.wherecar.rest.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,14 +13,14 @@ import java.time.LocalDateTime;
 @ToString(exclude = "geoInfo")
 @NoArgsConstructor
 @AllArgsConstructor
-public class GeoLog extends BaseEntity{
+public class GeoLog extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="geo_log_id")
     private Long id;
 
+    @Column(name = "mdn")
     private String mdn;
-
 
     @Column(name = "o_time")
     private LocalDateTime oTime;
@@ -28,10 +29,10 @@ public class GeoLog extends BaseEntity{
     private String gpsCondition;
 
     @Column(name = "latitude")
-    private Integer latitude;
+    private Double latitude;
 
     @Column(name = "longitude")
-    private Integer longitude;
+    private Double longitude;
 
     @Column(name = "angle")
     private Integer angle;
@@ -61,11 +62,11 @@ public class GeoLog extends BaseEntity{
         this.gpsCondition = gpsCondition;
     }
 
-    public void changeLatitude(Integer latitude) {
+    public void changeLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public void changeLongitude(Integer longitude) {
+    public void changeLongitude(Double longitude) {
         this.longitude = longitude;
     }
 

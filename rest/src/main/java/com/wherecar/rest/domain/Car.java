@@ -1,5 +1,6 @@
 package com.wherecar.rest.domain;
 
+import com.wherecar.rest.geo.domain.GeoInfo;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,7 +38,7 @@ public class Car extends BaseEntity{
     @JoinColumn(name="company_id")
     private Company company;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="geo_info_id")
     private GeoInfo geoInfo;
 

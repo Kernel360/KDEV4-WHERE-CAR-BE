@@ -1,4 +1,4 @@
-package com.wherecar.rest.dto;
+package com.wherecar.rest.geo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,8 +15,9 @@ public class GeoLogRequest {
     private Integer angle;
     private String evaluateValue;
     private String gpsCondition;
-    private Integer latitude;
-    private Integer longitude;
+    private Double latitude;
+    private Double longitude;
     private Integer speed;
     private Integer sum;
+    private GeoInfoResponse geoInfoResponse;
 }
