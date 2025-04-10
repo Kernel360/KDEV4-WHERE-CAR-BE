@@ -7,11 +7,6 @@ public class DeviceException extends RuntimeException {
 
   private final DeviceErrorCode errorCode;
 
-  public DeviceException(DeviceErrorCode errorCode) {
-    super(errorCode.getMessage());
-    this.errorCode = errorCode;
-  }
-
   public DeviceException(DeviceErrorCode errorCode, Throwable cause) {
     super(errorCode.getMessage(), cause);
     this.errorCode = errorCode;
