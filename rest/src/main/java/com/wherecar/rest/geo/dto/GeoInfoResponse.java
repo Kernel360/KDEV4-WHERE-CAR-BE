@@ -19,8 +19,6 @@ public class GeoInfoResponse {
     private String geoRange;
     private Double latitude;
     private Double longitude;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
     private LocalDateTime onTime;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
     private LocalDateTime offTime;
 }

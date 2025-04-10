@@ -16,8 +16,6 @@ public class GeoInfoRequest {
     private String geoRange;
     private Double latitude;
     private Double longitude;
-    @JsonFormat(pattern = "yyyyMMddHHmmss")
     private LocalDateTime onTime;
-    @JsonFormat(pattern = "yyyyMMddHHmmss")
     private LocalDateTime offTime;
 }
