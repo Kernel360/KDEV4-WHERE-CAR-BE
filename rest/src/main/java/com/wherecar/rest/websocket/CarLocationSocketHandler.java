@@ -70,7 +70,7 @@ public class CarLocationSocketHandler extends TextWebSocketHandler {
 
                     //TODO: 실제 시간으로 변경
                     //LocalDateTime now = LocalDateTime.now().withNano(0);
-                    LocalDateTime now = LocalDateTime.of(2025, 4, 1, 9, 1, 1, 0);
+                    LocalDateTime now = LocalDateTime.of(2025, 4, 10, 16, 51, 0, 0);
 
                     LocalDateTime baseTime = now.minusMinutes(1);
 
