@@ -12,18 +12,6 @@ spring:
     thymeleaf: # 기능 테스트를 위한 타임리프 사용
       check-template-location: false # 타임리프 검사 비활성화
 
-server:
-  port: 8090
-
-wherecar:
-  server:
-    url: http://localhost:8080
-  emulator:
-    car-mdn: 01234567890
-    car-vrp: 12가3456
-  db:
-    file-name: device_db.json
-
 logging:
   level:
     org.hibernate:
