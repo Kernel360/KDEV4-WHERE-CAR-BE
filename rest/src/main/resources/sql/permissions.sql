@@ -28,7 +28,3 @@ INSERT INTO permissions (type) VALUES ('PERM_DASHBOARD_EDIT');
 -- 관리자 권한
 INSERT INTO permissions (type) VALUES ('PERM_ADMIN');
 
-
-SHOW CREATE TABLE permissions;
-
-SHOW COLUMNS FROM permissions LIKE 'type';

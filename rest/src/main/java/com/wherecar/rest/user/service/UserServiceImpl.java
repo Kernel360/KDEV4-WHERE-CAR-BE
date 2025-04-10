@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
                 .name(companyRequest.getName())
                 .address(companyRequest.getAddress())
                 .website(companyRequest.getWebsite())
+                .description(companyRequest.getDescription())
                 .build();
         companyRepository.save(company);
 
