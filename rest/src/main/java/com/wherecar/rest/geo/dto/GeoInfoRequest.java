@@ -1,6 +1,5 @@
 package com.wherecar.rest.geo.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
