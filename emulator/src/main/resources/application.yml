@@ -7,10 +7,10 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-    profiles:
-      default: dev
-    thymeleaf: # 기능 테스트를 위한 타임리프 사용
-      check-template-location: false # 타임리프 검사 비활성화
+  profiles:
+    default: dev
+  thymeleaf: # 기능 테스트를 위한 타임리프 사용
+    check-template-location: false # 타임리프 검사 비활성화
 
 logging:
   level:

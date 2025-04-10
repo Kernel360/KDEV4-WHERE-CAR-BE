@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class RestTemplateConfig {
 
-  @Value("${where-car.server.url}")
+  @Value("${wherecar.server.url}")
   private String serverUrl;
 
   // restTemplate Bean으로 등록
