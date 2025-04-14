@@ -36,4 +36,11 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     // 대시보드 운행통계관련 해당회사 보유 차량조회
     @Query("SELECT c.mdn FROM Car c WHERE c.company.id = :companyId")
     List<String> findMdnsByCompanyId(@Param("companyId") Long companyId);
+
+    @EntityGraph(attributePaths = {"carStatus"})
+    @Query("SELECT c FROM Car c " +
+            "WHERE (c.company.id = :userCompanyId OR :userCompanyId IS NULL) " +
+            "AND (c.carStatus.carState IS NULL OR c.carStatus.carState <> com.wherecar.rest.domain.CarState.NOT_REGISTERED)")
+    List<Car> findByCompanyIdWithRegisteredCarStatus(@Param("userCompanyId") Long userCompanyId);
+
 }

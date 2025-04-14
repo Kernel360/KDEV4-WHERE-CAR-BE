@@ -60,7 +60,7 @@ public class CarLocationSocketHandler extends TextWebSocketHandler {
             if (session.isOpen() && companyId != null) {
 
                 // 전체 차량 데이터 가줘오기
-                List<CarResponse> cars = carService.getAllCars(companyId,0,9999);
+                List<CarResponse> cars = carService.gatCarsByStatus(companyId);
 
                 for(CarResponse car : cars) {
                  log.info("차량 정보"+ car.getMdn());

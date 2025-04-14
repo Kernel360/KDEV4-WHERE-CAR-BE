@@ -144,4 +144,16 @@ public class CarServiceImpl implements CarService {
                 .build();
     }
 
+    @Override
+    public List<CarResponse> gatCarsByStatus(Long companyId) {
+        List<Car> cars = carRepository.findByCompanyIdWithRegisteredCarStatus(companyId);
+        return cars.stream()
+                .map(car -> CarResponse.builder()
+                        .id(car.getId())
+                        .mdn(car.getMdn())
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
+
 }
