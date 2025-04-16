@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.wherecar.rest.dto.CarResponse;
-import com.wherecar.rest.dto.GpsLogResponse;
-import com.wherecar.rest.dto.GpsPoint;
-import com.wherecar.rest.dto.GpsRouteResponse;
-import com.wherecar.rest.service.CarService;
-import com.wherecar.rest.service.GpsLogService;
+import com.wherecar.rest.car.application.dto.CarResponse;
+import com.wherecar.rest.gpslog.application.dto.GpsLogResponse;
+import com.wherecar.rest.gpslog.application.dto.GpsPoint;
+import com.wherecar.rest.gpslog.application.dto.GpsRouteResponse;
+import com.wherecar.rest.car.application.CarService;
+import com.wherecar.rest.gpslog.application.GpsLogService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
