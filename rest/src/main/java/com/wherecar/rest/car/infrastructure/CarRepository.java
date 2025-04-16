@@ -37,7 +37,7 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     @EntityGraph(attributePaths = {"carStatus"})
     @Query("SELECT c FROM Car c " +
             "WHERE (c.company.id = :userCompanyId OR :userCompanyId IS NULL) " +
-            "AND (c.carStatus.carState IS NULL OR c.carStatus.carState <> com.wherecar.rest.domain.CarState.NOT_REGISTERED)")
+            "AND (c.carStatus.carState IS NULL OR c.carStatus.carState <> com.wherecar.rest.car.domain.constant.CarState.NOT_REGISTERED)")
     List<Car> findByCompanyIdWithRegisteredCarStatus(@Param("userCompanyId") Long userCompanyId);
 
 }

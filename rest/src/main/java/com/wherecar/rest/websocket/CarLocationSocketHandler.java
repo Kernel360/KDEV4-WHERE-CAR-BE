@@ -27,9 +27,9 @@ import java.util.*;
 @Component
 @Slf4j
 public class CarLocationSocketHandler extends TextWebSocketHandler {
-    //정인재 <
+
     private static Integer count = 0;
-    // 정인재 >
+
 
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private final GpsLogService gpsLogService;
