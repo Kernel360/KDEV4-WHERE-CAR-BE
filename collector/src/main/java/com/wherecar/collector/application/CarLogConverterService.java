@@ -1,7 +1,7 @@
-package com.wherecar.collector.service;
+package com.wherecar.collector.application;
 
-import com.wherecar.collector.dto.CarLogRequest;
-import com.wherecar.collector.dto.CarLogResponse;
+import com.wherecar.collector.application.dto.CarLogRequest;
+import com.wherecar.collector.application.dto.CarLogResponse;
 
 public interface CarLogConverterService {
 

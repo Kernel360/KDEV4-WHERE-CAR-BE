@@ -1,8 +1,8 @@
-package com.wherecar.collector.controller;
+package com.wherecar.collector.presentation;
 
-import com.wherecar.collector.dto.CarLogRequest;
-import com.wherecar.collector.dto.CarLogResponse;
-import com.wherecar.collector.service.CarLogConverterService;
+import com.wherecar.collector.application.dto.CarLogRequest;
+import com.wherecar.collector.application.dto.CarLogResponse;
+import com.wherecar.collector.application.CarLogConverterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.wherecar.collector.service;
+package com.wherecar.collector.application;
 
 import com.wherecar.collector.domain.CarLog;
 import com.wherecar.collector.domain.CarStatus;
