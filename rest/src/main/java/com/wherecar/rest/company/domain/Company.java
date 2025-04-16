@@ -1,6 +1,7 @@
 package com.wherecar.rest.company.domain;
 
 import com.wherecar.rest.common.domain.BaseEntity;
+import com.wherecar.rest.company.application.dto.CompanyRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,4 +34,14 @@ public class Company extends BaseEntity {
     private String website;
 
     private String description;
+
+    public void updateCompany(CompanyRequest companyRequest){
+        this.name = companyRequest.getName();
+        this.address = companyRequest.getAddress();
+        this.phone = companyRequest.getPhone();
+        this.email = companyRequest.getEmail();
+        this.website = companyRequest.getWebsite();
+        this.description = companyRequest.getDescription();
+    }
+
 }

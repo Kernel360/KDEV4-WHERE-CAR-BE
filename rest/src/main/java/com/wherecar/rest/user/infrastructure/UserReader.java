@@ -8,4 +8,5 @@ public interface UserReader {
     User getUserByEmail(String email);
     List<User> getUsersByCompanyId(Long companyId);
     boolean emailExists(String email);
+    User getUserById(Long id);
 }

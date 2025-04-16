@@ -12,7 +12,12 @@ public class CompanyStoreImpl implements CompanyStore {
     private final CompanyRepository companyRepository;
 
     @Override
-    public Company Store(Company company) {
+    public Company store(Company company) {
         return companyRepository.save(company);
+    }
+
+    @Override
+    public void deleteById(Long companyId) {
+        companyRepository.deleteById(companyId);
     }
 }

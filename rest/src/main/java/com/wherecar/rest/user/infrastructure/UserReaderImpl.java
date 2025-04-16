@@ -28,6 +28,12 @@ public class UserReaderImpl implements UserReader {
         return userRepository.findByEmail(email).isPresent();
     }
 
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
+
+
 
 
 }

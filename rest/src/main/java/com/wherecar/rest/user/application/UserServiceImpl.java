@@ -7,13 +7,10 @@ import com.wherecar.rest.company.domain.CompanyFactory;
 import com.wherecar.rest.company.infrastructure.CompanyReader;
 import com.wherecar.rest.company.infrastructure.CompanyStore;
 import com.wherecar.rest.user.application.dto.*;
-import com.wherecar.rest.user.domain.Permission;
+import com.wherecar.rest.user.domain.User;
 import com.wherecar.rest.user.domain.UserFactory;
 import com.wherecar.rest.user.domain.constant.PermissionType;
-import com.wherecar.rest.user.domain.User;
-import com.wherecar.rest.user.domain.UserPermission;
 import com.wherecar.rest.user.infrastructure.UserReader;
-
 import com.wherecar.rest.user.infrastructure.UserStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,70 +32,71 @@ public class UserServiceImpl implements UserService {
 
     private final UserStore userStore;
     private final UserReader userReader;
-
     private final CompanyStore companyStore;
     private final CompanyReader companyReader;
-
-    private final Map<PermissionType,Permission> permissions;
 
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void createRoot(RootUserRequest rootUserRequest) {
+    public UserResponse createRoot(RootUserRequest rootUserRequest) {
 
-        // 1. 이메일 중복확인
-        emailExists(rootUserRequest.getUser().getEmail());
-
-        // 2. 회사 생성
+        // 0. 필요한 파라미터 준비
+        UserRequest userRequest = rootUserRequest.getUser();
         CompanyRequest companyRequest = rootUserRequest.getCompany();
 
+        // 1. 이메일 중복확인
+        if(userReader.emailExists(userRequest.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+
+
+        // 2. 회사 생성
         Company company = companyFactory.toCompany(companyRequest);
-        companyStore.Store(company);
+        companyStore.store(company);
 
         // 3. 유저 생성
-        UserRequest userRequest = rootUserRequest.getUser();
         User user = userFactory.toUser(userRequest, company);
 
-        // 4. 유저 권한 지정
-        Permission rootPermission = permissions.get(PermissionType.PERM_ADMIN);
-        user.changeUserPermissions(rootPermission);
+        // 4. 유저 권한 지정 및 저장
+        user = userStore.store(user, Set.of(PermissionType.PERM_ADMIN));
 
-        //5. 저장
-        user = userStore.store(user);
+        // 5. 유저 dto 반환
+        return userFactory.toUserResponse(user);
     }
 
     @Override
-    public void createSub(SubUserRequest subUserRequest, Long companyId) {
+    public UserResponse createSub(SubUserRequest subUserRequest, Long companyId) {
 
-
-
+        // 0. 필요한 파라미터 준비
+        UserRequest userRequest = subUserRequest.getUser();
+        Set<PermissionType> permissionTypes = subUserRequest.getPermission().getPermissionTypes();
 
 
         // 1. 이메일 중복확인
-        userReader.dddddd;
+        if(userReader.emailExists(userRequest.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
 
         // 2. 회사 조회
         Company company = companyReader.getById(companyId);
 
         // 3. 유저 생성
-        UserRequest userRequest = subUserRequest.getUser();
         User user = userFactory.toUser(userRequest, company);
 
-        // 4. 유저 권한 지정
+        // 4. 유저 권한 지정 및 저장
+        user = userStore.store(user, permissionTypes);
 
-
-        // 5. 전체 저장
-
+        // 5. 유저 dto 반환
+        return userFactory.toUserResponse(user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<UserResponse> getUsersOfCompany(Long companyId) {
         // 1. 유저조회
-        List<User> users = userRepository.findByCompanyId(companyId);
+        List<User> users = userReader.getUsersByCompanyId(companyId);
 
-        // 2. userResponse 로 전환
-
+        // 2. 유저 dto 리스트로 반환
         return users.stream()
                 .map(userFactory::toUserResponse)
                 .collect(Collectors.toList());
@@ -106,61 +105,57 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserResponse getUserById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userReader.getUserById(userId);
         return userFactory.toUserResponse(user);
     }
 
     @Override
     public void deleteUserById(Long userId) {
-        userRepository.deleteById(userId);
+        userStore.deleteById(userId);
     }
 
     @Override
-    public void updateUserById(Long userId, UserRequest userRequest) {
-        User user = userRepository.findById(userId).orElseThrow();
+    public UserResponse updateUserById(Long userId, UserRequest userRequest) {
+        User user = userReader.getUserById(userId);
         user.updateUser(userRequest);
-        userRepository.save(user);
+        userStore.store(user);
+        return userFactory.toUserResponse(user);
     }
 
     @Override
-    public void updatePasswordById(Long userId, PasswordRequest passwordRequest) {
-        User user = userRepository.findById(userId).orElseThrow();
+    public UserResponse updatePasswordById(Long userId, PasswordRequest passwordRequest) {
+        User user = userReader.getUserById(userId);
+
+        //비밀번호 확인 로직 실행
         if (!passwordEncoder.matches(passwordRequest.getCurrentPassword(), user.getPassword())) {
             user.changePassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
         }
-        userRepository.save(user);
+        // 유저 저장
+        userStore.store(user);
+
+        return userFactory.toUserResponse(user);
     }
 
     //권한
 
     @Override
-    public void updatePermission(Long userId, PermissionRequest permissionRequest) {
-        User user = userRepository.findById(userId).orElseThrow();
-        List<Permission> permissions = new ArrayList<>();
-        log.info(permissionRequest.toString());
-        for(PermissionType permissionType : permissionRequest.getPermissionTypes()){
-            Permission permission = permissionRepository.findByType(permissionType).orElseThrow();
-            permissions.add(permission);
-        }
-        user.changeUserPermissions(permissions.toArray(new Permission[0]));
-        log.info("Size: {}", user.getUserPermissions().size());
-        userRepository.save(user);
+    public UserResponse updatePermission(Long userId, PermissionRequest permissionRequest) {
+        User user = userReader.getUserById(userId);
+        Set<PermissionType> permissionTypes = permissionRequest.getPermissionTypes();
+
+        user = userStore.store(user,permissionTypes);
+        return userFactory.toUserResponse(user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public PermissionResponse getPermissionById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow();
-        Set<UserPermission> userPermission = user.getUserPermissions();
-        Set<PermissionType> permissionTypes = new HashSet<>();
-        for(UserPermission permission : userPermission){
-            permissionTypes.add(permission.getPermission().getType());
-        }
-        return PermissionResponse.builder()
-                .permissionTypes(permissionTypes)
-                .build();
+        User user = userReader.getUserById(userId);
+
+        Set<PermissionType> permissionTypes = user.getUserPermissions().stream()
+                .map(userPermission -> userPermission.getPermission().getType())
+                .collect(Collectors.toSet());
+
+        return new PermissionResponse(permissionTypes);
     }
-
-
-
 }

@@ -13,6 +13,6 @@ public class CompanyReaderImpl implements CompanyReader {
 
     @Override
     public Company getById(Long companyId) {
-        return companyRepository.findById(companyId).orElseThrow();
+        return companyRepository.findById(companyId).orElseThrow(()->new RuntimeException("Company not found"));
     }
 }
