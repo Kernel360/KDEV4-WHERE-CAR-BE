@@ -1,6 +1,6 @@
 package com.wherecar.rest.carlog.application.dto;
 
-import com.wherecar.rest.carlog.domain.DriveType;
+import com.wherecar.rest.carlog.domain.constant.DriveType;
 import lombok.*;
 
 @Data

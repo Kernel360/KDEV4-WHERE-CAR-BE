@@ -1,6 +1,6 @@
 package com.wherecar.rest.common.permissionCheck;
 
-import com.wherecar.rest.user.domain.PermissionType;
+import com.wherecar.rest.user.domain.constant.PermissionType;
 
 import java.lang.annotation.*;
 

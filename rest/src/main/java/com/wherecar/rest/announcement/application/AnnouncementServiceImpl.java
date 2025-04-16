@@ -1,7 +1,7 @@
 package com.wherecar.rest.announcement.application;
 
 import com.wherecar.rest.announcement.domain.Announcement;
-import com.wherecar.rest.announcement.domain.AnnouncementType;
+import com.wherecar.rest.announcement.domain.constant.AnnouncementType;
 import com.wherecar.rest.announcement.application.dto.AnnouncementDetailResponse;
 import com.wherecar.rest.announcement.application.dto.AnnouncementRegisterRequest;
 import com.wherecar.rest.announcement.application.dto.AnnouncementUpdateRequest;

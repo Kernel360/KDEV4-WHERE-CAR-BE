@@ -1,7 +1,7 @@
 package com.wherecar.rest.car.application.dto;
 
-import com.wherecar.rest.car.domain.AcquisitionType;
-import com.wherecar.rest.car.domain.OwnerType;
+import com.wherecar.rest.car.domain.constant.AcquisitionType;
+import com.wherecar.rest.car.domain.constant.OwnerType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

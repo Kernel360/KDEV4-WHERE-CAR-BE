@@ -1,6 +1,6 @@
 package com.wherecar.rest.car.infrastructure;
 
-import com.wherecar.rest.car.domain.CarState;
+import com.wherecar.rest.car.domain.constant.CarState;
 import com.wherecar.rest.car.domain.CarStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

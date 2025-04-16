@@ -1,4 +1,4 @@
-package com.wherecar.rest.gpslog.domain;
+package com.wherecar.rest.gpslog.domain.constant;
 
 public enum GpsConditionType {
     A,

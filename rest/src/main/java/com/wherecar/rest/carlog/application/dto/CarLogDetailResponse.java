@@ -1,7 +1,7 @@
 package com.wherecar.rest.carlog.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wherecar.rest.carlog.domain.DriveType;
+import com.wherecar.rest.carlog.domain.constant.DriveType;
 import lombok.*;
 
 import java.time.LocalDateTime;

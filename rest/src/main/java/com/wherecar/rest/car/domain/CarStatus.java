@@ -1,6 +1,7 @@
 package com.wherecar.rest.car.domain;
 
 
+import com.wherecar.rest.car.domain.constant.CarState;
 import com.wherecar.rest.common.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,7 +1,8 @@
 package com.wherecar.rest.carlog.domain;
 
+import com.wherecar.rest.carlog.domain.constant.DriveType;
 import com.wherecar.rest.common.domain.BaseEntity;
-import com.wherecar.rest.gpslog.domain.GpsConditionType;
+import com.wherecar.rest.gpslog.domain.constant.GpsConditionType;
 import jakarta.persistence.*;
 import lombok.*;
 

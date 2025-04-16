@@ -1,7 +1,7 @@
 package com.wherecar.rest.common.permissionCheck;
 
 import com.wherecar.rest.common.auth.AuthUtil;
-import com.wherecar.rest.user.domain.PermissionType;
+import com.wherecar.rest.user.domain.constant.PermissionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

@@ -1,6 +1,6 @@
 package com.wherecar.rest.user.application.dto;
 
-import com.wherecar.rest.user.domain.PermissionType;
+import com.wherecar.rest.user.domain.constant.PermissionType;
 import lombok.Builder;
 import lombok.Data;
 

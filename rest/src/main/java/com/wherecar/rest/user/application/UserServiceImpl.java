@@ -5,7 +5,7 @@ import com.wherecar.rest.company.application.dto.CompanyRequest;
 import com.wherecar.rest.company.infrastructure.CompanyRepository;
 import com.wherecar.rest.user.application.dto.*;
 import com.wherecar.rest.user.domain.Permission;
-import com.wherecar.rest.user.domain.PermissionType;
+import com.wherecar.rest.user.domain.constant.PermissionType;
 import com.wherecar.rest.user.domain.User;
 import com.wherecar.rest.user.domain.UserPermission;
 import com.wherecar.rest.user.infrastructure.PermissionRepository;

@@ -1,9 +1,9 @@
 package com.wherecar.rest.car.application;
 
 import com.wherecar.rest.car.domain.Car;
-import com.wherecar.rest.car.domain.CarState;
+import com.wherecar.rest.car.domain.constant.CarState;
 import com.wherecar.rest.car.domain.CarStatus;
-import com.wherecar.rest.car.domain.OwnerType;
+import com.wherecar.rest.car.domain.constant.OwnerType;
 import com.wherecar.rest.company.domain.Company;
 import com.wherecar.rest.car.application.dto.CarOverviewResponse;
 import com.wherecar.rest.car.application.dto.CarResponse;

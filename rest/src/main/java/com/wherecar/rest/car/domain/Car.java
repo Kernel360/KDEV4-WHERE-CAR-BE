@@ -1,5 +1,7 @@
 package com.wherecar.rest.car.domain;
 
+import com.wherecar.rest.car.domain.constant.AcquisitionType;
+import com.wherecar.rest.car.domain.constant.OwnerType;
 import com.wherecar.rest.common.domain.BaseEntity;
 import com.wherecar.rest.company.domain.Company;
 import com.wherecar.rest.geoinfo.domain.GeoInfo;

@@ -1,7 +1,7 @@
 package com.wherecar.rest.car.infrastructure;
 
 import com.wherecar.rest.car.domain.Car;
-import com.wherecar.rest.car.domain.OwnerType;
+import com.wherecar.rest.car.domain.constant.OwnerType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;

@@ -1,6 +1,6 @@
 package com.wherecar.rest.common.security;
 
-import com.wherecar.rest.user.domain.PermissionType;
+import com.wherecar.rest.user.domain.constant.PermissionType;
 import com.wherecar.rest.user.domain.User;
 import com.wherecar.rest.user.domain.UserPermission;
 import org.springframework.security.core.GrantedAuthority;

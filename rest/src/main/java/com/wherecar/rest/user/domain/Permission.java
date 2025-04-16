@@ -1,5 +1,6 @@
 package com.wherecar.rest.user.domain;
 
+import com.wherecar.rest.user.domain.constant.PermissionType;
 import jakarta.persistence.*;
 import lombok.*;
 

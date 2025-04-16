@@ -1,4 +1,4 @@
-package com.wherecar.rest.user.domain;
+package com.wherecar.rest.user.domain.constant;
 
 public enum PermissionType {
     PERM_COMPANY_VIEW,
