@@ -1,4 +1,4 @@
-package com.wherecar.collector.application.dto;
+package com.wherecar.collector.application.dto.constant;
 
 import lombok.Getter;
 
