@@ -1,4 +1,4 @@
-package com.wherecar.collector.domain;
+package com.wherecar.collector.domain.constant;
 
 public enum CarState {
     RUNNING,
