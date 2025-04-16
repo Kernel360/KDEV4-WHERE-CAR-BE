@@ -1,5 +1,7 @@
 package com.wherecar.collector.domain;
 
+import com.wherecar.collector.domain.constant.DriveType;
+import com.wherecar.collector.domain.constant.GpsConditionType;
 import jakarta.persistence.*;
 import lombok.*;
 

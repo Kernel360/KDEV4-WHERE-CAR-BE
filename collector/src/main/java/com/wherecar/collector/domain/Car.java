@@ -1,5 +1,7 @@
 package com.wherecar.collector.domain;
 
+import com.wherecar.collector.domain.constant.AcquisitionType;
+import com.wherecar.collector.domain.constant.OwnerType;
 import jakarta.persistence.*;
 import lombok.*;
 

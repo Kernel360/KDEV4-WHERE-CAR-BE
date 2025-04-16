@@ -2,12 +2,12 @@ package com.wherecar.collector.application;
 
 import com.wherecar.collector.domain.Car;
 import com.wherecar.collector.domain.CarStatus;
-import com.wherecar.collector.domain.GpsConditionType;
+import com.wherecar.collector.domain.constant.GpsConditionType;
 import com.wherecar.collector.domain.GpsLog;
 import com.wherecar.collector.application.dto.GpsLogInfo;
 import com.wherecar.collector.application.dto.GpsLogRequest;
 import com.wherecar.collector.application.dto.GpsLogResponse;
-import com.wherecar.collector.application.dto.ResponseCode;
+import com.wherecar.collector.application.dto.constant.ResponseCode;
 import com.wherecar.collector.infrastructure.CarRepository;
 import com.wherecar.collector.infrastructure.CarStatusRepository;
 import lombok.RequiredArgsConstructor;

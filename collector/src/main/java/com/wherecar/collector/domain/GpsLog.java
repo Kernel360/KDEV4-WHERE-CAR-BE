@@ -1,9 +1,9 @@
 package com.wherecar.collector.domain;
 
+import com.wherecar.collector.domain.constant.GpsConditionType;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Table(name="gps_logs")
