@@ -1,4 +1,4 @@
-package com.wherecar.collector.dto;
+package com.wherecar.collector.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,8 @@
-package com.wherecar.collector.controller;
+package com.wherecar.collector.presentation;
 
-import com.wherecar.collector.dto.*;
-import com.wherecar.collector.service.GpsLogConverterService;
+import com.wherecar.collector.application.dto.GpsLogRequest;
+import com.wherecar.collector.application.dto.GpsLogResponse;
+import com.wherecar.collector.application.GpsLogConverterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

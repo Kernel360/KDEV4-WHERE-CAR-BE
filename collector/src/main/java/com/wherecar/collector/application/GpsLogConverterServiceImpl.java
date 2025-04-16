@@ -1,15 +1,15 @@
-package com.wherecar.collector.service;
+package com.wherecar.collector.application;
 
 import com.wherecar.collector.domain.Car;
 import com.wherecar.collector.domain.CarStatus;
 import com.wherecar.collector.domain.GpsConditionType;
 import com.wherecar.collector.domain.GpsLog;
-import com.wherecar.collector.dto.GpsLogInfo;
-import com.wherecar.collector.dto.GpsLogRequest;
-import com.wherecar.collector.dto.GpsLogResponse;
-import com.wherecar.collector.dto.ResponseCode;
-import com.wherecar.collector.repository.CarRepository;
-import com.wherecar.collector.repository.CarStatusRepository;
+import com.wherecar.collector.application.dto.GpsLogInfo;
+import com.wherecar.collector.application.dto.GpsLogRequest;
+import com.wherecar.collector.application.dto.GpsLogResponse;
+import com.wherecar.collector.application.dto.ResponseCode;
+import com.wherecar.collector.infrastructure.CarRepository;
+import com.wherecar.collector.infrastructure.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

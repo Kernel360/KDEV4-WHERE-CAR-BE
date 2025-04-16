@@ -1,4 +1,4 @@
-package com.wherecar.collector.repository;
+package com.wherecar.collector.infrastructure;
 
 import com.wherecar.collector.domain.CarLog;
 import org.springframework.data.jpa.repository.JpaRepository;
