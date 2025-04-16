@@ -1,7 +1,7 @@
 package com.wherecar.rest.user.domain;
 
-import com.wherecar.rest.domain.BaseEntity;
-import com.wherecar.rest.domain.Company;
+import com.wherecar.rest.common.domain.BaseEntity;
+import com.wherecar.rest.company.domain.Company;
 import jakarta.persistence.*;
 import lombok.*;
 
