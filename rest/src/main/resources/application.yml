@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: rest
+  jpa:
+    open-in-view: false
+    database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+        jdbc:
+          lob:
+            non_contextual_creation: true # LOB 생성 시 컨텍스트를 사용하지 않습니다.
+        dialect: org.hibernate.dialect.MySQLDialect # Hibernate에 MySQL 방언을 사용하도록 설정합니다.
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver # MySQL JDBC 드라이버 클래스 이름
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 20000
+  profiles:
+    default: dev

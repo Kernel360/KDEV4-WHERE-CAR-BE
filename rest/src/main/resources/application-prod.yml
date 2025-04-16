@@ -1,0 +1,29 @@
+spring:
+  config:
+    activate:
+      on-profile: prod # 'dev' 프로파일이 활성화될 때 이 설정을 사용합니다.
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://${DB_HOST_NAME}/${DB_STORAGE_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jwt:
+    secret: 1o23eoi21joiejoijsdoijoisdjfojafa # JWT 비밀 키
+
+server:
+  port: 8080
+  ssl:
+    key-alias: tomcat
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-store-password: ${KEY_STORE_PASSWORD}
+    key-store-provider: SunJSSE
+    #trust-store: classpath:truststore.jks
+    #trust-store-password: ${TRUST_STORE_PASSWORD}
+  http2:
+    enabled: true
+  error:
+    include-message: always
+    include-stacktrace: never

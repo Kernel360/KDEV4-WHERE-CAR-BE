@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+server:
+  port: 8095
+
+wherecar:
+  server:
+    url: http://localhost:8090
+  emulator:
+    car-mdn: 01234567890
+    car-vrp: 12가3456
+  db:
+    file-name: device_db.json

@@ -1,0 +1,3 @@
+INSERT INTO wherecar.companies (company_id, created_at, updated_at, address, email, name, phone, website) VALUES (1, '2023-04-01 15:30:00.000000', '2023-04-01 15:30:00.000000', '주소', '이메일', '이름', '폰 번호', '웹 주소');
+INSERT INTO wherecar.companies (company_id, created_at, updated_at, address, email, name, phone, website) VALUES (2, '2023-04-01 15:30:00.000000', '2023-04-01 15:30:00.000000', '주소', '이메일', '이름', '폰 번호', '웹 주소');
+INSERT INTO wherecar.companies (company_id, created_at, updated_at, address, email, name, phone, website) VALUES (3, '2023-04-01 15:30:00.000000', '2023-04-01 15:30:00.000000', '주소', '이메일', '이름', '폰 번호', '웹 주소');
