@@ -1,7 +1,6 @@
-package com.wherecar.rest.common.auth;
+package com.wherecar.rest.security.auth;
 
 import com.wherecar.rest.user.domain.constant.PermissionType;
-import com.wherecar.rest.common.security.CustomUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

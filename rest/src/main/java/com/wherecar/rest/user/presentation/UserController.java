@@ -1,7 +1,7 @@
 package com.wherecar.rest.user.presentation;
 
 import com.wherecar.rest.user.application.dto.*;
-import com.wherecar.rest.common.auth.AuthUtil;
+import com.wherecar.rest.security.auth.AuthUtil;
 import com.wherecar.rest.user.application.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

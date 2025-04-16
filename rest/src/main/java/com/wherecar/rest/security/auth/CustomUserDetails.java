@@ -1,4 +1,4 @@
-package com.wherecar.rest.common.security;
+package com.wherecar.rest.security.auth;
 
 import com.wherecar.rest.user.domain.constant.PermissionType;
 import com.wherecar.rest.user.domain.User;

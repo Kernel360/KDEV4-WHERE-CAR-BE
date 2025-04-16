@@ -1,9 +1,9 @@
-package com.wherecar.rest.common.config;
+package com.wherecar.rest.security.config;
 
 import com.wherecar.rest.user.infrastructure.UserRepository;
-import com.wherecar.rest.common.security.JWTFilter;
-import com.wherecar.rest.common.security.JWTUtil;
-import com.wherecar.rest.common.security.LoginFilter;
+import com.wherecar.rest.security.jwt.JWTFilter;
+import com.wherecar.rest.security.jwt.JWTUtil;
+import com.wherecar.rest.security.jwt.LoginFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

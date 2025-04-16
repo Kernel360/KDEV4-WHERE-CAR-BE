@@ -1,5 +1,6 @@
-package com.wherecar.rest.common.security;
+package com.wherecar.rest.security.jwt;
 
+import com.wherecar.rest.security.auth.CustomUserDetails;
 import com.wherecar.rest.user.domain.User;
 import com.wherecar.rest.user.infrastructure.UserRepository;
 import jakarta.servlet.FilterChain;

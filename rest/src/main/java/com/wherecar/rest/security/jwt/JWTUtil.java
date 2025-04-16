@@ -1,4 +1,4 @@
-package com.wherecar.rest.common.security;
+package com.wherecar.rest.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;

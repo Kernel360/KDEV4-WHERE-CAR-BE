@@ -1,6 +1,7 @@
-package com.wherecar.rest.common.security;
+package com.wherecar.rest.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wherecar.rest.security.auth.CustomUserDetails;
 import com.wherecar.rest.user.application.dto.UserLoginRequest;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;

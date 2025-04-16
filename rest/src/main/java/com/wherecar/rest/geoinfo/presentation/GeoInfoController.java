@@ -3,7 +3,7 @@ package com.wherecar.rest.geoinfo.presentation;
 import com.wherecar.rest.geoinfo.application.dto.GeoInfoRequest;
 import com.wherecar.rest.geoinfo.application.dto.GeoInfoResponse;
 import com.wherecar.rest.geoinfo.application.GeoInfoService;
-import com.wherecar.rest.common.auth.AuthUtil;
+import com.wherecar.rest.security.auth.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

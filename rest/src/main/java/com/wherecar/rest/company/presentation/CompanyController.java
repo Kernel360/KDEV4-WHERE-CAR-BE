@@ -3,7 +3,7 @@ package com.wherecar.rest.company.presentation;
 import com.wherecar.rest.company.application.dto.CompanyRequest;
 import com.wherecar.rest.company.application.dto.CompanyResponse;
 import com.wherecar.rest.company.application.CompanyService;
-import com.wherecar.rest.common.auth.AuthUtil;
+import com.wherecar.rest.security.auth.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

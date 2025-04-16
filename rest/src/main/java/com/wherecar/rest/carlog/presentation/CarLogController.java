@@ -6,7 +6,7 @@ import com.wherecar.rest.carlog.application.dto.CarLogFilterRequest;
 import com.wherecar.rest.carlog.application.dto.CarLogsResponse;
 import com.wherecar.rest.carlog.application.dto.CarLogsUpdateRequest;
 import com.wherecar.rest.carlog.application.CarLogService;
-import com.wherecar.rest.common.auth.AuthUtil;
+import com.wherecar.rest.security.auth.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

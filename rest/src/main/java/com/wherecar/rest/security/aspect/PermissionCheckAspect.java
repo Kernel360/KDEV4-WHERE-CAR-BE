@@ -1,6 +1,6 @@
-package com.wherecar.rest.common.permissionCheck;
+package com.wherecar.rest.security.aspect;
 
-import com.wherecar.rest.common.auth.AuthUtil;
+import com.wherecar.rest.security.auth.AuthUtil;
 import com.wherecar.rest.user.domain.constant.PermissionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
