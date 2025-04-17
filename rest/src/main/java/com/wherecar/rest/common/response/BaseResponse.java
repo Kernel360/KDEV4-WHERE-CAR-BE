@@ -12,68 +12,68 @@ public class BaseResponse<T> {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();  // ObjectMapper 재사용
 
-    public BaseResponse(T data, HttpStatusCode httpStatusCode) {
+    public BaseResponse(T data, String message, int statusCode) {
         this.data = data;
-        this.message = httpStatusCode.getMessage();
-        this.statusCode = httpStatusCode.getStatusCode();
+        this.message = message;
+        this.statusCode = statusCode;
     }
 
-    public BaseResponse(HttpStatusCode httpStatusCode) {
-        this.data = null;
-        this.message = httpStatusCode.getMessage();
-        this.statusCode = httpStatusCode.getStatusCode();
-    }
-
-    public BaseResponse(String message, HttpStatusCode httpStatusCode) {
+    public BaseResponse(String message, int statusCode) {
         this.data = null;
         this.message = message;
-        this.statusCode = httpStatusCode.getStatusCode();
+        this.statusCode = statusCode;
+    }
+
+
+    // 200 OK
+    public static <T> BaseResponse<T> ok() {
+        return new BaseResponse<>(HttpStatusCode.OK.getMessage(), HttpStatusCode.OK.getStatusCode());
     }
 
     // 200 OK
     public static <T> BaseResponse<T> ok(T data) {
-        return new BaseResponse<>(data, HttpStatusCode.OK);
+        return new BaseResponse<>(data, HttpStatusCode.OK.getMessage(), HttpStatusCode.OK.getStatusCode());
     }
 
     // 201 Created
     public static <T> BaseResponse<T> created(T data) {
-        return new BaseResponse<>(data, HttpStatusCode.CREATED);
+        return new BaseResponse<>(data, HttpStatusCode.CREATED.getMessage(), HttpStatusCode.CREATED.getStatusCode());
     }
 
     // 202 Accepted
     public static <T> BaseResponse<T> accepted(String message) {
-        return new BaseResponse<>(null, HttpStatusCode.ACCEPTED);
+        return new BaseResponse<>(HttpStatusCode.ACCEPTED.getMessage(), HttpStatusCode.ACCEPTED.getStatusCode());
     }
 
     // 204 No Content
-    public static <T> BaseResponse<T> noContent() {
-        return new BaseResponse<>(null, HttpStatusCode.NO_CONTENT);
+    public static <T> BaseResponse<T> noContent(String message) {
+        return new BaseResponse<>(message, HttpStatusCode.NO_CONTENT.getStatusCode());
     }
 
     // 400 Bad Request
     public static <T> BaseResponse<T> badRequest(String message) {
-        return new BaseResponse<>(message, HttpStatusCode.BAD_REQUEST);
+        return new BaseResponse<>(message, HttpStatusCode.BAD_REQUEST.getStatusCode());
     }
 
     // 401 Unauthorized
     public static <T> BaseResponse<T> unauthorized(String message) {
-        return new BaseResponse<>(message, HttpStatusCode.UNAUTHORIZED);
+        return new BaseResponse<>(message, HttpStatusCode.UNAUTHORIZED.getStatusCode());
     }
 
     // 403 Forbidden
     public static <T> BaseResponse<T> forbidden(String message) {
-        return new BaseResponse<>(message, HttpStatusCode.FORBIDDEN);
+        return new BaseResponse<>(message, HttpStatusCode.FORBIDDEN.getStatusCode());
     }
 
     // 404 Not Found
     public static <T> BaseResponse<T> notFound(String message) {
-        return new BaseResponse<>(message, HttpStatusCode.NOT_FOUND);
+        return new BaseResponse<>(message, HttpStatusCode.NOT_FOUND.getStatusCode());
     }
 
 
     // 500 Internal Server Error
     public static <T> BaseResponse<T> internalServerError(String message) {
-        return new BaseResponse<>(message, HttpStatusCode.INTERNAL_SERVER_ERROR);
+        return new BaseResponse<>(message, HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode());
     }
 
 
