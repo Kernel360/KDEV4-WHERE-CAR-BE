@@ -1,7 +1,7 @@
 package com.wherecar.rest.security.aspect;
 
-import com.wherecar.rest.security.auth.AuthUtil;
 import com.wherecar.rest.user.domain.constant.PermissionType;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -19,9 +19,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PermissionCheckAspect {
 
+    private final HttpServletRequest request;
+
     @Around("@annotation(requiredPermission)")
     public Object checkPermissions(ProceedingJoinPoint joinPoint, RequiredPermission requiredPermission) throws Throwable {
-        Set<PermissionType> userPermissions = AuthUtil.getPermissionTypes();
+        @SuppressWarnings("unchecked")
+        Set<PermissionType> userPermissions = (Set<PermissionType>) request.getAttribute("PermissionTypes");
 
         PermissionType[] requiredPermissions = requiredPermission.value();
 
