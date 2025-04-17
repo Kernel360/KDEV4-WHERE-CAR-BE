@@ -26,14 +26,14 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional(readOnly = true)
     public CompanyResponse getCompanyDetails(Long companyId) {
-        Company company = companyReader.getById(companyId);
+        Company company = companyReader.getCompanyById(companyId);
 
         return companyFactory.toCompanyResponse(company);
     }
 
     @Override
     public CompanyResponse updateCompany(Long companyId, CompanyRequest companyRequest) {
-        Company company = companyReader.getById(companyId);
+        Company company = companyReader.getCompanyById(companyId);
         company.updateCompany(companyRequest);
         company = companyStore.store(company);
         return companyFactory.toCompanyResponse(company);
