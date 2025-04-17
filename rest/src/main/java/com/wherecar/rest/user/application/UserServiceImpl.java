@@ -45,9 +45,7 @@ public class UserServiceImpl implements UserService {
         CompanyRequest companyRequest = rootUserRequest.getCompany();
 
         // 1. 이메일 중복확인
-        if(userReader.emailExists(userRequest.getEmail())) {
-            throw new RuntimeException("Email already exists");
-        }
+        checkEmailDuplication(userRequest.getEmail());
 
 
         // 2. 회사 생성
@@ -73,9 +71,7 @@ public class UserServiceImpl implements UserService {
 
 
         // 1. 이메일 중복확인
-        if(userReader.emailExists(userRequest.getEmail())) {
-            throw new RuntimeException("Email already exists");
-        }
+        checkEmailDuplication(userRequest.getEmail());
 
         // 2. 회사 조회
         Company company = companyReader.getById(companyId);
@@ -157,5 +153,11 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
 
         return new PermissionResponse(permissionTypes);
+    }
+
+    private void checkEmailDuplication(String email){
+        if(userReader.emailExists(email)) {
+            throw new RuntimeException("Email already exists");
+        }
     }
 }
