@@ -1,19 +1,18 @@
 package com.wherecar.rest.announcement.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnnouncementDetailResponse {
+public class AnnouncementResponse {
 
     private Long announcementId;
 
@@ -21,7 +20,6 @@ public class AnnouncementDetailResponse {
 
     private String content;
 
-    @JsonProperty("announcementType")
     private String announcementType;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

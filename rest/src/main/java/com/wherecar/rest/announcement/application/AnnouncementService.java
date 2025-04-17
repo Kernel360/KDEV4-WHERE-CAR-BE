@@ -1,20 +1,18 @@
 package com.wherecar.rest.announcement.application;
 
-import com.wherecar.rest.announcement.application.dto.AnnouncementDetailResponse;
-import com.wherecar.rest.announcement.application.dto.AnnouncementRegisterRequest;
-import com.wherecar.rest.announcement.application.dto.AnnouncementUpdateRequest;
-import com.wherecar.rest.announcement.application.dto.AnnouncementsResponse;
+import com.wherecar.rest.announcement.application.dto.AnnouncementRequest;
+import com.wherecar.rest.announcement.application.dto.AnnouncementResponse;
 import org.springframework.data.domain.Page;
 
 public interface AnnouncementService {
 
-    void createAnnouncement(AnnouncementRegisterRequest announcementRegisterRequest);
+    AnnouncementResponse createAnnouncement(AnnouncementRequest announcementRequest);
 
-    Page<AnnouncementsResponse> getAnnouncements(int page, int size);
+    Page<AnnouncementResponse> getAnnouncements(int page, int size);
 
-    AnnouncementDetailResponse getAnnouncementDetail(Long announcementId);
+    AnnouncementResponse getAnnouncementDetail(Long announcementId);
 
-    void updateAnnouncement(Long announcementId, AnnouncementUpdateRequest announcementUpdateRequest);
+    AnnouncementResponse updateAnnouncement(Long announcementId, AnnouncementRequest announcementRequest);
 
     void deleteAnnouncement(Long announcementId);
 }

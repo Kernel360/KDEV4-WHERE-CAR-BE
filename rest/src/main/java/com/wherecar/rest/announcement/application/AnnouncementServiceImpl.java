@@ -1,12 +1,11 @@
 package com.wherecar.rest.announcement.application;
 
+import com.wherecar.rest.announcement.application.dto.AnnouncementRequest;
+import com.wherecar.rest.announcement.application.dto.AnnouncementResponse;
 import com.wherecar.rest.announcement.domain.Announcement;
-import com.wherecar.rest.announcement.domain.constant.AnnouncementType;
-import com.wherecar.rest.announcement.application.dto.AnnouncementDetailResponse;
-import com.wherecar.rest.announcement.application.dto.AnnouncementRegisterRequest;
-import com.wherecar.rest.announcement.application.dto.AnnouncementUpdateRequest;
-import com.wherecar.rest.announcement.application.dto.AnnouncementsResponse;
-import com.wherecar.rest.announcement.infrastructure.AnnouncementRepository;
+import com.wherecar.rest.announcement.domain.AnnouncementFactory;
+import com.wherecar.rest.announcement.infrastructure.AnnouncementReader;
+import com.wherecar.rest.announcement.infrastructure.AnnouncementStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,88 +19,46 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class AnnouncementServiceImpl implements AnnouncementService {
 
-    private final AnnouncementRepository announcementRepository;
+    private final AnnouncementFactory announcementFactory;
+    private final AnnouncementStore announcementStore;
+    private final AnnouncementReader announcementReader;
 
     @Override
-    public void createAnnouncement(AnnouncementRegisterRequest announcementRegisterRequest) {
+    public AnnouncementResponse createAnnouncement(AnnouncementRequest announcementRequest) {
 
-        AnnouncementType announcementType;
-
-        try {
-            announcementType = AnnouncementType.valueOf(announcementRegisterRequest.getAnnouncementType());
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("잘못된 공지 사항입니다.");
-        }
-
-        Announcement announcement = Announcement.builder()
-                .title(announcementRegisterRequest.getTitle())
-                .content(announcementRegisterRequest.getContent())
-                .announcementType(announcementType)
-                .build();
-
-        // 요청 데이터 저장
-        announcementRepository.save(announcement);
+        Announcement announcement = announcementFactory.toAnnouncement(announcementRequest);
+        announcement = announcementStore.store(announcement);
+        return announcementFactory.toAnnouncementResponse(announcement);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AnnouncementsResponse> getAnnouncements(int page, int size) {
+    public Page<AnnouncementResponse> getAnnouncements(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        Page<Announcement> announcements = announcementRepository.findAnnouncements(pageRequest);
+        Page<Announcement> announcementPage = announcementReader.getAnnouncementPage(pageRequest);
 
-        return announcements.map(announcement -> AnnouncementsResponse.builder()
-                .announcementId(announcement.getId())
-                .announcementType(announcement.getAnnouncementType().toString())
-                .title(announcement.getTitle())
-                .content(announcement.getContent())
-                .createdAt(announcement.getCreatedAt())
-                .build()
-        );
+        return announcementFactory.toAnnouncementResponsePage(announcementPage);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public AnnouncementDetailResponse getAnnouncementDetail(Long announcementId) {
-        Announcement announcement = announcementRepository.findById(announcementId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 공지 사항입니다."));
+    public AnnouncementResponse getAnnouncementDetail(Long announcementId) {
+        Announcement announcement = announcementReader.getAnnouncementById(announcementId);
 
-        return AnnouncementDetailResponse.builder()
-                .announcementId(announcement.getId())
-                .announcementType(announcement.getAnnouncementType().toString())
-                .title(announcement.getTitle())
-                .content(announcement.getContent())
-                .createdAt(announcement.getCreatedAt())
-                .build();
+        return announcementFactory.toAnnouncementResponse(announcement);
     }
 
     @Override
-    public void updateAnnouncement(Long announcementId, AnnouncementUpdateRequest announcementUpdateRequest) {
-        Announcement announcement = announcementRepository.findById(announcementId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 공지 사항입니다."));
-
-        AnnouncementType announcementType;
-
-        try {
-            announcementType = AnnouncementType.valueOf(announcementUpdateRequest.getAnnouncementType());
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("잘못된 공지 사항입니다.");
-        }
-
-
-        // 공지 사항 수정
-        announcement.changeTitle(announcementUpdateRequest.getTitle());
-        announcement.changeContent(announcementUpdateRequest.getContent());
-        announcement.changeAnnouncementType(announcementType);
-
-        announcementRepository.save(announcement);
+    public AnnouncementResponse updateAnnouncement(Long announcementId, AnnouncementRequest announcementRequest) {
+        Announcement announcement = announcementReader.getAnnouncementById(announcementId);
+        announcement.updateAnnouncement(announcementRequest);
+        announcement = announcementStore.store(announcement);
+        return announcementFactory.toAnnouncementResponse(announcement);
     }
 
     @Override
     public void deleteAnnouncement(Long announcementId) {
-        if (!announcementRepository.existsById(announcementId)) {
-            throw new RuntimeException("존재하지 않는 공지 사항입니다.");
-        }
-        announcementRepository.deleteById(announcementId);
+        announcementStore.delete(announcementId);
     }
 }

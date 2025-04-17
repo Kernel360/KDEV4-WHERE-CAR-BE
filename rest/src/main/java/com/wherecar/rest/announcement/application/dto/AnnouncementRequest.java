@@ -1,6 +1,6 @@
 package com.wherecar.rest.announcement.application.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wherecar.rest.announcement.domain.constant.AnnouncementType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,12 +10,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnnouncementUpdateRequest {
+public class AnnouncementRequest {
 
     private String title;
 
     private String content;
 
-    @JsonProperty("announcementType")
-    private String announcementType;
+    private AnnouncementType announcementType;
 }
