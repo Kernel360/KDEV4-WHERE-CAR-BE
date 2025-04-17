@@ -17,7 +17,7 @@ public class CompanyStoreImpl implements CompanyStore {
     }
 
     @Override
-    public void deleteById(Long companyId) {
+    public void delete(Long companyId) {
         companyRepository.deleteById(companyId);
     }
 }

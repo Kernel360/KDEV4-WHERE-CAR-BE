@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         checkEmailDuplication(userRequest.getEmail());
 
         // 2. 회사 조회
-        Company company = companyReader.getById(companyId);
+        Company company = companyReader.getCompanyById(companyId);
 
         // 3. 유저 생성
         User user = userFactory.toUser(userRequest, company);
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Long userId) {
-        userStore.deleteById(userId);
+        userStore.delete(userId);
     }
 
     @Override

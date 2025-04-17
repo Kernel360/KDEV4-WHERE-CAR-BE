@@ -41,6 +41,6 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void deleteCompany(Long companyId) {
-        companyStore.deleteById(companyId);
+        companyStore.delete(companyId);
     }
 }
