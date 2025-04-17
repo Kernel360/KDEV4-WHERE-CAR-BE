@@ -21,7 +21,7 @@ public class GeoInfoController {
     @PostMapping("/create")
     public ResponseEntity<Void> geoInfoCreate(@RequestBody GeoInfoRequest geoInfoRequest) {
         Long companyId = AuthUtil.getCompanyId();
-        geoInfoService.createGeoInfo(geoInfoRequest, companyId);
+        geoInfoService.createGeoInfo(companyId, geoInfoRequest);
 
         return ResponseEntity.ok().build();
 
