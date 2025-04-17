@@ -21,7 +21,7 @@ public class CarStoreImpl implements CarStore{
     }
 
     @Override
-    public void deleteById(Long id) {
-        carRepository.deleteById(id);
+    public void delete(Long carId) {
+        carRepository.deleteById(carId);
     }
 }

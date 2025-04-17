@@ -6,6 +6,6 @@ import com.wherecar.rest.car.domain.Car;
 public interface CarStore {
 
     Car store(Car car);
-    void deleteById(Long id);
+    void delete(Long carId);
 
 }

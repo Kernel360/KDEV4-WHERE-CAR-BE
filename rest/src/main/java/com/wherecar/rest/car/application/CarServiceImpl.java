@@ -37,6 +37,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarResponse createCar(Long companyId, CarRegisterRequest carRegisterRequest) {
 
+       //Todo: company와 병합 후 companyReader 사용
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company 정보가 존재하지 않습니다."));
         Car car = carFactory.toCar(carRegisterRequest, company);
@@ -52,7 +53,11 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarResponse updateCar(Long id, CarRegisterRequest carRegisterRequest) {
 
-        Car car = carRepository.findById(id).orElseThrow(() -> new RuntimeException("차량을 찾을 수 없습니다."));
+        Car car = carReader.getCarById(id);
+        if (car == null) {
+            throw new RuntimeException("차량을 찾을 수 없습니다.");
+        }
+
         car.updateCar(carRegisterRequest);
         car = carStore.store(car);
 
@@ -62,7 +67,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public void deleteCar(Long id) {
 
-        carStore.deleteById(id);
+        carStore.delete(id);
 
     }
 
@@ -73,10 +78,7 @@ public class CarServiceImpl implements CarService {
 
         Page<Car> carPage = carReader.getCarsById(companyId, page, size);
 
-        return carPage.getContent().stream()
-                .map(carFactory::toCarResponse)
-                .collect(Collectors.toList());
-
+        return carFactory.toCarResponseList(carPage.getContent());
     }
 
     @Override

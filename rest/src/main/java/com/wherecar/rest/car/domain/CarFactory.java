@@ -7,6 +7,9 @@ import com.wherecar.rest.company.domain.Company;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Component
 public class CarFactory {
@@ -50,6 +53,13 @@ public class CarFactory {
                 .companyName(car.getCompany() != null ? car.getCompany().getName() : null)
                 .build();
     }
+
+    public List<CarResponse> toCarResponseList(List<Car> cars) {
+        return cars.stream()
+                .map(this::toCarResponse)
+                .collect(Collectors.toList());
+    }
+
 
 
 }
