@@ -73,11 +73,6 @@ public class CarServiceImpl implements CarService {
 
         Page<Car> carPage = carReader.getCarsById(companyId, page, size);
 
-        System.out.println("조회된 차량 리스트: " + carPage.getContent());
-        System.out.println("현재 페이지: " + carPage.getNumber());
-        System.out.println("총 페이지 수: " + carPage.getTotalPages());
-        System.out.println("총 요소 수: " + carPage.getTotalElements());
-
         return carPage.getContent().stream()
                 .map(carFactory::toCarResponse)
                 .collect(Collectors.toList());
