@@ -1,6 +1,5 @@
 package com.wherecar.rest.security.jwt;
 
-import com.wherecar.rest.security.auth.CustomUserDetails;
 import com.wherecar.rest.user.domain.User;
 import com.wherecar.rest.user.infrastructure.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -14,6 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
@@ -45,12 +47,15 @@ public class JWTFilter extends OncePerRequestFilter {
         String email = jwtUtil.getEmail(token);
 
 
-        User user = userRepository.findUserWithPermissionsAndCompany(email).orElseThrow();
+        User user = userRepository.findUserWithPermissionsAndCompany(email).orElseThrow(() -> new NoSuchElementException("User not found"));
 
+        request.setAttribute("userId", user.getId());
+        request.setAttribute("companyId", user.getCompany().getId());
+        request.setAttribute("permissionTypes", user.getUserPermissions().stream()
+                .map(userPermission -> userPermission.getPermission().getType())
+                .collect(Collectors.toSet()));
 
-        CustomUserDetails customUserDetails = new CustomUserDetails(user);
-
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+        Authentication authToken = new UsernamePasswordAuthenticationToken(new org.springframework.security.core.userdetails.User(email,"[PROTECTED]",List.of()), null, List.of());
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
