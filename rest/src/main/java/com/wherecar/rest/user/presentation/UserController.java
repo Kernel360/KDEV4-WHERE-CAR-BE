@@ -1,8 +1,8 @@
 package com.wherecar.rest.user.presentation;
 
 import com.wherecar.rest.user.application.dto.*;
-import com.wherecar.rest.security.auth.AuthUtil;
 import com.wherecar.rest.user.application.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,16 +26,16 @@ public class UserController {
 
 //    @RequiredPermission(PermissionType.SUB_USER_CREATE)
     @PostMapping("/sub")
-    public ResponseEntity<Void> subCreate(@RequestBody SubUserRequest subUserRequest) {
+    public ResponseEntity<Void> subCreate(HttpServletRequest request, @RequestBody SubUserRequest subUserRequest) {
         log.info("Creating sub user: {}", subUserRequest);
-        Long companyId = AuthUtil.getCompanyId();
+        Long companyId = (Long)request.getAttribute("companyId");
         userService.createSub(subUserRequest, companyId);
         return ResponseEntity.ok().build();
     }
 //    @RequiredPermission(PermissionType.USER_VIEW)
     @GetMapping("/companies/my")
-    public ResponseEntity<List<UserResponse>> usersGetOfCompany(){
-        Long companyId = AuthUtil.getCompanyId();
+    public ResponseEntity<List<UserResponse>> usersGetOfCompany(HttpServletRequest request){
+        Long companyId = (Long)request.getAttribute("companyId");
         log.info("Retrieving users with company");
         List<UserResponse> userResponses = userService.getUsersOfCompany(companyId);
         return ResponseEntity.ok(userResponses);
@@ -51,8 +51,8 @@ public class UserController {
 
 //    @RequiredPermission(PermissionType.USER_VIEW)
     @GetMapping("/my")
-    public ResponseEntity<UserResponse> myUserGet(){
-        Long userId = AuthUtil.getUserId();
+    public ResponseEntity<UserResponse> myUserGet(HttpServletRequest request){
+        Long userId = (Long)request.getAttribute("userId");
         log.info("Retrieving user with id: {}", userId);
         UserResponse userResponse = userService.getUserById(userId);
         return ResponseEntity.ok(userResponse);
@@ -68,8 +68,8 @@ public class UserController {
 
 //    @RequiredPermission(PermissionType.ROOT)
     @DeleteMapping("/my")
-    public ResponseEntity<Void> myUserDelete(){
-        Long userId = AuthUtil.getUserId();
+    public ResponseEntity<Void> myUserDelete(HttpServletRequest request){
+        Long userId = (Long)request.getAttribute("userId");
         log.info("Deleting user with id: {}", userId);
         userService.deleteUserById(userId);
         return ResponseEntity.ok().build();
@@ -85,8 +85,8 @@ public class UserController {
 
 //    @RequiredPermission(PermissionType.ROOT)
     @PutMapping("/my")
-    public ResponseEntity<Void> myUserUpdate(@RequestBody UserRequest userRequest){
-        Long userId = AuthUtil.getUserId();
+    public ResponseEntity<Void> myUserUpdate(HttpServletRequest request, @RequestBody UserRequest userRequest){
+        Long userId = (Long)request.getAttribute("userId");
         log.info("Updating my user: {}", userId);
         userService.updateUserById(userId, userRequest);
         return ResponseEntity.ok().build();
@@ -94,8 +94,8 @@ public class UserController {
 
 //    @RequiredPermission(PermissionType.ROOT)
     @PutMapping("/password")
-    public ResponseEntity<Void> passwordUpdate(@RequestBody PasswordRequest passwordRequest){
-        Long userId = AuthUtil.getUserId();
+    public ResponseEntity<Void> passwordUpdate(HttpServletRequest request, @RequestBody PasswordRequest passwordRequest){
+        Long userId = (Long)request.getAttribute("userId");
         log.info("Updating password");
         userService.updatePasswordById(userId, passwordRequest);
         return ResponseEntity.ok().build();
@@ -113,8 +113,8 @@ public class UserController {
     }
 
     @PutMapping("/permissions/my")
-    public ResponseEntity<Void> myPermissionUpdate(@RequestBody PermissionRequest permissionRequest){
-        Long userId = AuthUtil.getUserId();
+    public ResponseEntity<Void> myPermissionUpdate(HttpServletRequest request, @RequestBody PermissionRequest permissionRequest){
+        Long userId = (Long)request.getAttribute("userId");
         log.info("Retrieving my permission with id: {}", userId);
         userService.updatePermission(userId, permissionRequest);
         return ResponseEntity.ok().build();
@@ -129,8 +129,8 @@ public class UserController {
     }
 
     @GetMapping("/permissions/my")
-    public ResponseEntity<PermissionResponse> myPermissionGet(){
-        Long userId = AuthUtil.getUserId();
+    public ResponseEntity<PermissionResponse> myPermissionGet(HttpServletRequest request){
+        Long userId = (Long)request.getAttribute("userId");
         log.info("Retrieving my permission with id: {}", userId);
         PermissionResponse permissionResponse = userService.getPermissionById(userId);
         return ResponseEntity.ok(permissionResponse);
