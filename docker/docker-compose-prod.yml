@@ -1,0 +1,76 @@
+services:
+  rest:
+    build:
+      context: ../
+      dockerfile: docker/rest/Dockerfile
+    container_name: wherecar-rest-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../config/rest:/app/config
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+          cpus: '0.5'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+
+  collector:
+    build:
+      context: ../
+      dockerfile: docker/collector/Dockerfile
+    container_name: wherecar-collector
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    volumes:
+      - ../config/collector:/app/config
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+          cpus: '0.5'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+
+  emulator:
+    build:
+      context: ../
+      dockerfile: docker/emulator/Dockerfile
+    container_name: wherecar-emulator
+    restart: unless-stopped
+    ports:
+      - "8095:8095"
+    volumes:
+      - ../config/emulator:/app/config
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+          cpus: '0.3'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+
+networks:
+  wherecar-network:
+    driver: bridge
