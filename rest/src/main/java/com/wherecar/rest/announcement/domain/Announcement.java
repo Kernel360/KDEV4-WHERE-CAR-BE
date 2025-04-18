@@ -1,5 +1,6 @@
 package com.wherecar.rest.announcement.domain;
 
+import com.wherecar.rest.announcement.application.dto.AnnouncementRequest;
 import com.wherecar.rest.announcement.domain.constant.AnnouncementType;
 import com.wherecar.rest.common.domain.BaseEntity;
 import jakarta.persistence.*;
@@ -30,16 +31,10 @@ public class Announcement extends BaseEntity {
     @Column(name = "content", columnDefinition = "LONGTEXT")
     private String content;
 
-    public void changeTitle(String title) {
-        this.title = title;
-    }
-
-    public void changeContent(String content) {
-        this.content = content;
-    }
-
-    public void changeAnnouncementType(AnnouncementType announcementType) {
-        this.announcementType = announcementType;
+    public void updateAnnouncement(AnnouncementRequest announcementRequest) {
+        this.title = announcementRequest.getTitle();
+        this.content = announcementRequest.getContent();
+        this.announcementType = announcementRequest.getAnnouncementType();
     }
 
 }

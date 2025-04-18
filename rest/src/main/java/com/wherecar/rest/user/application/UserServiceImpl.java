@@ -1,173 +1,163 @@
 package com.wherecar.rest.user.application;
 
-import com.wherecar.rest.company.domain.Company;
+
 import com.wherecar.rest.company.application.dto.CompanyRequest;
-import com.wherecar.rest.company.infrastructure.CompanyRepository;
+import com.wherecar.rest.company.domain.Company;
+import com.wherecar.rest.company.domain.CompanyFactory;
+import com.wherecar.rest.company.infrastructure.CompanyReader;
+import com.wherecar.rest.company.infrastructure.CompanyStore;
 import com.wherecar.rest.user.application.dto.*;
-import com.wherecar.rest.user.domain.Permission;
-import com.wherecar.rest.user.domain.constant.PermissionType;
 import com.wherecar.rest.user.domain.User;
-import com.wherecar.rest.user.domain.UserPermission;
-import com.wherecar.rest.user.infrastructure.PermissionRepository;
-import com.wherecar.rest.user.infrastructure.UserRepository;
+import com.wherecar.rest.user.domain.UserFactory;
+import com.wherecar.rest.user.domain.constant.PermissionType;
+import com.wherecar.rest.user.infrastructure.UserReader;
+import com.wherecar.rest.user.infrastructure.UserStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
-    private final PermissionRepository permissionRepository;
-    private final CompanyRepository companyRepository;
+    private final UserFactory userFactory;
+    private final CompanyFactory companyFactory;
+
+    private final UserStore userStore;
+    private final UserReader userReader;
+    private final CompanyStore companyStore;
+    private final CompanyReader companyReader;
+
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void createRoot(RootUserRequest rootUserRequest) {
-        emailExists(rootUserRequest.getUser().getEmail());
-        CompanyRequest companyRequest = rootUserRequest.getCompany();
-        Company company = Company.builder()
-                .phone(companyRequest.getPhone())
-                .email(companyRequest.getEmail())
-                .name(companyRequest.getName())
-                .address(companyRequest.getAddress())
-                .website(companyRequest.getWebsite())
-                .description(companyRequest.getDescription())
-                .build();
-        companyRepository.save(company);
+    public UserResponse createRoot(RootUserRequest rootUserRequest) {
 
+        // 0. 필요한 파라미터 준비
         UserRequest userRequest = rootUserRequest.getUser();
-        User user = this.createUser(userRequest, company);
-        Permission rootPermission = permissionRepository.findByType(PermissionType.PERM_ADMIN).orElseThrow();
+        CompanyRequest companyRequest = rootUserRequest.getCompany();
 
-        user.changeUserPermissions(rootPermission);
-        userRepository.save(user);
+        // 1. 이메일 중복확인
+        checkEmailDuplication(userRequest.getEmail());
+
+
+        // 2. 회사 생성
+        Company company = companyFactory.toCompany(companyRequest);
+        companyStore.store(company);
+
+        // 3. 유저 생성
+        User user = userFactory.toUser(userRequest, company);
+
+        // 4. 유저 권한 지정 및 저장
+        user = userStore.store(user, Set.of(PermissionType.PERM_ADMIN));
+
+        // 5. 유저 dto 반환
+        return userFactory.toUserResponse(user);
     }
 
     @Override
-    public void createSub(SubUserRequest subUserRequest, Long companyId) {
-        emailExists(subUserRequest.getUser().getEmail());
-        Company company = companyRepository.findById(companyId).orElseThrow();
-        User user = this.createUser(subUserRequest.getUser(), company);
-        this.updatePermission(user.getId(), subUserRequest.getPermission());
+    public UserResponse createSub(SubUserRequest subUserRequest, Long companyId) {
+
+        // 0. 필요한 파라미터 준비
+        UserRequest userRequest = subUserRequest.getUser();
+        Set<PermissionType> permissionTypes = subUserRequest.getPermission().getPermissionTypes();
+
+
+        // 1. 이메일 중복확인
+        checkEmailDuplication(userRequest.getEmail());
+
+        // 2. 회사 조회
+        Company company = companyReader.getCompanyById(companyId);
+
+        // 3. 유저 생성
+        User user = userFactory.toUser(userRequest, company);
+
+        // 4. 유저 권한 지정 및 저장
+        user = userStore.store(user, permissionTypes);
+
+        // 5. 유저 dto 반환
+        return userFactory.toUserResponse(user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<UserResponse> getUsersOfCompany(Long companyId) {
-        List<User> users = userRepository.findByCompanyId(companyId);
-        List<UserResponse> userResponses = new ArrayList<>();
-        for (User user : users) {
-            UserResponse userResponse = UserResponse.builder()
-                    .userId(user.getId())
-                    .name(user.getName())
-                    .phone(user.getPhone())
-                    .email(user.getEmail())
-                    .jobTitle(user.getJobTitle())
-                    .createdAt(user.getCreatedAt())
-                    .updatedAt(user.getUpdatedAt())
-                    .build();
-            userResponses.add(userResponse);
-        }
-        return userResponses;
+        // 1. 유저조회
+        List<User> users = userReader.getUsersByCompanyId(companyId);
+
+        // 2. 유저 dto 리스트로 반환
+        return users.stream()
+                .map(userFactory::toUserResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserResponse getUserById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow();
-        return UserResponse.builder()
-                .userId(user.getId())
-                .name(user.getName())
-                .phone(user.getPhone())
-                .email(user.getEmail())
-                .jobTitle(user.getJobTitle())
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
-                .build();
+        User user = userReader.getUserById(userId);
+        return userFactory.toUserResponse(user);
     }
 
     @Override
     public void deleteUserById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow();
-        userRepository.delete(user);
+        userStore.delete(userId);
     }
 
     @Override
-    public void updateUserById(Long userId, UserRequest userRequest) {
-        User user = userRepository.findById(userId).orElseThrow();
-        user.changeName(userRequest.getName());
-        user.changePhone(userRequest.getPhone());
-        user.changeEmail(userRequest.getEmail());
-        user.changeJobTitle(userRequest.getJobTitle());
-        userRepository.save(user);
+    public UserResponse updateUserById(Long userId, UserRequest userRequest) {
+        User user = userReader.getUserById(userId);
+        user.updateUser(userRequest);
+        userStore.store(user);
+        return userFactory.toUserResponse(user);
     }
 
     @Override
-    public void updatePasswordById(Long userId, PasswordRequest passwordRequest) {
-        User user = userRepository.findById(userId).orElseThrow();
+    public UserResponse updatePasswordById(Long userId, PasswordRequest passwordRequest) {
+        User user = userReader.getUserById(userId);
+
+        //비밀번호 확인 로직 실행
         if (!passwordEncoder.matches(passwordRequest.getCurrentPassword(), user.getPassword())) {
             user.changePassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
         }
-        userRepository.save(user);
+        // 유저 저장
+        userStore.store(user);
+
+        return userFactory.toUserResponse(user);
     }
 
     //권한
 
     @Override
-    public void updatePermission(Long userId, PermissionRequest permissionRequest) {
-        User user = userRepository.findById(userId).orElseThrow();
-        List<Permission> permissions = new ArrayList<>();
-        log.info(permissionRequest.toString());
-        for(PermissionType permissionType : permissionRequest.getPermissionTypes()){
-            Permission permission = permissionRepository.findByType(permissionType).orElseThrow();
-            permissions.add(permission);
-        }
-        user.changeUserPermissions(permissions.toArray(new Permission[0]));
-        log.info("Size: {}", user.getUserPermissions().size());
-        userRepository.save(user);
+    public UserResponse updatePermission(Long userId, PermissionRequest permissionRequest) {
+        User user = userReader.getUserById(userId);
+        Set<PermissionType> permissionTypes = permissionRequest.getPermissionTypes();
+
+        user = userStore.store(user,permissionTypes);
+        return userFactory.toUserResponse(user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public PermissionResponse getPermissionById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow();
-        Set<UserPermission> userPermission = user.getUserPermissions();
-        Set<PermissionType> permissionTypes = new HashSet<>();
-        for(UserPermission permission : userPermission){
-            permissionTypes.add(permission.getPermission().getType());
-        }
-        return PermissionResponse.builder()
-                .permissionTypes(permissionTypes)
-                .build();
+        User user = userReader.getUserById(userId);
+
+        Set<PermissionType> permissionTypes = user.getUserPermissions().stream()
+                .map(userPermission -> userPermission.getPermission().getType())
+                .collect(Collectors.toSet());
+
+        return new PermissionResponse(permissionTypes);
     }
 
-
-    private User createUser(UserRequest userRequest, Company company) {
-        User user = User.builder()
-                .phone(userRequest.getPhone())
-                .email(userRequest.getEmail())
-                .name(userRequest.getName())
-                .jobTitle(userRequest.getJobTitle())
-                .password(passwordEncoder.encode(userRequest.getPassword()))
-                .company(company)
-                .build();
-        userRepository.save(user);
-        return user;
-    }
-
-    public void emailExists(String email) {
-        if (userRepository.findByEmail(email).isPresent()){
-           throw new RuntimeException("Email already exists");
+    private void checkEmailDuplication(String email){
+        if(userReader.emailExists(email)) {
+            throw new RuntimeException("Email already exists");
         }
     }
 }

@@ -2,6 +2,7 @@ package com.wherecar.rest.geoinfo.domain;
 
 import com.wherecar.rest.common.domain.BaseEntity;
 import com.wherecar.rest.company.domain.Company;
+import com.wherecar.rest.geoinfo.application.dto.GeoInfoRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -45,23 +46,13 @@ public class GeoInfo extends BaseEntity {
     @Column(name = "off_time")
     private LocalDateTime offTime;
 
-    public void changeGeoEventType(String geoEventType) {
-        this.geoEventType = geoEventType;
-    }
-
-    public void changeName(String name) {
-        this.name = name;
-    }
-
-    public void changeGeoRange(String geoRange) {
-        this.geoRange = geoRange;
-    }
-
-    public void changeLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public void changeLongitude(Double longitude) {
-        this.longitude = longitude;
+    public void updateGeoInfo(GeoInfoRequest geoInfoRequest) {
+        this.name = geoInfoRequest.getName();
+        this.geoEventType = geoInfoRequest.getGeoEventType();
+        this.geoRange = geoInfoRequest.getGeoRange();
+        this.latitude = geoInfoRequest.getLatitude();
+        this.longitude = geoInfoRequest.getLongitude();
+        this.onTime = geoInfoRequest.getOnTime();
+        this.offTime = geoInfoRequest.getOffTime();
     }
 }

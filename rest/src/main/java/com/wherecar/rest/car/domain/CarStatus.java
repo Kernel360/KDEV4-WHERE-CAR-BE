@@ -34,4 +34,9 @@ public class CarStatus  extends BaseEntity {
     @Column(name="car_state")
     private CarState carState;
 
+    public void changeCar(Car car) {
+        this.car = car;
+    }
+
+
 }
