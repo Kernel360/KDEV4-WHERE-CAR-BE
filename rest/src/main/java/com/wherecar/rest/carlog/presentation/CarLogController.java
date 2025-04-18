@@ -48,7 +48,7 @@ class CarLogController {
     //운행일지 상세 정보 조회
     @GetMapping("/{logId}")
     public ResponseEntity<CarLogDetailResponse> carLogsGetDetails(@PathVariable Long logId) {
-        CarLogDetailResponse carLogs = carLogService.getCarLogsDetails(logId);
+        CarLogDetailResponse carLogs = carLogService.getCarLogDetails(logId);
         return ResponseEntity.ok(carLogs);
     }
 

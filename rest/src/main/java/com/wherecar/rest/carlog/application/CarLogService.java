@@ -11,11 +11,11 @@ public interface CarLogService {
 
     Page<CarLogsResponse> getCarLogsFiltered(Long companyId, String mdn, LocalDateTime startTime, LocalDateTime endTime, int page, int size);
 
-    CarLogDetailResponse getCarLogsDetails(Long logId);
+    CarLogDetailResponse getCarLogDetails(Long carLogId);
 
-    void updateCarLogDetails(Long id, CarLogsUpdateRequest carLogsUpdateRequest);
+    void updateCarLogDetails(Long carLogId, CarLogsUpdateRequest carLogsUpdateRequest);
 
-    void deleteCarLogDetails(Long id);
+    void deleteCarLogDetails(Long carLogId);
 
     CarLogsResponse getAllCarLogsStatics(Long companyId);
 

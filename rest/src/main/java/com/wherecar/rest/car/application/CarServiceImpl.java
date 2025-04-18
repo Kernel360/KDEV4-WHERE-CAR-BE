@@ -36,10 +36,6 @@ public class CarServiceImpl implements CarService {
     public CarResponse createCar(Long companyId, CarRegisterRequest carRegisterRequest) {
 
         Company company = companyReader.getById(companyId);
-        if (company == null) {
-            throw new RuntimeException("Company 정보가 존재하지 않습니다.");
-        }
-
         Car car = carFactory.toCar(carRegisterRequest, company);
         car = carStore.store(car);
         return carFactory.toCarResponse(car);
@@ -51,10 +47,6 @@ public class CarServiceImpl implements CarService {
     public CarResponse updateCar(Long id, CarRegisterRequest carRegisterRequest) {
 
         Car car = carReader.getCarById(id);
-        if (car == null) {
-            throw new RuntimeException("차량을 찾을 수 없습니다.");
-        }
-
         car.updateCar(carRegisterRequest);
         car = carStore.store(car);
 
@@ -91,7 +83,7 @@ public class CarServiceImpl implements CarService {
         return carReader.getCarOverviewByCompanyId(companyId);
     }
 
-    //todo: 추후 리팩토링 관제 이외의 상태별로 조회할 수 있도록 수정
+    //Todo: 추후 리팩토링 관제 이외의 상태별로 조회할 수 있도록 수정
     @Override
     public List<CarResponse> gatCarsByStatus(Long companyId) {
         List<Car> cars = carRepository.findByCompanyIdWithRegisteredCarStatus(companyId);

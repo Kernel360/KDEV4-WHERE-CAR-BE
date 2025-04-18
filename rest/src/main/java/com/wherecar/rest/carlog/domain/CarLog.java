@@ -1,5 +1,6 @@
 package com.wherecar.rest.carlog.domain;
 
+import com.wherecar.rest.carlog.application.dto.CarLogsUpdateRequest;
 import com.wherecar.rest.carlog.domain.constant.DriveType;
 import com.wherecar.rest.common.domain.BaseEntity;
 import com.wherecar.rest.gpslog.domain.constant.GpsConditionType;
@@ -52,15 +53,11 @@ public class CarLog extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DriveType driveType;
 
-    public void changeDriver(String driver) {
-        this.driver = driver;
+    public void updateCarLog(CarLogsUpdateRequest carLogsUpdateRequest){
+        this.driver = carLogsUpdateRequest.getDriver();
+        this.description = carLogsUpdateRequest.getDescription();
+        this.driveType = carLogsUpdateRequest.getDriveType();
     }
 
-    public void changeDescription(String description) {
-        this.description = description;
-    }
 
-    public void changeDriveType(DriveType driveType) {
-        this.driveType = driveType;
-    }
 }
