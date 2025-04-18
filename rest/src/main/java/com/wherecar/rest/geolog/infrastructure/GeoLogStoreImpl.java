@@ -17,7 +17,7 @@ public class GeoLogStoreImpl implements GeoLogStore {
     }
 
     @Override
-    public void deleteById(Long geoLogId) {
+    public void delete(Long geoLogId) {
         geoLogRepository.deleteById(geoLogId);
     }
 }

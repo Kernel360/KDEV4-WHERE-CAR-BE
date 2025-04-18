@@ -5,6 +5,6 @@ import com.wherecar.rest.geolog.domain.GeoLog;
 import java.util.List;
 
 public interface GeoLogReader {
-    List<GeoLog> getGeoLogByMdn(String mdn);
+    List<GeoLog> getGeoLogsByMdn(String mdn);
     GeoLog getGeoLogById(Long geoLogId);
 }

@@ -5,6 +5,6 @@ import com.wherecar.rest.geolog.domain.GeoLog;
 public interface GeoLogStore {
 
     GeoLog store(GeoLog geoLog);
-    void deleteById(Long geoLogId);
+    void delete(Long geoLogId);
 
 }

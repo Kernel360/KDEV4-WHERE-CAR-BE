@@ -14,8 +14,8 @@ public class GeoLogReaderImpl implements GeoLogReader {
     private final GeoLogRepository geoLogRepository;
 
     @Override
-    public List<GeoLog> getGeoLogByMdn(String mdn) {
-        List<GeoLog> geoLogs = geoLogRepository.findByGeoLogIdWithMdn(mdn);
+    public List<GeoLog> getGeoLogsByMdn(String mdn) {
+        List<GeoLog> geoLogs = geoLogRepository.findByMdn(mdn);
 
         if (geoLogs.isEmpty()) {
             throw new RuntimeException("GeoLog not found");

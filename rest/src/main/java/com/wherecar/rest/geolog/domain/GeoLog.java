@@ -62,36 +62,4 @@ public class GeoLog extends BaseEntity {
         this.mdn = geoLogRequest.getMdn();
     }
 
-//    public void changeAngle(Integer angle) {
-//        this.angle = angle;
-//    }
-//
-//    public void changeEvaluate_value(String evaluateValue) {
-//        this.evaluateValue = evaluateValue;
-//    }
-//
-//    public void changeGpsCondition(String gpsCondition) {
-//        this.gpsCondition = gpsCondition;
-//    }
-//
-//    public void changeLatitude(Double latitude) {
-//        this.latitude = latitude;
-//    }
-//
-//    public void changeLongitude(Double longitude) {
-//        this.longitude = longitude;
-//    }
-//
-//    public void changeSpeed(Integer speed) {
-//        this.speed = speed;
-//    }
-//
-//    public void changeSum(Integer sum) {
-//        this.sum = sum;
-//    }
-//
-//    public void changeMdn(String mdn) {
-//        this.mdn = mdn;
-//    }
-
 }

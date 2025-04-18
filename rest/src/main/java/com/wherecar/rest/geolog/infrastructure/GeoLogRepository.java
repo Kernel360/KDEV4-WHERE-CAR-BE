@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface GeoLogRepository extends JpaRepository<GeoLog, Long>{
 
     @EntityGraph(attributePaths = {"geoInfo"})
-    List<GeoLog> findByGeoLogIdWithMdn(String mdn);
+    List<GeoLog> findByMdn(String mdn);
 
 }

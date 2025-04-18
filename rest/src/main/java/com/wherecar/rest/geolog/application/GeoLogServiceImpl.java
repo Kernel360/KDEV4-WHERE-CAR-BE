@@ -29,11 +29,10 @@ public class GeoLogServiceImpl implements GeoLogService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GeoLogResponse> getGeoLogByCarId(Long carId) {
+    public List<GeoLogResponse> getGeoLogsByCarId(Long carId) {
         Car car = carReader.getCarById(carId);
-        List<GeoLog> geoLogs = geoLogReader.getGeoLogByMdn(car.getMdn());
-
-        log.info(geoLogs.toString());
+        List<GeoLog> geoLogs = geoLogReader.getGeoLogsByMdn(car.getMdn());
+        log.info("GeoLogs : {}", geoLogs);
 
         return geoLogFactory.toGeoLogListResponse(geoLogs);
     }
@@ -56,6 +55,6 @@ public class GeoLogServiceImpl implements GeoLogService {
 
     @Override
     public void deleteGeoLog(Long geoLogId) {
-        geoLogStore.deleteById(geoLogId);
+        geoLogStore.delete(geoLogId);
     }
 }
