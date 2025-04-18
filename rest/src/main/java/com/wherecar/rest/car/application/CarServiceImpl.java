@@ -35,7 +35,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarResponse createCar(Long companyId, CarRegisterRequest carRegisterRequest) {
 
-        Company company = companyReader.getById(companyId);
+        Company company = companyReader.getCompanyById(companyId);
         Car car = carFactory.toCar(carRegisterRequest, company);
         car = carStore.store(car);
         return carFactory.toCarResponse(car);
