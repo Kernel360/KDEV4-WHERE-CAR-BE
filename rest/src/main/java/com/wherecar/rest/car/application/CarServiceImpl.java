@@ -9,8 +9,7 @@ import com.wherecar.rest.car.application.dto.CarOverviewResponse;
 import com.wherecar.rest.car.application.dto.CarResponse;
 import com.wherecar.rest.car.application.dto.CarRegisterRequest;
 import com.wherecar.rest.car.infrastructure.CarRepository;
-import com.wherecar.rest.car.infrastructure.CarStatusRepository;
-import com.wherecar.rest.company.infrastructure.CompanyRepository;
+import com.wherecar.rest.company.infrastructure.CompanyReader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,9 +26,8 @@ import java.util.stream.Collectors;
 public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
-    private final CarStatusRepository carStatusRepository;
     private final CarReader carReader;
-    private final CompanyRepository companyRepository;
+    private final CompanyReader companyReader;
     private final CarFactory carFactory;
 
     private final CarStore carStore;
@@ -37,14 +35,13 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarResponse createCar(Long companyId, CarRegisterRequest carRegisterRequest) {
 
-       //Todo: company와 병합 후 companyReader 사용
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new RuntimeException("Company 정보가 존재하지 않습니다."));
+        Company company = companyReader.getById(companyId);
+        if (company == null) {
+            throw new RuntimeException("Company 정보가 존재하지 않습니다.");
+        }
+
         Car car = carFactory.toCar(carRegisterRequest, company);
-
         car = carStore.store(car);
-
-
         return carFactory.toCarResponse(car);
 
     }
