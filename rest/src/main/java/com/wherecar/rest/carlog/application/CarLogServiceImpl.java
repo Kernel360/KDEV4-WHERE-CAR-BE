@@ -1,8 +1,7 @@
 package com.wherecar.rest.carlog.application;
 
+import com.wherecar.rest.carlog.application.dto.CarLogResponse;
 import com.wherecar.rest.carlog.domain.CarLog;
-import com.wherecar.rest.carlog.application.dto.CarLogDetailResponse;
-import com.wherecar.rest.carlog.application.dto.CarLogsResponse;
 import com.wherecar.rest.carlog.application.dto.CarLogsUpdateRequest;
 import com.wherecar.rest.carlog.application.dto.MonthlyMileage;
 import com.wherecar.rest.carlog.domain.CarLogFactory;
@@ -38,7 +37,7 @@ public class CarLogServiceImpl implements CarLogService {
     //차량 목록 조회(필터 추가)
     @Override
     @Transactional(readOnly = true)
-    public Page<CarLogsResponse> getCarLogsFiltered(
+    public Page<CarLogResponse> getCarLogsFiltered(
             Long companyId,
             String mdn,
             LocalDateTime startTime,
@@ -55,10 +54,10 @@ public class CarLogServiceImpl implements CarLogService {
     //운행일지 상세 정보
     @Override
     @Transactional(readOnly = true)
-    public CarLogDetailResponse getCarLogDetails(Long carLogId) {
+    public CarLogResponse getCarLogDetails(Long carLogId) {
 
         CarLog carLog = carLogReader.getCarLogById(carLogId);
-        return carLogFactory.toCarLogDetailResponse(carLog);
+        return carLogFactory.toCarLogResponse(carLog);
 
     }
 
@@ -80,7 +79,7 @@ public class CarLogServiceImpl implements CarLogService {
 
     //Todo: 대시보드 코드 추후 별도로 리팩토링 진행
     @Override
-    public CarLogsResponse getAllCarLogsStatics(Long companyId) {
+    public CarLogResponse getAllCarLogsStatics(Long companyId) {
 
         List<String> mdns = carRepository.findMdnsByCompanyId(companyId);
 
@@ -133,7 +132,7 @@ public class CarLogServiceImpl implements CarLogService {
                 .map(entry -> new MonthlyMileage(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
-        return CarLogsResponse.builder()
+        return CarLogResponse.builder()
                 .totalMileage((int) totalMileage)
                 .carLogsCount(String.valueOf(count))
                 .monthlyMileages(monthlyMileages)
