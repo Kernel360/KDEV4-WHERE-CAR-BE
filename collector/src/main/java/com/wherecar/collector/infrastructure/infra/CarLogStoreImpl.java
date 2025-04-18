@@ -5,6 +5,7 @@ import com.wherecar.collector.domain.Car;
 import com.wherecar.collector.domain.CarLog;
 import com.wherecar.collector.domain.CarLogFactory;
 import com.wherecar.collector.domain.CarStatus;
+import com.wherecar.collector.domain.constant.CarState;
 import com.wherecar.collector.infrastructure.CarLogRepository;
 import com.wherecar.collector.infrastructure.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class CarLogStoreImpl implements CarLogStore {
 
         CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
         carStatus.changeMileage(onMileage);
+        carStatus.changeCarState(CarState.RUNNING);
         carStatusRepository.save(carStatus);
     }
 
@@ -47,6 +49,7 @@ public class CarLogStoreImpl implements CarLogStore {
 
             CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
             carStatus.changeMileage(previousCarLog.getOffMileage());
+            carStatus.changeCarState(CarState.RUNNING);
             carStatusRepository.save(carStatus);
         }
     }
@@ -61,6 +64,7 @@ public class CarLogStoreImpl implements CarLogStore {
 
         CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
         carStatus.changeMileage(offMileage);
+        carStatus.changeCarState(CarState.STOPPED);
         carStatusRepository.save(carStatus);
     }
 

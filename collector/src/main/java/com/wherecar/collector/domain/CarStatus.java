@@ -40,5 +40,9 @@ public class CarStatus  extends BaseEntity {
         this.mileage = mileage;
     }
 
+    public void changeCarState(CarState carState) {
+        this.carState = carState;
+    }
+
 }
 
