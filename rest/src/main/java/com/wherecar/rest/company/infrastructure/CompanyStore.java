@@ -4,5 +4,5 @@ import com.wherecar.rest.company.domain.Company;
 
 public interface CompanyStore {
     Company store(Company company);
-    void deleteById(Long companyId);
+    void delete(Long companyId);
 }

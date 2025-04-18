@@ -19,6 +19,7 @@ public class GeoInfoController {
 
     // GeoFence 정보 등록
     @PostMapping("/create")
+
     public ResponseEntity<Void> geoInfoCreate(HttpServletRequest request, @RequestBody GeoInfoRequest geoInfoRequest) {
         Long companyId = (Long)request.getAttribute("companyId");
         geoInfoService.createGeoInfo(geoInfoRequest, companyId);

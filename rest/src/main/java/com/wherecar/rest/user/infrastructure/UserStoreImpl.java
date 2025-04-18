@@ -35,7 +35,7 @@ public class UserStoreImpl implements UserStore {
     }
 
     @Override
-    public void deleteById(Long userId){
+    public void delete(Long userId){
         userRepository.deleteById(userId);
     }
 }
