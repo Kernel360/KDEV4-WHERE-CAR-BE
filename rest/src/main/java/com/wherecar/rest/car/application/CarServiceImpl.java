@@ -2,8 +2,8 @@ package com.wherecar.rest.car.application;
 
 import com.wherecar.rest.car.domain.Car;
 import com.wherecar.rest.car.domain.CarFactory;
-import com.wherecar.rest.car.infrastructure.infra.CarReader;
-import com.wherecar.rest.car.infrastructure.infra.CarStore;
+import com.wherecar.rest.car.infrastructure.CarReader;
+import com.wherecar.rest.car.infrastructure.CarStore;
 import com.wherecar.rest.company.domain.Company;
 import com.wherecar.rest.car.application.dto.CarOverviewResponse;
 import com.wherecar.rest.car.application.dto.CarResponse;

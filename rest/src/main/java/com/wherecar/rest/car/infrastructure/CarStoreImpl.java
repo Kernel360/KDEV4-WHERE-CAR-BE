@@ -1,8 +1,6 @@
-package com.wherecar.rest.car.infrastructure.infra;
+package com.wherecar.rest.car.infrastructure;
 
 import com.wherecar.rest.car.domain.Car;
-import com.wherecar.rest.car.infrastructure.CarRepository;
-import com.wherecar.rest.car.infrastructure.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
