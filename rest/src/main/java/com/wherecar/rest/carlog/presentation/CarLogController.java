@@ -6,7 +6,7 @@ import com.wherecar.rest.carlog.application.dto.CarLogFilterRequest;
 import com.wherecar.rest.carlog.application.dto.CarLogsResponse;
 import com.wherecar.rest.carlog.application.dto.CarLogsUpdateRequest;
 import com.wherecar.rest.carlog.application.CarLogService;
-import com.wherecar.rest.security.auth.AuthUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,11 +24,12 @@ class CarLogController {
     //운행일지 목록 조회 (filter 추가)
     @PostMapping
     public ResponseEntity<Page<CarLogsResponse>> carLogsGetWithFilter(
+            HttpServletRequest httpServletRequest,
             @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size,
             @RequestBody(required = false) CarLogFilterRequest filterRequest) {
 
-        Long companyId = AuthUtil.getCompanyId();
+        Long companyId = (Long)httpServletRequest.getAttribute("companyId");
 
         CarLogFilterRequest request = filterRequest != null ? filterRequest : new CarLogFilterRequest();
 
@@ -69,9 +70,9 @@ class CarLogController {
 
     // 대시보드 운행 통계 달별 km 및 운행건수를 counting
     @GetMapping("/statics")
-    public ResponseEntity<CarLogsResponse> carLogsStaticsGetAll() {
+    public ResponseEntity<CarLogsResponse> carLogsStaticsGetAll(HttpServletRequest request) {
 
-        Long companyId = AuthUtil.getCompanyId();
+        Long companyId = (Long)request.getAttribute("companyId");
         System.out.println("companyId = " + companyId);
         CarLogsResponse carLogsStaticsResponse = carLogService.getAllCarLogsStatics(companyId);
 
