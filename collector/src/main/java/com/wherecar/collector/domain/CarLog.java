@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Objects;
 
 @Table(name = "car_logs")
 @Entity
@@ -20,7 +23,6 @@ public class CarLog extends BaseEntity {
     @Column(name="car_log_id")
     private Long id;
 
-    // car
     @Column(name = "mdn")
     private String mdn;
 
@@ -84,15 +86,40 @@ public class CarLog extends BaseEntity {
     @Column(name = "drive_type")
     private DriveType driveType;
 
-    public void changeDriver(String driver) {
-        this.driver = driver;
+    public static boolean isSameOffSum(Integer previousOffSum, String currentOnSum) {
+        return Objects.equals(previousOffSum, Integer.parseInt(currentOnSum));
     }
 
-    public void changeDescription(String description) {
-        this.description = description;
+    public static Double parseLatLon(String latLon) {
+        return (double) Integer.parseInt(latLon) / 1000000;
     }
 
-    public void changeDriveType(DriveType driveType) {
-        this.driveType = driveType;
+    public static LocalDateTime parseOnOffTime(String onOffTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        return LocalDateTime.parse(onOffTime, formatter);
     }
+
+    public static Integer getSumToAdd(Integer onSum, Integer offSum) {
+        Integer sumToAdd = 0;
+
+        if (onSum <= offSum) {
+            sumToAdd = offSum - onSum;
+        }
+        if (onSum > offSum) {   // 주행 거리가 10,000km(10,000,000m)를 넘었을 경우
+            sumToAdd = (offSum + 10000000) - onSum;
+        }
+        return sumToAdd;
+    }
+
+    public static GpsConditionType getGpsConditionType(String gcd) {
+        if (Arrays.stream(GpsConditionType.values()).noneMatch(e -> e.name().equals(gcd))) {
+            throw new RuntimeException("잘못된 값입니다. 유효한 값은 A, V, O입니다.");
+        }
+        return GpsConditionType.valueOf(gcd);
+    }
+
+    public static Double getOffMileage(Double onMileage, Integer sumToAdd) {
+        return onMileage + (double) sumToAdd / 1000;
+    }
+
 }
