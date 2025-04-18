@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 
 public interface GpsLogService {
 
-    GpsLogResponse getLatestLocation(String mdn);
+    GpsLogResponse getLatestGpsLogByMdn(String mdn);
 
-    GpsRouteResponse getRoute(String mdn, LocalDateTime startTime, LocalDateTime endTime);
+    GpsRouteResponse getGpsPointsByMdn(String mdn, LocalDateTime startTime, LocalDateTime endTime);
 
 }

@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface GpsLogReader {
     GpsLog findTopByMdnOrderByTimestampDesc(String mdn);
-    List<GpsPoint> findByMdnAndTimestampBetweenOrderByTimestamp(String mdn, LocalDateTime startTime, LocalDateTime endTime);
+    List<GpsLog> getGpsPointsByTimestamp(String mdn, LocalDateTime startTime, LocalDateTime endTime);
 }

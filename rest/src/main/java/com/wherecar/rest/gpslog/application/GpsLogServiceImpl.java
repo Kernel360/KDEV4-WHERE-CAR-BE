@@ -24,7 +24,7 @@ public class GpsLogServiceImpl implements GpsLogService {
     private final GpsLogFactory gpsFactory;
 
     @Override
-    public GpsLogResponse getLatestLocation(String mdn) {
+    public GpsLogResponse getLatestGpsLogByMdn(String mdn) {
 
         GpsLog gpslog = gpsLogReader.findTopByMdnOrderByTimestampDesc(mdn);
 
@@ -33,10 +33,12 @@ public class GpsLogServiceImpl implements GpsLogService {
     }
 
     @Override
-    public GpsRouteResponse getRoute(String mdn, LocalDateTime startTime, LocalDateTime endTime) {
-        List<GpsPoint> route = gpsLogReader.findByMdnAndTimestampBetweenOrderByTimestamp(mdn, startTime, endTime);
+    public GpsRouteResponse getGpsPointsByMdn(String mdn, LocalDateTime startTime, LocalDateTime endTime) {
 
-        return gpsFactory.toRouteResponse(route, mdn);
+        List<GpsLog> route = gpsLogReader.getGpsPointsByTimestamp(mdn, startTime, endTime);
+        List<GpsPoint> gpsPoints = gpsFactory.route(route);
+
+        return gpsFactory.toRouteResponse(gpsPoints, mdn);
     }
 
 }

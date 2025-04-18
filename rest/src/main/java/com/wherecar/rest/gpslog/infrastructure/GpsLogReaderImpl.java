@@ -17,7 +17,6 @@ import java.util.List;
 public class GpsLogReaderImpl implements GpsLogReader {
 
     private final GpsLogRepository gpsLogRepository;
-    private final GpsLogFactory gpsLogFactory;
 
     @Override
     public GpsLog findTopByMdnOrderByTimestampDesc(String mdn) {
@@ -26,10 +25,7 @@ public class GpsLogReaderImpl implements GpsLogReader {
     }
 
     @Override
-    public List<GpsPoint> findByMdnAndTimestampBetweenOrderByTimestamp(String mdn, LocalDateTime startTime, LocalDateTime endTime) {
-
-        List<GpsLog> gpsLogs = gpsLogRepository.findByMdnAndTimestampBetweenOrderByTimestamp(mdn, startTime, endTime);
-
-        return gpsLogFactory.route(gpsLogs);
+    public List<GpsLog> getGpsPointsByTimestamp(String mdn, LocalDateTime startTime, LocalDateTime endTime) {
+        return gpsLogRepository.findByMdnAndTimestampBetweenOrderByTimestamp(mdn, startTime, endTime);
     }
 }

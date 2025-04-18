@@ -13,12 +13,14 @@ import java.util.List;
 public class GpsLogFactory {
 
     public GpsLogResponse toGpsLogResponse(GpsLog gpsLog) {
+
         return GpsLogResponse.builder()
                 .mdn(gpsLog.getMdn())
                 .latitude(gpsLog.getLatitude())
                 .longitude(gpsLog.getLongitude())
                 .timestamp(gpsLog.getTimestamp())
                 .build();
+
     }
 
     public List<GpsPoint> route(List<GpsLog> gpsLogs) {
@@ -31,13 +33,16 @@ public class GpsLogFactory {
                         .build()
                 )
                 .toList();
+
     }
 
     public GpsRouteResponse toRouteResponse(List<GpsPoint> route, String mdn) {
+
         return GpsRouteResponse.builder()
                 .mdn(mdn)
                 .route(route)
                 .build();
+
     }
 
 }
