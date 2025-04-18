@@ -8,11 +8,12 @@ import java.util.List;
 
 public interface CarService {
 
-    void createCar(Long companyId, CarRegisterRequest carRegisterRequest);
-    void updateCar(Long id, CarRegisterRequest carRegisterRequest);
+    CarResponse createCar(Long companyId, CarRegisterRequest carRegisterRequest);
+    CarResponse updateCar(Long id, CarRegisterRequest carRegisterRequest);
     void deleteCar(Long id);
     List<CarResponse> getAllCars(Long companyId, int page, int size);
     CarResponse getCarDetails(Long id);
     CarOverviewResponse getCarOverview(Long companyId);
     List<CarResponse> gatCarsByStatus(Long companyId);
+
 }

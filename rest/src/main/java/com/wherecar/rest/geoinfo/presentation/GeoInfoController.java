@@ -3,7 +3,7 @@ package com.wherecar.rest.geoinfo.presentation;
 import com.wherecar.rest.geoinfo.application.dto.GeoInfoRequest;
 import com.wherecar.rest.geoinfo.application.dto.GeoInfoResponse;
 import com.wherecar.rest.geoinfo.application.GeoInfoService;
-import com.wherecar.rest.security.auth.AuthUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +19,10 @@ public class GeoInfoController {
 
     // GeoFence 정보 등록
     @PostMapping("/create")
-    public ResponseEntity<Void> geoInfoCreate(@RequestBody GeoInfoRequest geoInfoRequest) {
-        Long companyId = AuthUtil.getCompanyId();
-        geoInfoService.createGeoInfo(companyId, geoInfoRequest);
+
+    public ResponseEntity<Void> geoInfoCreate(HttpServletRequest request, @RequestBody GeoInfoRequest geoInfoRequest) {
+        Long companyId = (Long)request.getAttribute("companyId");
+        geoInfoService.createGeoInfo(geoInfoRequest, companyId);
 
         return ResponseEntity.ok().build();
 
@@ -63,8 +64,8 @@ public class GeoInfoController {
     }
 
     @GetMapping("/companies/my")
-    public ResponseEntity<List<GeoInfoResponse>> geoInfoGetByMyCompany() {
-        Long companyId = AuthUtil.getCompanyId();
+    public ResponseEntity<List<GeoInfoResponse>> geoInfoGetByMyCompany(HttpServletRequest request) {
+        Long companyId = (Long)request.getAttribute("companyId");
         List<GeoInfoResponse> geoInfoResponses = geoInfoService.getGeoInfosByCompanyId(companyId);
         return ResponseEntity.ok(geoInfoResponses);
     }

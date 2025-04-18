@@ -1,5 +1,6 @@
 package com.wherecar.rest.car.domain;
 
+import com.wherecar.rest.car.application.dto.CarRegisterRequest;
 import com.wherecar.rest.car.domain.constant.AcquisitionType;
 import com.wherecar.rest.car.domain.constant.OwnerType;
 import com.wherecar.rest.common.domain.BaseEntity;
@@ -46,32 +47,13 @@ public class Car extends BaseEntity {
     @JoinColumn(name="geo_info_id")
     private GeoInfo geoInfo;
 
-    public void changeMake(String make) {
-        this.make = make;
-    }
-
-    public void changeModel(String model) {
-        this.model = model;
-    }
-
-    public void changeYear(String year) {
-        this.year = year;
-    }
-
-    public void changeMdn(String mdn) {
-        this.mdn = mdn;
-    }
-
-    public void changeOwnerType(OwnerType ownerType) {
-        this.ownerType = ownerType;
-    }
-
-    public void changeAcquisitionType(AcquisitionType acquisitionType) {
-        this.acquisitionType = acquisitionType;
-    }
-
-    public void changeGeoInfo(GeoInfo geoInfo) {
-        this.geoInfo = geoInfo;
+    public void updateCar(CarRegisterRequest carRegisterRequest) {
+        this.make = carRegisterRequest.getMake();
+        this.model = carRegisterRequest.getModel();
+        this.year = carRegisterRequest.getYear();
+        this.mdn = carRegisterRequest.getMdn();
+        this.ownerType = carRegisterRequest.getOwnerType();
+        this.acquisitionType = carRegisterRequest.getAcquisitionType();
     }
 
 }
