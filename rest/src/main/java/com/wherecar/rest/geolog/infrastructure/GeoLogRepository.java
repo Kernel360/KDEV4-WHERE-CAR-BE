@@ -9,8 +9,7 @@ import java.util.Optional;
 
 public interface GeoLogRepository extends JpaRepository<GeoLog, Long>{
 
-    List<GeoLog> getGeoLogByMdn(String mdn);
     @EntityGraph(attributePaths = {"geoInfo"})
-    Optional<GeoLog> findById(Long id);
+    List<GeoLog> findByGeoLogIdWithMdn(String mdn);
 
 }
