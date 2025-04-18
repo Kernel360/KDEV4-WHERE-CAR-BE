@@ -1,14 +1,14 @@
 services:
   rest:
     build:
-      context: ../
-      dockerfile: docker/rest/Dockerfile
+      context: ../repository/KDEV4-WHERE-CAR-BE/
+      dockerfile: ../../docker/rest/Dockerfile
     container_name: wherecar-rest-api
     restart: unless-stopped
     ports:
       - "8080:8080"
     volumes:
-      - ../config/rest:/app/config
+      - ./rest:/app/config:rw
     deploy:
       resources:
         limits:
@@ -25,14 +25,14 @@ services:
 
   collector:
     build:
-      context: ../
-      dockerfile: docker/collector/Dockerfile
+      context: ../repository/KDEV4-WHERE-CAR-BE/
+      dockerfile: ../../docker/collector/Dockerfile
     container_name: wherecar-collector
     restart: unless-stopped
     ports:
       - "8090:8090"
     volumes:
-      - ../config/collector:/app/config
+      - ./collector:/app/config:rw
     deploy:
       resources:
         limits:
@@ -49,14 +49,14 @@ services:
 
   emulator:
     build:
-      context: ../
-      dockerfile: docker/emulator/Dockerfile
+      context: ../repository/KDEV4-WHERE-CAR-BE/
+      dockerfile: ../../docker/emulator/Dockerfile
     container_name: wherecar-emulator
     restart: unless-stopped
     ports:
       - "8095:8095"
     volumes:
-      - ../config/emulator:/app/config
+      - ./emulator:/app/config:rw
     deploy:
       resources:
         limits:
