@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: wherecar-mysql
+    restart: unless-stopped # 사용자 중지 외 모든 경우 재시작
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: wherecar
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - wherecar-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-p1234"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+volumes:
+  mysql-data:
+    driver: local
+
+networks:
+  wherecar-network:
+    driver: bridge
