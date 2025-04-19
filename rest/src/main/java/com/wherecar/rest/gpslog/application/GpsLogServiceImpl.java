@@ -4,7 +4,8 @@ import com.wherecar.rest.gpslog.application.dto.GpsLogResponse;
 import com.wherecar.rest.gpslog.application.dto.GpsPoint;
 import com.wherecar.rest.gpslog.application.dto.GpsRouteResponse;
 import com.wherecar.rest.gpslog.domain.GpsLog;
-import com.wherecar.rest.gpslog.infrastructure.GpsLogRepository;
+import com.wherecar.rest.gpslog.domain.GpsLogFactory;
+import com.wherecar.rest.gpslog.infrastructure.GpsLogReader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,41 +20,25 @@ import java.util.List;
 @Transactional
 public class GpsLogServiceImpl implements GpsLogService {
 
-    private final GpsLogRepository gpsLogRepository;
+    private final GpsLogReader gpsLogReader;
+    private final GpsLogFactory gpsFactory;
 
     @Override
-    public GpsLogResponse getLatestLocation(String mdn) {
+    public GpsLogResponse getLatestGpsLogByMdn(String mdn) {
 
-        GpsLog gpsLog = gpsLogRepository.findTopByMdnOrderByTimestampDesc(mdn)
-                .orElseThrow(() -> new RuntimeException("해당 차량의 GPS 로그가 없습니다."));
+        GpsLog gpslog = gpsLogReader.findTopByMdnOrderByTimestampDesc(mdn);
 
-        return GpsLogResponse.builder()
-                .mdn(gpsLog.getMdn())
-                .longitude(gpsLog.getLongitude())
-                .latitude(gpsLog.getLatitude())
-                .timestamp(gpsLog.getTimestamp())
-                .build();
+        return gpsFactory.toGpsLogResponse(gpslog);
 
     }
 
     @Override
-    public GpsRouteResponse getRoute(String mdn, LocalDateTime startTime, LocalDateTime endTime) {
-        List<GpsLog> gpsLogs = gpsLogRepository.findByMdnAndTimestampBetweenOrderByTimestamp(mdn, startTime, endTime);
+    public GpsRouteResponse getGpsPointsByMdn(String mdn, LocalDateTime startTime, LocalDateTime endTime) {
 
-        List<GpsPoint> route = gpsLogs.stream()
-                .map(gpsLog -> GpsPoint.builder()
-                        .latitude(gpsLog.getLatitude())
-                        .longitude(gpsLog.getLongitude())
-                        .timestamp(gpsLog.getTimestamp())
-                        .build()
-                )
-                .toList();
+        List<GpsLog> route = gpsLogReader.getGpsPointsByTimestamp(mdn, startTime, endTime);
+        List<GpsPoint> gpsPoints = gpsFactory.route(route);
 
-        return GpsRouteResponse.builder()
-                .mdn(mdn)
-                .route(route)
-                .build();
-
+        return gpsFactory.toRouteResponse(gpsPoints, mdn);
     }
 
 }

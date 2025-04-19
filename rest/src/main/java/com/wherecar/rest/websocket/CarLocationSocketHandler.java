@@ -86,7 +86,7 @@ public class CarLocationSocketHandler extends TextWebSocketHandler {
                     String carMdn = car.getMdn();
 
                     // 1분간의 GPS 데이터 조회
-                    GpsRouteResponse result = gpsLogService.getRoute(carMdn, baseTime, now);
+                    GpsRouteResponse result = gpsLogService.getGpsPointsByMdn(carMdn, baseTime, now);
                     log.info("경로 결과"+ result.getRoute());
 
                     // 60초 기준 데이터 보정
@@ -134,7 +134,7 @@ public class CarLocationSocketHandler extends TextWebSocketHandler {
 
         //rawList가 비어 있으면 미리 최신 위치 한 번만 조회
         if (rawList.isEmpty()) {
-            GpsLogResponse latestLocation = gpsLogService.getLatestLocation(mdn);
+            GpsLogResponse latestLocation = gpsLogService.getLatestGpsLogByMdn(mdn);
 
             for (int i = 0; i < 60; i++) {
                 LocalDateTime currentTime = baseTime.plusSeconds(i);
@@ -180,7 +180,7 @@ public class CarLocationSocketHandler extends TextWebSocketHandler {
                 log.info("최신 좌표 사용: {}", point);
 
             } else {
-                GpsLogResponse latestLocation = gpsLogService.getLatestLocation(mdn);
+                GpsLogResponse latestLocation = gpsLogService.getLatestGpsLogByMdn(mdn);
                 if (latestLocation != null) {
                     point = GpsPoint.builder()
                             .latitude(latestLocation.getLatitude())
