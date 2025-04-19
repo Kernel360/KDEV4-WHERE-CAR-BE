@@ -2,6 +2,7 @@ package com.wherecar.rest.geolog.domain;
 
 import com.wherecar.rest.common.domain.BaseEntity;
 import com.wherecar.rest.geoinfo.domain.GeoInfo;
+import com.wherecar.rest.geolog.application.dto.GeoLogRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -51,36 +52,14 @@ public class GeoLog extends BaseEntity {
     @Column(name = "evaluate_value")
     private String evaluateValue;
 
-    public void changeAngle(Integer angle) {
-        this.angle = angle;
-    }
-
-    public void changeEvaluate_value(String evaluateValue) {
-        this.evaluateValue = evaluateValue;
-    }
-
-    public void changeGpsCondition(String gpsCondition) {
-        this.gpsCondition = gpsCondition;
-    }
-
-    public void changeLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public void changeLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public void changeSpeed(Integer speed) {
-        this.speed = speed;
-    }
-
-    public void changeSum(Integer sum) {
-        this.sum = sum;
-    }
-
-    public void changeMdn(String mdn) {
-        this.mdn = mdn;
+    public void updateGeoLog(GeoLogRequest geoLogRequest){
+        this.angle = geoLogRequest.getAngle();
+        this.gpsCondition = geoLogRequest.getGpsCondition();
+        this.latitude = geoLogRequest.getLatitude();
+        this.longitude = geoLogRequest.getLongitude();
+        this.speed = geoLogRequest.getSpeed();
+        this.sum = geoLogRequest.getSum();
+        this.mdn = geoLogRequest.getMdn();
     }
 
 }
