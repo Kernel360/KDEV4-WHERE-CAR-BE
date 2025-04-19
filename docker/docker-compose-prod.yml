@@ -8,7 +8,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./rest:/app/config:rw
+      - ./rest/application-prod.yml:/app/config/application-prod.yml:rw
     deploy:
       resources:
         limits:
@@ -32,7 +32,7 @@ services:
     ports:
       - "8090:8090"
     volumes:
-      - ./collector:/app/config:rw
+      - ./collector/application-prod.yml:/app/config/application-prod.yml:rw
     deploy:
       resources:
         limits:
@@ -56,7 +56,7 @@ services:
     ports:
       - "8095:8095"
     volumes:
-      - ./emulator:/app/config:rw
+      - ./emulator/application-prod.yml:/app/config/application-prod.yml:rw
     deploy:
       resources:
         limits:
