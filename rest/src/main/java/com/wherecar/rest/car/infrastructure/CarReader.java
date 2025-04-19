@@ -1,4 +1,4 @@
-package com.wherecar.rest.car.infrastructure.infra;
+package com.wherecar.rest.car.infrastructure;
 
 import com.wherecar.rest.car.application.dto.CarOverviewResponse;
 import com.wherecar.rest.car.domain.Car;

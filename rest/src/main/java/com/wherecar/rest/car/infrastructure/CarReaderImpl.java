@@ -1,12 +1,10 @@
-package com.wherecar.rest.car.infrastructure.infra;
+package com.wherecar.rest.car.infrastructure;
 
 import com.wherecar.rest.car.application.dto.CarOverviewResponse;
 import com.wherecar.rest.car.domain.Car;
 import com.wherecar.rest.car.domain.CarFactory;
 import com.wherecar.rest.car.domain.constant.CarState;
 import com.wherecar.rest.car.domain.constant.OwnerType;
-import com.wherecar.rest.car.infrastructure.CarRepository;
-import com.wherecar.rest.car.infrastructure.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

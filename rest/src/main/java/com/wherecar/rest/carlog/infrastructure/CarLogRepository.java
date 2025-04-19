@@ -32,8 +32,6 @@ public interface CarLogRepository extends JpaRepository<CarLog, Long> {
             Pageable pageable
     );
 
-
     List<CarLog> findByMdnIn(List<String> mdns);
-
 
 }

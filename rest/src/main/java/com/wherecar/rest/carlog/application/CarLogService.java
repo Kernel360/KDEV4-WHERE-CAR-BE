@@ -1,7 +1,6 @@
 package com.wherecar.rest.carlog.application;
 
-import com.wherecar.rest.carlog.application.dto.CarLogDetailResponse;
-import com.wherecar.rest.carlog.application.dto.CarLogsResponse;
+import com.wherecar.rest.carlog.application.dto.CarLogResponse;
 import com.wherecar.rest.carlog.application.dto.CarLogsUpdateRequest;
 import org.springframework.data.domain.Page;
 
@@ -9,14 +8,14 @@ import java.time.LocalDateTime;
 
 public interface CarLogService {
 
-    Page<CarLogsResponse> getCarLogsFiltered(Long companyId, String mdn, LocalDateTime startTime, LocalDateTime endTime, int page, int size);
+    Page<CarLogResponse> getCarLogsFiltered(Long companyId, String mdn, LocalDateTime startTime, LocalDateTime endTime, int page, int size);
 
-    CarLogDetailResponse getCarLogsDetails(Long logId);
+    CarLogResponse getCarLogDetails(Long carLogId);
 
-    void updateCarLogDetails(Long id, CarLogsUpdateRequest carLogsUpdateRequest);
+    void updateCarLogDetails(Long carLogId, CarLogsUpdateRequest carLogsUpdateRequest);
 
-    void deleteCarLogDetails(Long id);
+    void deleteCarLogDetails(Long carLogId);
 
-    CarLogsResponse getAllCarLogsStatics(Long companyId);
+    CarLogResponse getAllCarLogsStatics(Long companyId);
 
 }

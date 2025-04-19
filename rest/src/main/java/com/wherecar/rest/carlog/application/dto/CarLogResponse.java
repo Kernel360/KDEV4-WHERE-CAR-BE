@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarLogsResponse {
+public class CarLogResponse {
 
     private Long logId;
 
