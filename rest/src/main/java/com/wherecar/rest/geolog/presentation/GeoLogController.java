@@ -20,7 +20,7 @@ public class GeoLogController {
 
     @GetMapping("/cars/{carId}")
     public ResponseEntity<List<GeoLogResponse>> geoLogGetByCarId(@PathVariable Long carId) {
-        List<GeoLogResponse> geoLogResponses = geoLogService.getGeoLogByCarId(carId);
+        List<GeoLogResponse> geoLogResponses = geoLogService.getGeoLogsByCarId(carId);
         return ResponseEntity.ok(geoLogResponses);
     }
 

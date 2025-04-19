@@ -1,4 +1,4 @@
-package com.wherecar.rest.security.auth;
+package com.wherecar.rest.security.jwt;
 
 
 import com.wherecar.rest.user.domain.User;
@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -24,15 +24,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     // 기본 method 라 username 을 parameter 로 받음
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         log.info("loadUserByUsername");
-        Optional<User> user = userRepository.findByEmail(username);
-        if (user.isEmpty()) {
-            log.info("user not found");
-            throw new UsernameNotFoundException("User not found with email: " + username);
-        }
-        return new CustomUserDetails(user.get());
-
-
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), List.of());
     }
 }

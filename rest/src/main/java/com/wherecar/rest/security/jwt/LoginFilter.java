@@ -1,7 +1,6 @@
 package com.wherecar.rest.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wherecar.rest.security.auth.CustomUserDetails;
 import com.wherecar.rest.user.application.dto.UserLoginRequest;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
@@ -12,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.BufferedReader;
@@ -62,12 +62,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user  = (User) authentication.getPrincipal();
 
-        String username = customUserDetails.getUsername();
+        String email = user.getUsername();
 
 
-        String token = jwtUtil.createJwt(username, 60*60*10000L);
+        String token = jwtUtil.createJwt(email, 60*60*10000L);
 
         response.addHeader("Authorization", "Bearer " + token);
     }

@@ -8,5 +8,5 @@ import java.util.Set;
 public interface UserStore {
     User store(User user);
     User store(User user, Set<PermissionType> permissionTypes);
-    void deleteById(Long userId);
+    void delete(Long userId);
 }
