@@ -19,7 +19,7 @@ public class GpsLogController {
 
     @GetMapping("/position")
     public ResponseEntity<GpsLogResponse> LocationGetLatest(@RequestParam String mdn) {
-        GpsLogResponse gpsLogResponse = gpsLogService.getLatestLocation(mdn);
+        GpsLogResponse gpsLogResponse = gpsLogService.getLatestGpsLogByMdn(mdn);
         return ResponseEntity.ok(gpsLogResponse);
     }
 
@@ -29,7 +29,7 @@ public class GpsLogController {
     ) {
         log.info("routeGet request {}", request);
         return ResponseEntity.ok(gpsLogService
-                .getRoute(
+                .getGpsPointsByMdn(
                         request.getMdn(),
                         request.getStartTime(),
                         request.getEndTime()
