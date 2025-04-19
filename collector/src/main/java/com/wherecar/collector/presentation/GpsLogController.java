@@ -21,7 +21,7 @@ public class GpsLogController {
 
     @PostMapping("/gps")
     public ResponseEntity<GpsLogResponse> gpsLogReceive(@RequestBody GpsLogRequest gpsLogRequest) {
-        gpsLogService.receiveGpsLog(gpsLogRequest);
+        gpsLogService.receiveGpsLogs(gpsLogRequest);
 
         return ResponseEntity.ok(GpsLogResponse.getGpsLogResponse(gpsLogRequest.getMdn()));
     }

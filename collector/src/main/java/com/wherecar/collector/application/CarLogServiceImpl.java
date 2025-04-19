@@ -3,6 +3,7 @@ package com.wherecar.collector.application;
 import com.wherecar.collector.domain.Car;
 import com.wherecar.collector.domain.CarLog;
 import com.wherecar.collector.application.dto.CarLogRequest;
+import com.wherecar.collector.domain.CarLogFactory;
 import com.wherecar.collector.infrastructure.infra.CarLogReader;
 import com.wherecar.collector.infrastructure.infra.CarLogStore;
 import com.wherecar.collector.infrastructure.infra.CarReader;
@@ -22,6 +23,7 @@ public class CarLogServiceImpl implements CarLogService {
     private final CarReader carReader;
     private final CarLogReader carLogReader;
     private final CarLogStore carLogStore;
+    private final CarLogFactory carLogFactory;
 
     @Override
     public void receiveOnLog(CarLogRequest onLogRequest) {
@@ -30,9 +32,11 @@ public class CarLogServiceImpl implements CarLogService {
         Optional<CarLog> optionalPreviousCarLog = carLogReader.findPreviousOffLogByMdn(car.getMdn());
 
         if (optionalPreviousCarLog.isEmpty()) {
-            carLogStore.storeFirstOnLog(onLogRequest, car);
+            CarLog carLog = carLogFactory.toFirstOnLog(onLogRequest);
+            carLogStore.storeFirstOnLog(car, carLog);
         } else {
-            carLogStore.storeOnLog(onLogRequest, car, optionalPreviousCarLog.get());
+            CarLog carLog = carLogFactory.toOnLog(onLogRequest, optionalPreviousCarLog.get().getOffMileage());
+            carLogStore.storeOnLog(onLogRequest, car, optionalPreviousCarLog.get(), carLog);
         }
     }
 
@@ -41,7 +45,8 @@ public class CarLogServiceImpl implements CarLogService {
 
         Car car = carReader.getCarByMdn(offLogRequest.getMdn());
         CarLog previousCarLog = carLogReader.getPreviousOnLogByMdn(car.getMdn());
-        carLogStore.storeOffLog(offLogRequest, car, previousCarLog);
+        CarLog carLog = carLogFactory.toOffLog(offLogRequest, previousCarLog);
+        carLogStore.storeOffLog(offLogRequest, car, previousCarLog, carLog);
     }
 
 }

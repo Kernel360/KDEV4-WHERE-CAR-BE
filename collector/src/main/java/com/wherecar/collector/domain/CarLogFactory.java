@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @Component
 public class CarLogFactory {
 
-    public CarLog toOnLog(CarLogRequest carLogRequest, CarLog previousCarLog) {
+    public CarLog toOnLog(CarLogRequest carLogRequest, Double previousOffMileage) {
 
-        Double onMileage = previousCarLog.getOffMileage();  // 시동 ON 시 mileage는 직전 시동 OFF 시 mileage
+        Double onMileage = previousOffMileage;  // 시동 ON 시 mileage는 직전 시동 OFF 시 mileage
         Double doubleLatitude = CarLog.parseLatLon(carLogRequest.getLat());
         Double doubleLongitude = CarLog.parseLatLon(carLogRequest.getLon());
         LocalDateTime onTime = CarLog.parseOnOffTime(carLogRequest.getOnTime());
@@ -32,7 +32,10 @@ public class CarLogFactory {
             .build();
     }
 
-    public CarLog toOnLog(CarLogRequest carLogRequest, Integer onSum, Double onMileage) {
+    public CarLog toFirstOnLog(CarLogRequest carLogRequest) {
+
+        Integer onSum = 0;
+        Double onMileage = 0.0;
 
         Double doubleLatitude = CarLog.parseLatLon(carLogRequest.getLat());
         Double doubleLongitude = CarLog.parseLatLon(carLogRequest.getLon());
@@ -89,6 +92,5 @@ public class CarLogFactory {
                 .offTime(offTime)
                 .build();
     }
-
 
 }

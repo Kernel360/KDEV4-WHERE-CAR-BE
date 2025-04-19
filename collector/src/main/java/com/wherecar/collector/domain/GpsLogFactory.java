@@ -8,27 +8,40 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component
 public class GpsLogFactory {
 
-    public GpsLog toGpsLog(GpsLogRequest gpsLogRequest, GpsLogInfo gpsLogInfo, DateTimeFormatter timestampFormatter) {
+    public List<GpsLog> toGpsLogList(GpsLogRequest gpsLogRequest) {
 
-        LocalDateTime timestamp = GpsLog.getTimestamp(gpsLogRequest.getOTime(), gpsLogInfo.getSec(), timestampFormatter);
-        Double doubleLatitude = GpsLog.parseLatLon(gpsLogInfo.getLat());
-        Double doubleLongitude = GpsLog.parseLatLon(gpsLogInfo.getLon());
-        GpsConditionType gpsCondition = GpsLog.getGpsConditionType(gpsLogInfo.getGcd());
+        DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        List<GpsLog> gpsLogList = new ArrayList<>();
 
-        return GpsLog.builder()
-                .mdn(gpsLogRequest.getMdn())
-                .timestamp(timestamp)
-                .gpsCondition(gpsCondition)
-                .latitude(doubleLatitude)
-                .longitude(doubleLongitude)
-                .angle(Integer.parseInt(gpsLogInfo.getAng()))
-                .speed(Integer.parseInt(gpsLogInfo.getSpd()))
-                .sum(Integer.parseInt(gpsLogInfo.getSum()))
-                .build();
+        // 0 ~ 59초의 주기 정보 데이터 처리
+        for (GpsLogInfo gpsLogInfo : gpsLogRequest.getCList()) {
+
+            LocalDateTime timestamp = GpsLog.getTimestamp(gpsLogRequest.getOTime(), gpsLogInfo.getSec(), timestampFormatter);
+            Double doubleLatitude = GpsLog.parseLatLon(gpsLogInfo.getLat());
+            Double doubleLongitude = GpsLog.parseLatLon(gpsLogInfo.getLon());
+            GpsConditionType gpsCondition = GpsLog.getGpsConditionType(gpsLogInfo.getGcd());
+
+            GpsLog gpsLog = GpsLog.builder()
+                    .mdn(gpsLogRequest.getMdn())
+                    .timestamp(timestamp)
+                    .gpsCondition(gpsCondition)
+                    .latitude(doubleLatitude)
+                    .longitude(doubleLongitude)
+                    .angle(Integer.parseInt(gpsLogInfo.getAng()))
+                    .speed(Integer.parseInt(gpsLogInfo.getSpd()))
+                    .sum(Integer.parseInt(gpsLogInfo.getSum()))
+                    .build();
+
+            gpsLogList.add(gpsLog);
+        }
+
+        return gpsLogList;
     }
 }
