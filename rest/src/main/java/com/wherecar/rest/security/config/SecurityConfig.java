@@ -42,6 +42,8 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
+                        //Todo: 여기 특정 페이지만 접근 가능하도록 수정 질문
+                        //.requestMatchers("/reissue").permitAll()
                         .anyRequest().permitAll()
 //                        .requestMatchers("/","/join", "/login").permitAll()
 //                        .anyRequest().authenticated()
