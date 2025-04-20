@@ -3,6 +3,7 @@ package com.wherecar.rest.geolog.domain;
 import com.wherecar.rest.common.domain.BaseEntity;
 import com.wherecar.rest.geoinfo.domain.GeoInfo;
 import com.wherecar.rest.geolog.application.dto.GeoLogRequest;
+import com.wherecar.rest.gpslog.domain.constant.GpsConditionType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,7 +29,8 @@ public class GeoLog extends BaseEntity {
     private LocalDateTime oTime;
 
     @Column(name = "gps_condition")
-    private String gpsCondition;
+    @Enumerated(EnumType.STRING)
+    private GpsConditionType gpsCondition;
 
     @Column(name = "latitude")
     private Double latitude;

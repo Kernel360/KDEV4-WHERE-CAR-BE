@@ -1,5 +1,6 @@
 package com.wherecar.batch.main.domain;
 
+import com.wherecar.batch.main.domain.constant.GpsConditionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +28,8 @@ public class GpsLog extends BaseEntity {
     private LocalDateTime timestamp;
 
     @Column(name = "gps_condition")
-    private String gpsCondition;
+    @Enumerated(EnumType.STRING)
+    private GpsConditionType gpsCondition;
 
     @Column(name = "latitude")
     private Double latitude;
