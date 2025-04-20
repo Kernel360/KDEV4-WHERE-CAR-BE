@@ -1,7 +1,6 @@
-package com.wherecar.collector.car.infrastructure.infra;
+package com.wherecar.collector.car.infrastructure;
 
 import com.wherecar.collector.car.domain.Car;
-import com.wherecar.collector.car.infrastructure.CarRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

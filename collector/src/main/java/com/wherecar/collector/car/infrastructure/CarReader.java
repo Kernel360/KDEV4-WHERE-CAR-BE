@@ -1,4 +1,4 @@
-package com.wherecar.collector.car.infrastructure.infra;
+package com.wherecar.collector.car.infrastructure;
 
 import com.wherecar.collector.car.domain.Car;
 

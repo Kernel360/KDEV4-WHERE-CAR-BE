@@ -1,4 +1,4 @@
-package com.wherecar.collector.gpslog.infrastructure.infra;
+package com.wherecar.collector.gpslog.infrastructure;
 
 import com.wherecar.collector.car.domain.Car;
 import com.wherecar.collector.gpslog.domain.GpsLog;

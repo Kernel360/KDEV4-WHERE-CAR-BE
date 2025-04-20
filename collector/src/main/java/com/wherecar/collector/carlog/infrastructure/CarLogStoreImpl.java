@@ -1,11 +1,10 @@
-package com.wherecar.collector.carlog.infrastructure.infra;
+package com.wherecar.collector.carlog.infrastructure;
 
 import com.wherecar.collector.carlog.application.dto.CarLogRequest;
 import com.wherecar.collector.car.domain.Car;
 import com.wherecar.collector.carlog.domain.CarLog;
 import com.wherecar.collector.car.domain.CarStatus;
 import com.wherecar.collector.common.constant.CarState;
-import com.wherecar.collector.carlog.infrastructure.CarLogRepository;
 import com.wherecar.collector.car.infrastructure.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

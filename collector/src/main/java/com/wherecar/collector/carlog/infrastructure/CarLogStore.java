@@ -1,4 +1,4 @@
-package com.wherecar.collector.carlog.infrastructure.infra;
+package com.wherecar.collector.carlog.infrastructure;
 
 import com.wherecar.collector.carlog.application.dto.CarLogRequest;
 import com.wherecar.collector.car.domain.Car;

@@ -1,10 +1,9 @@
-package com.wherecar.collector.gpslog.infrastructure.infra;
+package com.wherecar.collector.gpslog.infrastructure;
 
 import com.wherecar.collector.car.domain.Car;
 import com.wherecar.collector.car.domain.CarStatus;
 import com.wherecar.collector.gpslog.domain.GpsLog;
 import com.wherecar.collector.car.infrastructure.CarStatusRepository;
-import com.wherecar.collector.gpslog.infrastructure.GpsLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
