@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class TokenService {
 
+    private final JWTUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
 
     private static final long REFRESH_TTL_MS = 3 * 24 * 60 * 60 * 1000L;
@@ -23,7 +24,8 @@ public class TokenService {
         return providedToken.equals(saved);
     }
 
-    public void removeRefreshToken(String email) {
+    public void removeRefreshToken(String refreshToken) {
+        String email = jwtUtil.getEmail(refreshToken);
         redisTemplate.delete("refresh:user:" + email);
     }
 }

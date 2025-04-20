@@ -20,6 +20,28 @@ public class TokenController {
 
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
+    private final LogoutService logoutService;
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        String refresh = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("refreshToken".equals(cookie.getName())) {
+                    refresh = cookie.getValue();
+                }
+            }
+        }
+
+        if (refresh == null) {
+            return new ResponseEntity<>("No refresh token in cookies", HttpStatus.BAD_REQUEST);
+        }
+
+        logoutService.logout(refresh, response);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
