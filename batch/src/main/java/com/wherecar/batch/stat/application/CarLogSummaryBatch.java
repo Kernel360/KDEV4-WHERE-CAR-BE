@@ -1,8 +1,10 @@
 package com.wherecar.batch.stat.application;
 
+import com.wherecar.batch.main.domain.Car;
 import com.wherecar.batch.main.domain.CarLog;
 import com.wherecar.batch.main.domain.GpsLog;
 import com.wherecar.batch.main.infrastructure.CarLogRepository;
+import com.wherecar.batch.main.infrastructure.CarRepository;
 import com.wherecar.batch.main.infrastructure.GpsLogRepository;
 import com.wherecar.batch.stat.domain.CarLogSummary;
 import com.wherecar.batch.stat.infrastructure.CarLogSummaryRepository;
@@ -31,6 +33,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Configuration
 @RequiredArgsConstructor
@@ -40,6 +43,7 @@ public class CarLogSummaryBatch {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
+    private final CarRepository carRepository;
     private final CarLogRepository carLogRepository;
     private final GpsLogRepository gpsLogRepository;
     private final CarLogSummaryRepository carLogSummaryRepository;
@@ -100,7 +104,6 @@ public class CarLogSummaryBatch {
             double speedSum = 0.0;
             double maxSpeed = 0.0;
             long totalCount = 0;
-
             while (true) {
                 Pageable pageable = PageRequest.of(page, pageSize, Sort.by("timestamp").ascending());
                 Page<GpsLog> gpsPage = gpsLogRepository.findByMdnAndTimestampBetween(
@@ -126,6 +129,14 @@ public class CarLogSummaryBatch {
 
             int avgSpeed = totalCount > 0 ? (int) (speedSum / totalCount) : 0;
 
+
+            // 회사 id 추출
+            Long companyId = 0L;
+            Optional<Car> carOptional = carRepository.findByMdn(carLog.getMdn());
+            if(carOptional.isPresent()) {
+                companyId = carOptional.get().getCompanyId();
+            }
+
             return CarLogSummary.builder()
                     .mdn(carLog.getMdn())
                     .onTime(carLog.getOnTime())
@@ -138,6 +149,7 @@ public class CarLogSummaryBatch {
                     .distance(carLog.getOffMileage() - carLog.getOnMileage())
                     .averageSpeed(avgSpeed)
                     .maxSpeed((int) maxSpeed)
+                    .companyId(companyId)
                     .build();
         };
     }

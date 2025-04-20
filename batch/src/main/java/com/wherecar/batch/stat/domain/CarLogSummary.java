@@ -18,7 +18,12 @@ import java.time.LocalDateTime;
 public class CarLogSummary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "car_log_summary_id")
     private Long id;
+
+    @Column(name = "company_id")
+    private Long companyId;
+
     private String mdn;
 //    (km)
     private Integer distance;
