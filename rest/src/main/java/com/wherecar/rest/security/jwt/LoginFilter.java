@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wherecar.rest.user.application.dto.UserLoginRequest;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -66,15 +68,29 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String email = user.getUsername();
 
+        String accessToken = jwtUtil.createJwt("access", email, 60*60*10000L);
+        String refreshToken = jwtUtil.createJwt("refresh", email, 86400000L);
 
-        String token = jwtUtil.createJwt(email, 60*60*10000L);
+        response.setHeader("Authorization", "Bearer " + accessToken);
+        response.addCookie(createCookie(refreshToken));
+        response.setStatus(HttpStatus.OK.value());
 
-        response.addHeader("Authorization", "Bearer " + token);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         log.info("unsuccessfulAuthentication");
         response.setStatus(401);
+    }
+
+    private Cookie createCookie(String value) {
+
+        Cookie cookie = new Cookie("refresh", value);
+        cookie.setMaxAge(24*60*60);
+        //cookie.setSecure(true);
+        //cookie.setPath("/");
+        cookie.setHttpOnly(true);
+
+        return cookie;
     }
 }
