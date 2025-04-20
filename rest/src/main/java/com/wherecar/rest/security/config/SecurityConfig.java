@@ -1,5 +1,6 @@
 package com.wherecar.rest.security.config;
 
+import com.wherecar.rest.security.jwt.TokenService;
 import com.wherecar.rest.user.infrastructure.UserRepository;
 import com.wherecar.rest.security.jwt.JWTFilter;
 import com.wherecar.rest.security.jwt.JWTUtil;
@@ -30,6 +31,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
+    private final TokenService tokenService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -42,15 +44,14 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                        //Todo: 여기 특정 페이지만 접근 가능하도록 수정 질문
-                        //.requestMatchers("/reissue").permitAll()
                         .anyRequest().permitAll()
-//                        .requestMatchers("/","/join", "/login").permitAll()
+                        //Todo: ** 확인
+//                        .requestMatchers("/","/join", "/login", "/token/**").permitAll()
 //                        .anyRequest().authenticated()
 
                 )
                 .addFilterBefore(new JWTFilter(jwtUtil, userRepository), LoginFilter.class)
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, tokenService), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );

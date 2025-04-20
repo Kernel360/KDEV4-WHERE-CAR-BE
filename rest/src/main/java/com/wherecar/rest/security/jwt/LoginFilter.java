@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,16 +20,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.BufferedReader;
 
 @Slf4j
+@AllArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
-
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
-
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-    }
+    private final TokenService tokenService;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -69,7 +66,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String email = user.getUsername();
 
         String accessToken = jwtUtil.createJwt("access", email, 60*60*10000L);
-        String refreshToken = jwtUtil.createJwt("refresh", email, 86400000L);
+        String refreshToken = jwtUtil.createJwt("refresh", email, 3 * 24 * 60 * 60 * 1000L);
+
+        //리프레쉬 토큰에 저장
+        tokenService.saveRefreshToken(email, refreshToken);
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(createCookie(refreshToken));
@@ -84,13 +84,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     private Cookie createCookie(String value) {
-
-        Cookie cookie = new Cookie("refresh", value);
-        cookie.setMaxAge(24*60*60);
-        //cookie.setSecure(true);
-        //cookie.setPath("/");
+        Cookie cookie = new Cookie("refreshToken", value);
+        cookie.setMaxAge(3 * 24 * 60 * 60);
         cookie.setHttpOnly(true);
-
+        cookie.setPath("/");
         return cookie;
     }
 }
