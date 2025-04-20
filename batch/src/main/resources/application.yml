@@ -2,9 +2,9 @@ spring:
   application:
     name: batch
 
-  batch:
-    job:
-      enabled: true
+    batch:
+      job:
+        enabled: false
     jdbc:
       initialize-schema: always
 
