@@ -22,7 +22,7 @@ public class GeoInfoController {
 
     public ResponseEntity<Void> geoInfoCreate(HttpServletRequest request, @RequestBody GeoInfoRequest geoInfoRequest) {
         Long companyId = (Long)request.getAttribute("companyId");
-        geoInfoService.createGeoInfo(geoInfoRequest, companyId);
+        geoInfoService.createGeoInfo(companyId, geoInfoRequest);
 
         return ResponseEntity.ok().build();
 
