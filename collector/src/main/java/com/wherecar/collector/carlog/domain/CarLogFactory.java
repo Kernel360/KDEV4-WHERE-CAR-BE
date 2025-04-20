@@ -53,7 +53,6 @@ public class CarLogFactory {
                 .onMileage(onMileage)
                 .onTime(onTime)
                 .build();
-
     }
     
     public CarLog toOffLog(CarLogRequest carLogRequest, CarLog previousCarLog) {

@@ -7,6 +7,8 @@ import com.wherecar.collector.car.infrastructure.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Slf4j
@@ -18,22 +20,21 @@ public class GpsLogStoreImpl implements GpsLogStore {
     private final CarStatusRepository carStatusRepository;
 
     @Override
-    public void storeGpsLogs(List<GpsLog> gpsLogList, Car car, String bat) {
+    @Transactional
+    public void storeGpsLogs(List<GpsLog> gpsLogList, Car car, List<String> batList) {
 
-        boolean isFirst = true;
-
-        for (GpsLog gpsLog : gpsLogList) {
+        for (int i = 0; i < gpsLogList.size(); i++) {
+            GpsLog gpsLog = gpsLogList.get(i);
+            String bat = batList.get(i);
 
             gpsLogRepository.save(gpsLog);
 
-            if (isFirst) {
-                CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
-                carStatus.changeBatteryVoltage(Integer.parseInt(bat));
-                carStatusRepository.save(carStatus);
-
-                isFirst = false;
-            }
-
+//            CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
+//            CarStatus carStatus = carStatusRepository.findByCarIdForUpdate(car.getId())
+//                    .orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
+//            carStatus.changeBatteryVoltage(Integer.parseInt(bat));
+//            carStatusRepository.save(carStatus);
+            carStatusRepository.updateBatteryVoltage(car.getId(), Integer.parseInt(bat));
         }
 
     }
