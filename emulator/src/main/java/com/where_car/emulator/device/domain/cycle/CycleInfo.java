@@ -1,9 +1,10 @@
-package com.where_car.emulator.device.domain;
+package com.where_car.emulator.device.domain.cycle;
 
-import com.where_car.emulator.device.domain.common.CarCycleInfo;
-import com.where_car.emulator.device.domain.common.CarDevice;
-import com.where_car.emulator.device.domain.common.CarIdentity;
 import java.util.List;
+
+import com.where_car.emulator.device.domain.car.CarDevice;
+import com.where_car.emulator.device.domain.car.CarIdentity;
+
 import lombok.Builder;
 import lombok.Getter;
 

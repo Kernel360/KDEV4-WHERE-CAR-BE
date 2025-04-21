@@ -1,8 +1,9 @@
-package com.where_car.emulator.device.domain;
+package com.where_car.emulator.device.domain.device;
+
+import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 /**
  * <pre>

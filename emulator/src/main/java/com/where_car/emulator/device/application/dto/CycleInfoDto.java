@@ -3,7 +3,7 @@ package com.where_car.emulator.device.application.dto;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.where_car.emulator.device.domain.common.CarCycleInfo;
+import com.where_car.emulator.device.domain.cycle.CarCycleInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

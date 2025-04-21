@@ -1,6 +1,6 @@
-package com.where_car.emulator.device.domain;
+package com.where_car.emulator.device.domain.event;
 
-import com.where_car.emulator.device.domain.common.CarIdentity;
+import com.where_car.emulator.device.domain.car.CarIdentity;
 
 /**
  * <pre>

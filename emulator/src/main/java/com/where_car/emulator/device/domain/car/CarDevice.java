@@ -1,6 +1,7 @@
-package com.where_car.emulator.device.domain.common;
+package com.where_car.emulator.device.domain.car;
 
 import com.where_car.emulator.global.constants.DomainConstant;
+
 import lombok.Builder;
 import lombok.Getter;
 

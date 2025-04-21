@@ -1,4 +1,4 @@
-package com.where_car.emulator.device.domain.common;
+package com.where_car.emulator.device.domain.cycle;
 
 import lombok.Builder;
 import lombok.Getter;

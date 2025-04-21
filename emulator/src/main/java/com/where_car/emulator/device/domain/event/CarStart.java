@@ -1,8 +1,9 @@
-package com.where_car.emulator.device.domain;
+package com.where_car.emulator.device.domain.event;
 
-import com.where_car.emulator.device.domain.common.CarCycleInfo;
-import com.where_car.emulator.device.domain.common.CarDevice;
-import com.where_car.emulator.device.domain.common.CarIdentity;
+import com.where_car.emulator.device.domain.car.CarDevice;
+import com.where_car.emulator.device.domain.car.CarIdentity;
+import com.where_car.emulator.device.domain.cycle.CarCycleInfo;
+
 import lombok.Builder;
 import lombok.Getter;
 
