@@ -38,6 +38,9 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
+	// build.gradle
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 	//jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'

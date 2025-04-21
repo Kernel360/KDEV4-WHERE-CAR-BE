@@ -1,12 +1,15 @@
 package com.wherecar.rest.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wherecar.rest.security.jwt.dto.TokenPair;
 import com.wherecar.rest.user.application.dto.UserLoginRequest;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,16 +20,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.BufferedReader;
 
 @Slf4j
+@AllArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JWTUtil jwtUtil;
-
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
-
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-    }
+    private final TokenService tokenService;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -66,10 +64,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String email = user.getUsername();
 
+        TokenPair tokens = tokenService.issueTokens(email);
 
-        String token = jwtUtil.createJwt(email, 60*60*10000L);
+        response.setHeader("Authorization", "Bearer " + tokens.getAccessToken());
+        response.addCookie(CookieUtil.createRefreshTokenCookie(tokens.getRefreshToken()));
+        response.setStatus(HttpStatus.OK.value());
 
-        response.addHeader("Authorization", "Bearer " + token);
     }
 
     @Override
@@ -77,4 +77,5 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info("unsuccessfulAuthentication");
         response.setStatus(401);
     }
+
 }
