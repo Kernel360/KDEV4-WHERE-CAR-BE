@@ -1,9 +1,6 @@
 package com.where_car.emulator.device.application.dto;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.where_car.emulator.device.domain.cycle.CarCycleInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,17 +13,21 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CycleInfoDto {
+public class CarDto {
 
 	private String mdn;
 	private String tid;
 	private String mid;
 	private String pv;
 	private String did;
-	@JsonProperty("oTime")
-	private String oTime;
-	@JsonProperty("cCnt")
-	private String cCnt;
-	@JsonProperty("cList")
-	private List<CarCycleInfo> cList;
+	@JsonProperty("onTime")
+	private String onTime;
+	@JsonProperty("offTime")
+	private String offTime;
+	private String gcd;
+	private String lat;
+	private String lon;
+	private String ang;
+	private String spd;
+	private String sum;
 }
