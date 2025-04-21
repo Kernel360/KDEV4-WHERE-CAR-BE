@@ -31,7 +31,7 @@ public class CarLog extends BaseEntity {
     private Integer onAngle;
     private Integer onSpeed;
     private Integer onSum;
-    private Integer onMileage;
+    private Double onMileage;
     private LocalDateTime onTime;
 
     @Enumerated(EnumType.STRING)
@@ -42,7 +42,7 @@ public class CarLog extends BaseEntity {
     private Integer offAngle;
     private Integer offSpeed;
     private Integer offSum;
-    private Integer offMileage;
+    private Double offMileage;
     private LocalDateTime offTime;
 
     private String driver;
