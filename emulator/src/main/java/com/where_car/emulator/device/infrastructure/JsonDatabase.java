@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.where_car.emulator.device.domain.common.CarIdentity;
+import com.where_car.emulator.device.domain.car.CarIdentity;
 
 import lombok.extern.slf4j.Slf4j;
 
