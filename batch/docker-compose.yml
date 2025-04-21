@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  meta-db:
+    image: mysql:8.0
+    container_name: meta-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: meta
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+    ports:
+      - 3307:3306
+    networks:
+      - batch-net
+
+  main-db:
+    image: mysql:8.0
+    container_name: main-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wherecar
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+    ports:
+      - 3308:3306
+    networks:
+      - batch-net
+
+  stat-db:
+    image: mysql:8.0
+    container_name: stat-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: stat
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+    ports:
+      - 3309:3306
+    networks:
+      - batch-net
+
+networks:
+  batch-net:
+    driver: bridge

@@ -20,7 +20,7 @@ public class Car extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="car_id")
-    private long id;
+    private Long id;
 
     @OneToOne(mappedBy = "car", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private CarStatus carStatus;
