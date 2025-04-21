@@ -2,19 +2,17 @@ package com.wherecar.rest.security.jwt;
 
 import com.wherecar.rest.common.exception.TokenValidationException;
 import com.wherecar.rest.security.jwt.dto.TokenPair;
-import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @ResponseBody
 @AllArgsConstructor
 @RequestMapping("/token")

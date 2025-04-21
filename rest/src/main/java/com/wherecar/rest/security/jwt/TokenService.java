@@ -2,14 +2,14 @@ package com.wherecar.rest.security.jwt;
 
 import com.wherecar.rest.common.exception.TokenValidationException;
 import com.wherecar.rest.security.jwt.dto.TokenPair;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class TokenService {
 
     private final JWTUtil jwtUtil;
