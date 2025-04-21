@@ -27,8 +27,8 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     Optional<Car> findByMdn(String mdn);
 
-    long countByCompanyId(Long companyId);
-    long countByCompanyIdAndOwnerType(Long companyId, OwnerType ownerType);
+    Long countByCompanyId(Long companyId);
+    Long countByCompanyIdAndOwnerType(Long companyId, OwnerType ownerType);
 
     // 대시보드 운행통계관련 해당회사 보유 차량조회
     @Query("SELECT c.mdn FROM Car c WHERE c.company.id = :companyId")

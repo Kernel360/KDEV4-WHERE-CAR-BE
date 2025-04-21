@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 public interface CarStatusRepository extends JpaRepository<CarStatus, Long> {
 
     @Query("SELECT COUNT(cs) FROM CarStatus cs WHERE cs.car.company.id = :companyId AND cs.carState = :carState")
-    long countByCompanyIdAndCarState(@Param("companyId") Long companyId, @Param("carState") CarState carState);
+    Long countByCompanyIdAndCarState(@Param("companyId") Long companyId, @Param("carState") CarState carState);
 
 }
