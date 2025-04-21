@@ -34,11 +34,11 @@ public class CarLogSummaryFactory {
 
         for(CarLogSummary carLogSummary : carLogSummaries) {
             maxDistance = Math.max(maxDistance, carLogSummary.getDistance());
-            maxSpeed = Math.max(maxSpeed, carLogSummary.getDistance());
-            maxDriveTime = Math.max(maxDriveTime,(int) Duration.between(carLogSummary.getOffTime(),carLogSummary.getOnTime()).toSeconds());
+            maxSpeed = Math.max(maxSpeed, carLogSummary.getMaxSpeed());
+            maxDriveTime = Math.max(maxDriveTime, (int) Duration.between(carLogSummary.getOnTime(),carLogSummary.getOffTime()).toSeconds());
 
             totalDistance += carLogSummary.getDistance();
-            totalDriveTime += (int) Duration.between(carLogSummary.getOffTime(),carLogSummary.getOnTime()).toSeconds();
+            totalDriveTime += (int) Duration.between(carLogSummary.getOnTime(),carLogSummary.getOffTime()).toSeconds();
 
             switch (carLogSummary.getDriveType()) {
                 case UNCLASSIFIED -> unclassifiedCount++;
