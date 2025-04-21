@@ -17,7 +17,7 @@ public class CarRegisterRequest {
     private String make;
     private String model;
     private String year;
-    private Integer mileage;
+    private Double mileage;
     private OwnerType ownerType;
     private AcquisitionType acquisitionType;
     private Long companyId;

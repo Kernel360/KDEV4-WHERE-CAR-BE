@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MonthlyMileage {
     private String month;           // "2025-04"
-    private Integer totalMileage;
+    private Double totalMileage;
 }

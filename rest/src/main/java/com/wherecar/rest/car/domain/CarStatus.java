@@ -25,7 +25,7 @@ public class CarStatus  extends BaseEntity {
     private Car car;
 
     @Column(name="mileage")
-    private Integer mileage;
+    private Double mileage;
 
     @Column(name="battery_voltage")
     private Integer batteryVoltage;
