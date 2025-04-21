@@ -17,16 +17,16 @@ public class StringUtils {
      * @param value 좌표 문자열
      * @return 포맷된 좌표 문자열
      */
-    public String formatCoordinate(String value) {
+    public static String formatCoordinate(String value) {
         // 문자열을 double로 변환
         double doubleValue = Double.parseDouble(value);
         // 소수점 6자리까지 포맷
-        String formattedValue = String.format("%.6f", doubleValue);
+        String formattedValue = java.lang.String.format("%.6f", doubleValue);
         // 소수점 제거
         return formattedValue.replace(".", "");
     }
 
-    public String calculateSpeedFromCoordinates(List<Element> firstTrkpt) {
+    public static String calculateSpeedFromCoordinates(List<Element> firstTrkpt) {
         int speed = (int) Math.round(GpsUtils.calculateSpeed(
             GpsUtils.calculateDistance(
                 Double.parseDouble(firstTrkpt.get(0).getAttribute("lat")),
@@ -39,7 +39,7 @@ public class StringUtils {
         return String.valueOf(speed);
     }
 
-    public String calculateAngleFromCoordinates(List<Element> firstTrkpt) {
+    public static String calculateAngleFromCoordinates(List<Element> firstTrkpt) {
         int angle = GpsUtils.calculateBearing(
             Double.parseDouble(firstTrkpt.get(0).getAttribute("lat")),
             Double.parseDouble(firstTrkpt.get(0).getAttribute("lon")),
