@@ -1,9 +1,11 @@
-package com.wherecar.rest.gpslog.domain;
+package com.wherecar.batch.main.domain;
 
-import com.wherecar.rest.common.domain.BaseEntity;
-import com.wherecar.rest.gpslog.domain.constant.GpsConditionType;
+import com.wherecar.batch.main.domain.constant.GpsConditionType;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
