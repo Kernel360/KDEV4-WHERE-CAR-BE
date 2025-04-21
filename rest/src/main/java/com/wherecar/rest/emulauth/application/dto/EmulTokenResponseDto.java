@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class EmulTokenResponseDto {
 
     private final String rstCd;
@@ -12,4 +11,13 @@ public class EmulTokenResponseDto {
     private final String mdn;
     private final String token;
     private final String exPeriod;
+
+    public EmulTokenResponseDto(String rstCd, String rstMsg, String mdn, String token, String exPeriod) {
+        this.rstCd = rstCd;
+        this.rstMsg = rstMsg;
+        this.mdn = mdn;
+        this.token = token;
+        this.exPeriod = exPeriod;
+    }
+
 }
