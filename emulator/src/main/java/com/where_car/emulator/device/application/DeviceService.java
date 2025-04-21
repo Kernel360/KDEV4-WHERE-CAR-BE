@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,22 +16,24 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Element;
 
-import com.where_car.emulator.device.application.dto.CarStartDto;
-import com.where_car.emulator.device.application.dto.CarStopDto;
+import com.where_car.emulator.device.application.dto.CarDto;
 import com.where_car.emulator.device.application.dto.CycleInfoDto;
-import com.where_car.emulator.device.domain.CarStart;
-import com.where_car.emulator.device.domain.CarStop;
-import com.where_car.emulator.device.domain.CycleInfo;
-import com.where_car.emulator.device.domain.DeviceEntity;
-import com.where_car.emulator.device.domain.common.CarCycleInfo;
-import com.where_car.emulator.device.domain.common.CarDevice;
-import com.where_car.emulator.device.domain.common.CarIdentity;
+import com.where_car.emulator.device.domain.DeviceFactory;
+import com.where_car.emulator.device.domain.car.CarDevice;
+import com.where_car.emulator.device.domain.car.CarIdentity;
+import com.where_car.emulator.device.domain.cycle.CarCycleInfo;
+import com.where_car.emulator.device.domain.cycle.CycleInfo;
+import com.where_car.emulator.device.domain.device.DeviceEntity;
+import com.where_car.emulator.device.domain.event.CarStart;
+import com.where_car.emulator.device.domain.event.CarStop;
 import com.where_car.emulator.device.infrastructure.JsonDatabase;
 import com.where_car.emulator.global.constants.DateConstant;
 import com.where_car.emulator.global.error.DeviceErrorCode;
 import com.where_car.emulator.global.error.DeviceException;
+import com.where_car.emulator.global.utill.GpsUtils;
+import com.where_car.emulator.global.utill.RandomUtils;
+import com.where_car.emulator.global.utill.StringUtils;
 import com.where_car.emulator.gps.application.GpsPathService;
-import com.where_car.emulator.gps.application.GpsService;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,6 @@ import lombok.extern.slf4j.Slf4j;
  * </pre>
  *
  * @since 2025-03-30
- * @author Changil.kim
  * @version 1.0
  */
 @Slf4j
@@ -52,8 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DeviceService {
 
   private final RestTemplate restTemplate;
-  private final GpsService gpsService;
-  private ScheduledExecutorService scheduler; // 스케줄러를 사용하기 위해 라이브러리 호출
+  private ScheduledExecutorService scheduler; // 빈으로 주입되지 않으므로 final 제거
 
   private final CarIdentity carIdentity;
   private final DeviceEntity deviceEntity;
@@ -61,22 +60,29 @@ public class DeviceService {
   private final GpsPathService gpsPathService;
   private final JsonDatabase jsonDatabase;
 
+  private final DeviceFactory deviceFactory;
+
   private final List<CarCycleInfo> carCycleInfoList = new ArrayList<>();
 
   private static final int RETRY_DELAY_SECONDS = 60;
-  private static String START_TIME = ""; // 시작 시간 저장
-  private static Integer TOTAL_DISTANCE = 0; // 총 주행 거리 저장
-  private static int GPS_LIST_COUNT = 0; // GPS 리스트 카운트
+  private String startTime = ""; // 빈으로 주입되지 않으므로 생성자에서 제외
+  private Integer totalDistance = 0; // 빈으로 주입되지 않으므로 생성자에서 제외
+  private int gpsListCount = 0; // 빈으로 주입되지 않으므로 생성자에서 제외
 
-  public DeviceService(RestTemplate restTemplate, DeviceEntity deviceEntity,
-      GpsPathService gpsPathService, GpsService gpsService, CarIdentity carIdentity,
-      JsonDatabase jsonDatabase) {
+  // 생성자를 수동으로 정의해서 필요한 빈만 주입받도록 합니다
+  public DeviceService(RestTemplate restTemplate,
+                      CarIdentity carIdentity,
+                      DeviceEntity deviceEntity,
+                      GpsPathService gpsPathService,
+                      JsonDatabase jsonDatabase,
+                      DeviceFactory deviceFactory) {
     this.restTemplate = restTemplate;
+    this.carIdentity = carIdentity;
     this.deviceEntity = deviceEntity;
     this.gpsPathService = gpsPathService;
-    this.gpsService = gpsService;
-    this.carIdentity = carIdentity;
     this.jsonDatabase = jsonDatabase;
+    this.deviceFactory = deviceFactory;
+    // 다른 필드(scheduler, startTime, totalDistance, gpsListCount)는 이미 위에서 초기화됨
   }
 
   @PostConstruct
@@ -119,7 +125,6 @@ public class DeviceService {
   private void startScheduler() {
     scheduler = Executors.newScheduledThreadPool(2);
     scheduler.scheduleAtFixedRate(this::generateCarCycleInfo, 0, 1, TimeUnit.SECONDS);
-    //scheduler.scheduleAtFixedRate(this::generateCycleInfo, 60, 60, TimeUnit.SECONDS);
   }
 
   private void stopScheduler() {
@@ -131,10 +136,10 @@ public class DeviceService {
 
   public void generateCarStart() {
     CarStart carStart = createCarStart();
-    CarStartDto carStartDto = createCarStartDto(carStart);
+    CarDto carStartDto = deviceFactory.createCarStartDto(carStart);
 
-    if (Objects.equals(START_TIME, "")) {
-      START_TIME = carStartDto.getOnTime(); // 시동 시간 저장했다가 key-off 시에 사용
+    if (Objects.equals(startTime, "")) {
+      startTime = carStartDto.getOnTime(); // 시동 시간 저장했다가 key-off 시에 사용
     }
 
     log.info("CarStartData 생성: {}", carStartDto);
@@ -144,25 +149,25 @@ public class DeviceService {
   public void generateCarCycleInfo() {
 
     String previousSecond = carCycleInfoList.isEmpty() ? "00" : String.format("%02d", (Integer.parseInt(carCycleInfoList.get(carCycleInfoList.size() - 1).getSec()) + 1) % 60);
-    int batteryValue = generateRandomBatteryValue();
+    int batteryValue = RandomUtils.generateRandomBatteryValue();
 
     Resource gpxFile = gpsPathService.getRandomGpxFile();
     List<Element> allTrkpts = gpsPathService.getAllTrkpts(gpxFile);
 
-    String curLat = allTrkpts.get(GPS_LIST_COUNT).getAttribute("lat");
-    String curLon = allTrkpts.get(GPS_LIST_COUNT).getAttribute("lon");
-    String preLat = allTrkpts.get(GPS_LIST_COUNT != 0 ? GPS_LIST_COUNT - 1 : GPS_LIST_COUNT).getAttribute("lat");
-    String preLon = allTrkpts.get(GPS_LIST_COUNT != 0 ? GPS_LIST_COUNT - 1 : GPS_LIST_COUNT).getAttribute("lon");
+    String curLat = allTrkpts.get(gpsListCount).getAttribute("lat");
+    String curLon = allTrkpts.get(gpsListCount).getAttribute("lon");
+    String preLat = allTrkpts.get(gpsListCount != 0 ? gpsListCount - 1 : gpsListCount).getAttribute("lat");
+    String preLon = allTrkpts.get(gpsListCount != 0 ? gpsListCount - 1 : gpsListCount).getAttribute("lon");
 
-    int ang = gpsService.calculateBearing(
+    int ang = GpsUtils.calculateBearing(
         Double.parseDouble(preLat),
         Double.parseDouble(preLon),
         Double.parseDouble(curLat),
         Double.parseDouble(curLon)
     );
 
-    int spd = (int) Math.round(gpsService.calculateSpeed(
-        gpsService.calculateDistance(
+    int spd = (int) Math.round(GpsUtils.calculateSpeed(
+        GpsUtils.calculateDistance(
             Double.parseDouble(preLat),
             Double.parseDouble(preLon),
             Double.parseDouble(curLat),
@@ -171,26 +176,26 @@ public class DeviceService {
         1
     ));
 
-    double distance = gpsService.calculateDistance(Double.parseDouble(preLat),
+    double distance = GpsUtils.calculateDistance(Double.parseDouble(preLat),
         Double.parseDouble(preLon),
         Double.parseDouble(curLat),
         Double.parseDouble(curLon));
 
-    TOTAL_DISTANCE += (int) Math.round(distance);
+    totalDistance += (int) Math.round(distance);
 
     CarCycleInfo carCycleInfo = CarCycleInfo.builder()
         .sec(previousSecond)
         .gcd("A") // GPS 미구현으로 일단 0으로 처리함
-        .lat(formatCoordinate(curLat))
-        .lon(formatCoordinate(curLon))
+        .lat(StringUtils.formatCoordinate(curLat))
+        .lon(StringUtils.formatCoordinate(curLon))
         .ang(String.valueOf(ang))
         .spd(String.valueOf(spd))
-        .sum(String.valueOf(TOTAL_DISTANCE))
+        .sum(String.valueOf(totalDistance))
         .bat(String.valueOf(batteryValue)) // 80% 확률로 15v ~ 12v 사이의 값, 15% 확률로 12v ~ 10v 사이의 값, 5% 확률로 10v ~ 8v 사이의 값
         .build();
 
     carCycleInfoList.add(carCycleInfo);
-    GPS_LIST_COUNT++;
+    gpsListCount++;
 
     log.info("CarCycleInfo 생성: {}", carCycleInfo);
 
@@ -202,7 +207,7 @@ public class DeviceService {
   public void generateCycleInfo() {
 
     CycleInfo cycleInfo = createCycleInfo();
-    CycleInfoDto cycleInfoDto = createCycleInfoDto(cycleInfo);
+    CycleInfoDto cycleInfoDto = deviceFactory.createCycleInfoDto(cycleInfo);
 
     log.info("CycleInfo 생성 ({}): {}", carCycleInfoList.size(), cycleInfoDto);
     sendRequestWithRetry("/api/gps", cycleInfoDto, "주기 정보 API");
@@ -211,10 +216,10 @@ public class DeviceService {
 
   public void generateCarStop() {
     CarStop carStop = createCarStop();
-    CarStopDto carStopDto = createCarStopDto(carStop);
+    CarDto carStopDto = deviceFactory.createCarStopDto(carStop);
 
-    if (!Objects.equals(START_TIME, "")) {
-      START_TIME = ""; // 시동 시간 초기화
+    if (!Objects.equals(startTime, "")) {
+      startTime = ""; // 시동 시간 초기화
     }
 
     log.info("CarStopData 생성: {}", carStopDto);
@@ -226,8 +231,8 @@ public class DeviceService {
     Resource gpxFile = gpsPathService.getRandomGpxFile();
     List<Element> firstTrkpt = gpsPathService.getFirstTrkpt(gpxFile);
 
-    String angle = calculateAngleFromCoordinates(firstTrkpt);
-    String speed = calculateSpeedFromCoordinates(firstTrkpt);
+    String angle = StringUtils.calculateAngleFromCoordinates(firstTrkpt);
+    String speed = StringUtils.calculateSpeedFromCoordinates(firstTrkpt);
 
     return CarStart.builder()
         .carIdentity(carIdentity)
@@ -236,30 +241,42 @@ public class DeviceService {
         .offTime("")
         .cycleInfo(CarCycleInfo.builder()
             .gcd("A")
-            .lat(formatCoordinate(firstTrkpt.get(0).getAttribute("lat")))
-            .lon(formatCoordinate(firstTrkpt.get(0).getAttribute("lon")))
+            .lat(StringUtils.formatCoordinate(firstTrkpt.get(0).getAttribute("lat")))
+            .lon(StringUtils.formatCoordinate(firstTrkpt.get(0).getAttribute("lon")))
             .ang(angle)
             .spd(speed)
-            .sum(String.valueOf(TOTAL_DISTANCE))
+            .sum(String.valueOf(totalDistance))
             .build())
         .build();
   }
 
-  private CarStartDto createCarStartDto(CarStart carStart) {
-    return CarStartDto.builder()
-        .mdn(carStart.getCarIdentity().getMdn())
-        .tid(carStart.getCarDevice().getTid())
-        .mid(carStart.getCarDevice().getMid())
-        .pv(carStart.getCarDevice().getPv())
-        .did(carStart.getCarDevice().getDid())
-        .onTime(carStart.getOnTime())
-        .offTime(carStart.getOffTime())
-        .gcd(carStart.getCycleInfo().getGcd())
-        .lat(carStart.getCycleInfo().getLat())
-        .lon(carStart.getCycleInfo().getLon())
-        .ang(carStart.getCycleInfo().getAng())
-        .spd(carStart.getCycleInfo().getSpd())
-        .sum(carStart.getCycleInfo().getSum())
+  private CarStop createCarStop() {
+
+    Resource gpxFile = gpsPathService.getRandomGpxFile();
+    List<Element> lastTrkpt = gpsPathService.getLastTrkpt(gpxFile);
+
+    String angle = StringUtils.calculateAngleFromCoordinates(lastTrkpt);
+    String speed = StringUtils.calculateSpeedFromCoordinates(lastTrkpt);
+
+    CarIdentity updatedCarIdentity = new CarIdentity();
+    updatedCarIdentity.setMdn(carIdentity.getMdn());
+    updatedCarIdentity.setVrp(carIdentity.getVrp());
+    updatedCarIdentity.setTotalDistance(String.valueOf(totalDistance));
+    jsonDatabase.updateCarIdentity(updatedCarIdentity);
+
+    return CarStop.builder()
+        .carIdentity(carIdentity)
+        .carDevice(CarDevice.builder().build())
+        .onTime(startTime)
+        .offTime(LocalDateTime.now().format(DateConstant.DATE_TIME_FORMATTER))
+        .cycleInfo(CarCycleInfo.builder()
+            .gcd("A")
+            .lat(StringUtils.formatCoordinate(lastTrkpt.get(0).getAttribute("lat")))
+            .lon(StringUtils.formatCoordinate(lastTrkpt.get(0).getAttribute("lon")))
+            .ang(angle)
+            .spd(speed)
+            .sum(String.valueOf(totalDistance))
+            .build())
         .build();
   }
 
@@ -270,67 +287,6 @@ public class DeviceService {
         .oTime(LocalDateTime.now().format(DateConstant.DATE_TIME_MINUTE_FORMATTE))
         .cCnt(String.valueOf(carCycleInfoList.size()))
         .cList(carCycleInfoList)
-        .build();
-  }
-
-  private CycleInfoDto createCycleInfoDto(CycleInfo cycleInfo) {
-    return CycleInfoDto.builder()
-        .mdn(cycleInfo.getCarIdentity().getMdn())
-        .tid(cycleInfo.getCarDevice().getTid())
-        .mid(cycleInfo.getCarDevice().getMid())
-        .pv(cycleInfo.getCarDevice().getPv())
-        .did(cycleInfo.getCarDevice().getDid())
-        .oTime(cycleInfo.getOTime())
-        .cCnt(cycleInfo.getCCnt())
-        .cList(cycleInfo.getCList())
-        .build();
-  }
-
-  private CarStop createCarStop() {
-
-    Resource gpxFile = gpsPathService.getRandomGpxFile();
-    List<Element> lastTrkpt = gpsPathService.getLastTrkpt(gpxFile);
-
-    String angle = calculateAngleFromCoordinates(lastTrkpt);
-    String speed = calculateSpeedFromCoordinates(lastTrkpt);
-
-    CarIdentity updatedCarIdentity = new CarIdentity();
-    updatedCarIdentity.setMdn(carIdentity.getMdn());
-    updatedCarIdentity.setVrp(carIdentity.getVrp());
-    updatedCarIdentity.setTotalDistance(String.valueOf(TOTAL_DISTANCE));
-    jsonDatabase.updateCarIdentity(updatedCarIdentity);
-
-    return CarStop.builder()
-        .carIdentity(carIdentity)
-        .carDevice(CarDevice.builder().build())
-        .onTime(START_TIME)
-        .offTime(LocalDateTime.now().format(DateConstant.DATE_TIME_FORMATTER))
-        .cycleInfo(CarCycleInfo.builder()
-            .gcd("A")
-            .lat(formatCoordinate(lastTrkpt.get(0).getAttribute("lat")))
-            .lon(formatCoordinate(lastTrkpt.get(0).getAttribute("lon")))
-            .ang(angle)
-            .spd(speed)
-            .sum(String.valueOf(TOTAL_DISTANCE))
-            .build())
-        .build();
-  }
-
-  private CarStopDto createCarStopDto(CarStop carStop) {
-    return CarStopDto.builder()
-        .mdn(carStop.getCarIdentity().getMdn())
-        .tid(carStop.getCarDevice().getTid())
-        .mid(carStop.getCarDevice().getMid())
-        .pv(carStop.getCarDevice().getPv())
-        .did(carStop.getCarDevice().getDid())
-        .onTime(carStop.getOnTime())
-        .offTime(carStop.getOffTime())
-        .gcd(carStop.getCycleInfo().getGcd())
-        .lat(carStop.getCycleInfo().getLat())
-        .lon(carStop.getCycleInfo().getLon())
-        .ang(carStop.getCycleInfo().getAng())
-        .spd(carStop.getCycleInfo().getSpd())
-        .sum(carStop.getCycleInfo().getSum())
         .build();
   }
 
@@ -350,7 +306,7 @@ public class DeviceService {
 
   private void retryAfterDelay(String url, Object requestDto, String action) {
     try {
-      Thread.sleep(RETRY_DELAY_SECONDS * 1000);
+      Thread.sleep(RETRY_DELAY_SECONDS * 1000L);
       sendRequestWithRetry(url, requestDto, action);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
@@ -358,60 +314,12 @@ public class DeviceService {
     }
   }
 
-  private String formatCoordinate(String value) {
-    // 문자열을 double로 변환
-    double doubleValue = Double.parseDouble(value);
-    // 소수점 6자리까지 포맷
-    String formattedValue = String.format("%.6f", doubleValue);
-    // 소수점 제거
-    return formattedValue.replace(".", "");
-  }
-
-  private String calculateSpeedFromCoordinates(List<Element> firstTrkpt) {
-    int speed = (int) Math.round(gpsService.calculateSpeed(
-        gpsService.calculateDistance(
-            Double.parseDouble(firstTrkpt.get(0).getAttribute("lat")),
-            Double.parseDouble(firstTrkpt.get(0).getAttribute("lon")),
-            Double.parseDouble(firstTrkpt.get(1).getAttribute("lat")),
-            Double.parseDouble(firstTrkpt.get(1).getAttribute("lon"))
-        ),
-        1
-    ));
-    return String.valueOf(speed);
-  }
-
-  private String calculateAngleFromCoordinates(List<Element> firstTrkpt) {
-    int angle = gpsService.calculateBearing(
-        Double.parseDouble(firstTrkpt.get(0).getAttribute("lat")),
-        Double.parseDouble(firstTrkpt.get(0).getAttribute("lon")),
-        Double.parseDouble(firstTrkpt.get(1).getAttribute("lat")),
-        Double.parseDouble(firstTrkpt.get(1).getAttribute("lon"))
-    );
-    return String.valueOf(angle);
-  }
-
-  private int generateRandomBatteryValue() {
-    Random random = new Random();
-    double probability = random.nextDouble();
-
-    if (probability < 0.8) {
-      // 80% 확률로 15v ~ 12v 사이의 값
-      return (int) (12 + (15 - 12) * random.nextDouble());
-    } else if (probability < 0.95) {
-      // 15% 확률로 12v ~ 10v 사이의 값
-      return (int) (10 + (12 - 10) * random.nextDouble());
-    } else {
-      // 5% 확률로 10v ~ 8v 사이의 값
-      return (int) (8 + (10 - 8) * random.nextDouble());
-    }
-  }
-
   public void initializeTotalDistance() {
     Optional<CarIdentity> carIdentityOptional = jsonDatabase.getCarIdentityByMdn(carIdentity.getMdn());
     if (carIdentityOptional.isPresent()) {
-      CarIdentity carIdentity = carIdentityOptional.get();
-      TOTAL_DISTANCE = Integer.valueOf(carIdentity.getTotalDistance());
-      log.info("DB 누적 주행거리 로드: {}", TOTAL_DISTANCE);
+      CarIdentity loadedCarIdentity = carIdentityOptional.get();
+      totalDistance = Integer.valueOf(loadedCarIdentity.getTotalDistance());
+      log.info("DB 누적 주행거리 로드: {}", totalDistance);
     } else {
       log.warn("CarIdentity를 찾을 수 없습니다. MDN: {}", carIdentity.getMdn());
     }
