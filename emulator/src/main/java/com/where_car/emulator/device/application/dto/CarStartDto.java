@@ -1,6 +1,7 @@
-package com.where_car.emulator.device.dto;
+package com.where_car.emulator.device.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,13 +1,14 @@
-package com.where_car.emulator.device.controller;
+package com.where_car.emulator.device.presentation;
 
-import com.where_car.emulator.device.service.DeviceService;
-import com.where_car.emulator.global.error.DeviceException;
-import com.where_car.emulator.global.utill.FileNameUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.where_car.emulator.device.application.DeviceService;
+import com.where_car.emulator.global.error.DeviceException;
+import com.where_car.emulator.global.utill.FileNameUtil;
 
 /**
  * <pre>

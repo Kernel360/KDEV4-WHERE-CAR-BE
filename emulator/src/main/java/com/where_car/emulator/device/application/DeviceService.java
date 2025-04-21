@@ -1,22 +1,5 @@
-package com.where_car.emulator.device.service;
+package com.where_car.emulator.device.application;
 
-import com.where_car.emulator.device.domain.CarStart;
-import com.where_car.emulator.device.domain.CarStop;
-import com.where_car.emulator.device.domain.CycleInfo;
-import com.where_car.emulator.device.domain.DeviceEntity;
-import com.where_car.emulator.device.domain.common.CarCycleInfo;
-import com.where_car.emulator.device.domain.common.CarDevice;
-import com.where_car.emulator.device.domain.common.CarIdentity;
-import com.where_car.emulator.device.dto.CarStartDto;
-import com.where_car.emulator.device.dto.CarStopDto;
-import com.where_car.emulator.device.dto.CycleInfoDto;
-import com.where_car.emulator.device.repository.JsonDatabase;
-import com.where_car.emulator.global.constants.DateConstant;
-import com.where_car.emulator.global.error.DeviceErrorCode;
-import com.where_car.emulator.global.error.DeviceException;
-import com.where_car.emulator.gps_module.service.GpsPathService;
-import com.where_car.emulator.gps_module.service.GpsService;
-import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +9,33 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Element;
+
+import com.where_car.emulator.device.application.dto.CarStartDto;
+import com.where_car.emulator.device.application.dto.CarStopDto;
+import com.where_car.emulator.device.application.dto.CycleInfoDto;
+import com.where_car.emulator.device.domain.CarStart;
+import com.where_car.emulator.device.domain.CarStop;
+import com.where_car.emulator.device.domain.CycleInfo;
+import com.where_car.emulator.device.domain.DeviceEntity;
+import com.where_car.emulator.device.domain.common.CarCycleInfo;
+import com.where_car.emulator.device.domain.common.CarDevice;
+import com.where_car.emulator.device.domain.common.CarIdentity;
+import com.where_car.emulator.device.infrastructure.JsonDatabase;
+import com.where_car.emulator.global.constants.DateConstant;
+import com.where_car.emulator.global.error.DeviceErrorCode;
+import com.where_car.emulator.global.error.DeviceException;
+import com.where_car.emulator.gps_module.service.GpsPathService;
+import com.where_car.emulator.gps_module.service.GpsService;
+
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <pre>
