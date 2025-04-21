@@ -1,9 +1,10 @@
 package com.where_car.emulator.global.utill;
 
-import org.springframework.stereotype.Component;
+public class FileUtils {
 
-@Component
-public class FileNameUtil {
+  private FileUtils() {
+    throw new IllegalStateException("유틸리티 클래스는 인스턴스화할 수 없습니다");
+  }
 
   public static String[] extractLocations(String fileName) {
     if (fileName == null || fileName.isEmpty()) {
@@ -27,19 +28,27 @@ public class FileNameUtil {
     return new String[0];
   }
 
-  private static String extractRegion(String str) {
+  public static String extractRegion(String str) {
     if (str == null || str.isEmpty()) {
       return str;
     }
     // "지역-문자열" 또는 "지역_문자열" 형식에서 "지역"만 추출
     int hyphenIndex = str.indexOf('-');
     int underscoreIndex = str.indexOf('_');
-    int endIndex = (hyphenIndex != -1) ? hyphenIndex : (underscoreIndex != -1) ? underscoreIndex : str.length();
-    str = str.substring(0, endIndex);
+    int endIndex;
+	  if ((hyphenIndex != -1)) {
+		  endIndex = hyphenIndex;
+	  } else {
+		  if (underscoreIndex != -1)
+			  endIndex = underscoreIndex;
+		  else
+			  endIndex = str.length();
+	  }
+	  str = str.substring(0, endIndex);
     return capitalizeFirstLetter(str);
   }
 
-  private static String capitalizeFirstLetter(String str) {
+  public static String capitalizeFirstLetter(String str) {
     if (str == null || str.isEmpty()) {
       return str;
     }
