@@ -27,6 +27,22 @@ services:
           cpus: '1'
           memory: 1G
 
+  redis:
+    image: redis:7.2
+    container_name: wherecar-redis
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    networks:
+      - wherecar-network
+    volumes:
+      - redis-data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
 volumes:
   mysql-data:
     driver: local
