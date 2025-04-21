@@ -2,6 +2,11 @@ package com.where_car.emulator.global.utill;
 
 public class GpsUtils {
 
+	// private 생성자 추가 - 인스턴스화 방지
+	private GpsUtils() {
+		throw new IllegalStateException("유틸리티 클래스는 인스턴스화할 수 없습니다");
+	}
+
 	/**
 	 * 두 지점 간의 거리를 계산합니다.
 	 * @param lat1 첫 번째 지점의 위도
@@ -10,7 +15,7 @@ public class GpsUtils {
 	 * @param lon2 두 번째 지점의 경도
 	 * @return 두 지점 간의 거리 (미터 단위)
 	 */
-	public double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+	public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
 		final int R = 6371000; // 지구의 반지름 (미터 단위)
 		double latDistance = Math.toRadians(lat2 - lat1);
 		double lonDistance = Math.toRadians(lon2 - lon1);
@@ -27,7 +32,7 @@ public class GpsUtils {
 	 * @param timeInSeconds 시간 (초 단위)
 	 * @return 속도 (km/h 단위)
 	 */
-	public double calculateSpeed(double distance, double timeInSeconds) {
+	public static double calculateSpeed(double distance, double timeInSeconds) {
 		return distance / timeInSeconds * 3.6; // 속도 (km/h 단위)
 	}
 
@@ -39,7 +44,7 @@ public class GpsUtils {
 	 * @param lon2 두 번째 지점의 경도
 	 * @return 방위 (도 단위)
 	 */
-	public int calculateBearing(double lat1, double lon1, double lat2, double lon2) {
+	public static int calculateBearing(double lat1, double lon1, double lat2, double lon2) {
 		double longitude1 = Math.toRadians(lon1);
 		double longitude2 = Math.toRadians(lon2);
 		double latitude1 = Math.toRadians(lat1);
