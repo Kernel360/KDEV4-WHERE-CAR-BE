@@ -1,4 +1,4 @@
-package com.where_car.emulator.gps_module.service;
+package com.where_car.emulator.gps.application;
 
 import org.springframework.stereotype.Service;
 

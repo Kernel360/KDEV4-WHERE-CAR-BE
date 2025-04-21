@@ -31,8 +31,8 @@ import com.where_car.emulator.device.infrastructure.JsonDatabase;
 import com.where_car.emulator.global.constants.DateConstant;
 import com.where_car.emulator.global.error.DeviceErrorCode;
 import com.where_car.emulator.global.error.DeviceException;
-import com.where_car.emulator.gps_module.service.GpsPathService;
-import com.where_car.emulator.gps_module.service.GpsService;
+import com.where_car.emulator.gps.application.GpsPathService;
+import com.where_car.emulator.gps.application.GpsService;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;

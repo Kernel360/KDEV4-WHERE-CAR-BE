@@ -1,4 +1,4 @@
-package com.where_car.emulator.gps_module.dto;
+package com.where_car.emulator.gps.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

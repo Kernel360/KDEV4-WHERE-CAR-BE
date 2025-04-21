@@ -1,4 +1,4 @@
-package com.where_car.emulator.gps_module.service;
+package com.where_car.emulator.gps.application;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,17 +7,20 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import javax.annotation.PostConstruct;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * GPX 파일을 처리하는 서비스 클래스입니다.
