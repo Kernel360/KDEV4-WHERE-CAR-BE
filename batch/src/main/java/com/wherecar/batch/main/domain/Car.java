@@ -16,7 +16,7 @@ public class Car extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="car_id")
-    private long id;
+    private Long id;
 
 
     // Todo: make Enum 만들자
