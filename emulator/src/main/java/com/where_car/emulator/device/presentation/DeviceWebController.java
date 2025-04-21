@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.where_car.emulator.device.application.DeviceService;
 import com.where_car.emulator.global.error.DeviceException;
-import com.where_car.emulator.global.utill.FileNameUtil;
+import com.where_car.emulator.global.utill.FileUtils;
 
 /**
  * <pre>
@@ -56,7 +56,7 @@ public class DeviceWebController {
 
     String fileName = deviceService.getFilename();
     if (fileName != null) {
-      String[] locations = FileNameUtil.extractLocations(fileName);
+      String[] locations = FileUtils.extractLocations(fileName);
       if (locations.length == 2) {
         model.addAttribute("departure", locations[0]);
         model.addAttribute("destination", locations[1]);
