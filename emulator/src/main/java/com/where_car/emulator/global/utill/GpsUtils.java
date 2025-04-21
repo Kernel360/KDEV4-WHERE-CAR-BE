@@ -18,10 +18,19 @@ public class GpsUtils {
 	 * @return 두 지점 간의 거리 (미터 단위)
 	 */
 	public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-		double latDistance = Math.toRadians(lat2 - lat1);
-		double lonDistance = Math.toRadians(lon2 - lon1);
+		// 위도와 경도를 라디안으로 변환
+		double latitude1 = Math.toRadians(lat1);
+		double latitude2 = Math.toRadians(lat2);
+		double longitude1 = Math.toRadians(lon1);
+		double longitude2 = Math.toRadians(lon2);
+
+		// 위도와 경도의 차이 계산
+		double latDistance = latitude2 - latitude1;
+		double lonDistance = longitude2 - longitude1;
+
+		// Haversine 공식 적용
 		double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-			+ Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+			+ Math.cos(latitude1) * Math.cos(latitude2)
 			* Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 		return EARTH_RADIUS_METERS * c; // 거리 (미터 단위)
@@ -34,7 +43,10 @@ public class GpsUtils {
 	 * @return 속도 (km/h 단위)
 	 */
 	public static double calculateSpeed(double distance, double timeInSeconds) {
-		return distance / timeInSeconds * KM_PER_HOUR_CONVERSION; // 속도 (km/h 단위)
+		if (timeInSeconds <= 0) {
+			return 0.0; // 시간이 0이하인 경우 0을 반환
+		}
+		return (distance / timeInSeconds) * KM_PER_HOUR_CONVERSION; // 속도 (km/h 단위)
 	}
 
 	/**
@@ -46,10 +58,10 @@ public class GpsUtils {
 	 * @return 방위 (도 단위)
 	 */
 	public static int calculateBearing(double lat1, double lon1, double lat2, double lon2) {
-		double longitude1 = Math.toRadians(lon1);
-		double longitude2 = Math.toRadians(lon2);
 		double latitude1 = Math.toRadians(lat1);
 		double latitude2 = Math.toRadians(lat2);
+		double longitude1 = Math.toRadians(lon1);
+		double longitude2 = Math.toRadians(lon2);
 
 		double longDiff = longitude2 - longitude1;
 		double y = Math.sin(longDiff) * Math.cos(latitude2);
