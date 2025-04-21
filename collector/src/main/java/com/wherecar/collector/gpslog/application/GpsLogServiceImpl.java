@@ -56,8 +56,10 @@ public class GpsLogServiceImpl implements GpsLogService {
 //    public void receiveGpsLogs(GpsLogRequest gpsLogRequest) {
 //
 //        Car car = carReader.getCarByMdn(gpsLogRequest.getMdn());
-//        String bat = gpsLogRequest.getCList().get(0).getBat();
+//        List<String> batList = gpsLogRequest.getCList().stream()
+//                .map(GpsLogInfo::getBat)
+//                .toList();
 //        List<GpsLog> gpsLogList = gpsLogFactory.toGpsLogList(gpsLogRequest);
-//        gpsLogStore.storeGpsLogs(gpsLogList, car, bat);
+//        gpsLogStore.storeGpsLogs(gpsLogList, car, batList);
 //    }
 //}
