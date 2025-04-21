@@ -2,6 +2,7 @@ package com.where_car.emulator.device.domain.cycle;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * <pre>
@@ -23,6 +24,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
+@ToString
 public class CarCycleInfo {
 
   private String sec;
@@ -33,18 +35,4 @@ public class CarCycleInfo {
   private String spd;
   private String sum;
   private String bat;
-
-  @Override
-  public String toString() {
-    return "CarCycleInfo{" +
-        "sec='" + sec + '\'' +
-        ", gcd='" + gcd + '\'' +
-        ", lat=" + lat +
-        ", lon=" + lon +
-        ", ang=" + ang +
-        ", spd=" + spd +
-        ", sum=" + sum +
-        ", bat=" + bat +
-        '}';
-  }
 }

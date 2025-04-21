@@ -6,6 +6,7 @@ import com.where_car.emulator.device.domain.cycle.CarCycleInfo;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * <pre>
@@ -23,6 +24,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
+@ToString
 public class CarStart {
 
   private CarIdentity carIdentity;
@@ -32,15 +34,4 @@ public class CarStart {
   private String offTime;
 
   private CarCycleInfo cycleInfo;
-
-  @Override
-  public String toString() {
-    return "CarStart= {" +
-        " carIdentity= { " + "mdn=" + carIdentity.getMdn() + ", " + "vrp=" + carIdentity.getVrp() + " }" +
-        ", carDevice= { " + "tid=" + carDevice.getTid() + ", " + "mid=" + carDevice.getMid() + ", " + "pv=" + carDevice.getPv() + ", " + "did=" + carDevice.getDid() + " }" +
-        ", onTime=" + onTime +
-        ", offTime=" + offTime +
-        ", cycleInfo= { " + "sec=" + cycleInfo.getSec() + ", " + "gcd=" + cycleInfo.getGcd() + ", " + "lat=" + cycleInfo.getLat() + ", " + "lon=" + cycleInfo.getLon() + ", " +  "ang=" + cycleInfo.getAng() + ", " + "spd=" + cycleInfo.getSpd() + ", " + "sum=" + cycleInfo.getSum() + ", " + "bat=" + cycleInfo.getBat() + " }" +
-        " }";
-  }
 }

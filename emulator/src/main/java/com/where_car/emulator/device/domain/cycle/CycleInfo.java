@@ -7,7 +7,7 @@ import com.where_car.emulator.device.domain.car.CarIdentity;
 
 import lombok.Builder;
 import lombok.Getter;
-
+import lombok.ToString;
 
 /**
  * <pre>
@@ -25,6 +25,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
+@ToString
 public class CycleInfo {
 
   private CarIdentity carIdentity;
@@ -34,15 +35,4 @@ public class CycleInfo {
   private String cCnt;
 
   private List<CarCycleInfo> cList;
-
-  @Override
-  public String toString() {
-    return "CycleInfo= {" +
-        " carIdentity = { " + "mdn=" + carIdentity.getMdn() + ", " + "vrp=" + carIdentity.getVrp() + " }" +
-        ", carDevice = { " + "tid=" + carDevice.getTid() + ", " + "mid=" + carDevice.getMid() + ", " + "pv=" + carDevice.getPv() + ", " + "did=" + carDevice.getDid() + " }" +
-        ", oTime=" + oTime +
-        ", cCnt=" + cCnt +
-        ", cList=" + cList +
-        " }";
-  }
 }
