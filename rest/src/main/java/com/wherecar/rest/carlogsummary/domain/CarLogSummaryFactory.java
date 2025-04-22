@@ -62,6 +62,7 @@ public class CarLogSummaryFactory {
                     .build()
             );
         }
+
         try{
             averageDistance = totalDistance / carLogSummaries.size();
             averageSpeed = (totalDistance * 3600) / totalDriveTime;
@@ -71,7 +72,6 @@ public class CarLogSummaryFactory {
             averageSpeed = 0;
             averageDriveTime = 0;
         }
-
 
 
 

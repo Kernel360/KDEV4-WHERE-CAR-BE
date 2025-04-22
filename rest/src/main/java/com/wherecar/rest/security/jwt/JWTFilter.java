@@ -2,6 +2,7 @@ package com.wherecar.rest.security.jwt;
 
 import com.wherecar.rest.user.domain.User;
 import com.wherecar.rest.user.infrastructure.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -34,18 +36,35 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = authorization.split(" ")[1];
+        String accessToken = authorization.split(" ")[1];
 
 
-        if (jwtUtil.isExpired(token)) {
-            filterChain.doFilter(request, response);
+        try {
+            jwtUtil.isExpired(accessToken);
+        } catch (ExpiredJwtException e) {
 
+            PrintWriter writer = response.getWriter();
+            writer.print("access token expired");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
 
-        String email = jwtUtil.getEmail(token);
+        // 토큰이 access인지 확인
+        String category = jwtUtil.getCategory(accessToken);
 
+        if (!category.equals("access")) {
+
+            PrintWriter writer = response.getWriter();
+            writer.print("invalid access token");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+
+        String email = jwtUtil.getEmail(accessToken);
 
         User user = userRepository.findUserWithPermissionsAndCompany(email).orElseThrow(() -> new NoSuchElementException("User not found"));
 

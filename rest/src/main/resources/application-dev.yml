@@ -1,4 +1,8 @@
 spring:
+  data:
+    redis:
+      host: localhost  # 배포 후에는 변경해야함
+      port: 6379
   config:
     activate:
       on-profile: dev
