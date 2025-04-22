@@ -65,6 +65,9 @@ public class DeviceInfoService {
    * 차량 누적 주행거리 초기화
    */
   public void initializeTotalDistance() {
+    // MDN 변경 여부를 확인하고 필요시 새 데이터를 생성
+    jsonDatabase.checkAndUpdateMdnChange();
+    
     Optional<CarIdentity> carIdentityOptional = jsonDatabase.getCarIdentityByMdn(carIdentity.getMdn());
     if (carIdentityOptional.isPresent()) {
       CarIdentity loadedCarIdentity = carIdentityOptional.get();
@@ -163,3 +166,4 @@ public class DeviceInfoService {
     return carCycleInfoList.size();
   }
 }
+

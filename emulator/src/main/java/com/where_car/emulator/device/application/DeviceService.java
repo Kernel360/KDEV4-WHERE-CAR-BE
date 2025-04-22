@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.where_car.emulator.device.application.dto.LocationDto;
 import com.where_car.emulator.device.domain.car.CarIdentity;
 import com.where_car.emulator.device.domain.device.DeviceEntity;
+import com.where_car.emulator.device.infrastructure.JsonDatabase;
 import com.where_car.emulator.global.error.DeviceErrorCode;
 import com.where_car.emulator.global.error.DeviceException;
 import com.where_car.emulator.global.utill.FileUtils;
@@ -31,18 +32,21 @@ public class DeviceService {
   private final GpsPathService gpsPathService;
   private final CarIdentity carIdentity;
   private final DeviceEntity deviceEntity;
+  private final JsonDatabase jsonDatabase;
 
   public DeviceService(
       DeviceScheduler schedulerService,
       DeviceInfoService deviceInfoService,
       GpsPathService gpsPathService,
       CarIdentity carIdentity,
-      DeviceEntity deviceEntity) {
+      DeviceEntity deviceEntity,
+      JsonDatabase jsonDatabase) {
     this.schedulerService = schedulerService;
     this.deviceInfoService = deviceInfoService;
     this.gpsPathService = gpsPathService;
     this.carIdentity = carIdentity;
     this.deviceEntity = deviceEntity;
+    this.jsonDatabase = jsonDatabase;
   }
 
   @PostConstruct
@@ -93,21 +97,32 @@ public class DeviceService {
     deviceInfoService.generateAndSendCycleInfo();
     // 차량 시동 OFF 이벤트 생성 및 전송
     deviceInfoService.generateAndSendCarStop();
+    
+    // 시동 OFF 시점에 누적 주행거리 저장
+    updateTotalDistanceInDatabase();
   }
   
   private void handleScheduledTask() {
     // 차량 주기 정보 생성
     deviceInfoService.generateCarCycleInfo();
-    
+
     // 60개의 주기 정보가 쌓이면 서버로 전송
     if (deviceInfoService.getCycleInfoListSize() >= 60) {
       deviceInfoService.generateAndSendCycleInfo();
     }
   }
 
-  public LocationDto getLocationInfo() {
-    String fileName = getFilename();
-    return extractLocationInfoFromFilename(fileName);
+  private void updateTotalDistanceInDatabase() {
+    try {
+      Integer currentTotalDistance = deviceInfoService.getTotalDistance();
+      jsonDatabase.getCarIdentityByMdn(carIdentity.getMdn()).ifPresent(identity -> {
+        identity.setTotalDistance(String.valueOf(currentTotalDistance));
+        jsonDatabase.updateCarIdentity(identity);
+        log.info("차량 누적 주행거리 업데이트 완료: {} m", currentTotalDistance);
+      });
+    } catch (Exception e) {
+      log.error("누적 주행거리 저장 중 오류 발생: {}", e.getMessage());
+    }
   }
 
   private LocationDto extractLocationInfoFromFilename(String fileName) {
@@ -131,6 +146,11 @@ public class DeviceService {
     }
 
     return new LocationDto(departure, destination);
+  }
+
+  public LocationDto getLocationInfo() {
+    String fileName = getFilename();
+    return extractLocationInfoFromFilename(fileName);
   }
 
   private boolean isValidLocationName(String location) {

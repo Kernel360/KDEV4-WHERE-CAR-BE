@@ -3,9 +3,12 @@ package com.where_car.emulator.device.infrastructure;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.annotation.PostConstruct;
 
@@ -25,6 +28,8 @@ public class JsonDatabase {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final File file;
+  private final ReadWriteLock lock = new ReentrantReadWriteLock();
+  private String currentMdn;
 
   @Value("${wherecar.emulator.car-mdn}")
   private String mdn;
@@ -40,6 +45,7 @@ public class JsonDatabase {
   @PostConstruct
   public void initialize() {
     try {
+      currentMdn = mdn;
       if (!file.exists()) {
         // 파일이 없는 경우 새 파일 생성
         boolean isFileCreated = file.createNewFile();
@@ -64,6 +70,31 @@ public class JsonDatabase {
       }
     } catch (IOException e) {
       log.error("데이터베이스 파일 초기화 실패", e);
+      throw new IllegalArgumentException("데이터베이스 초기화 중 오류 발생", e);
+    }
+  }
+
+  /**
+   * MDN 변경 여부를 확인하고 변경되었으면 새 데이터를 생성합니다.
+   */
+  public void checkAndUpdateMdnChange() {
+    if (!currentMdn.equals(mdn)) {
+      log.info("MDN이 변경되었습니다: {} -> {}", currentMdn, mdn);
+      List<CarIdentity> existingData = readData();
+      
+      boolean mdnExists = existingData.stream()
+          .anyMatch(car -> car.getMdn().equals(mdn));
+      
+      if (!mdnExists) {
+        // 새로운 MDN에 대한 데이터 생성
+        CarIdentity carIdentity = createData();
+        existingData.add(carIdentity);
+        writeData(existingData);
+        log.info("새 MDN {}에 대한 데이터를 추가했습니다", mdn);
+      }
+      
+      // 현재 MDN 업데이트
+      currentMdn = mdn;
     }
   }
 
@@ -76,64 +107,111 @@ public class JsonDatabase {
   }
 
   public List<CarIdentity> readData() {
-    if (!file.exists()) {
-      try {
-        boolean isFileCreated = file.createNewFile();
-        if (isFileCreated) {
-          objectMapper.writeValue(file, List.of());
-        }
-      } catch (IOException e) {
-        log.error("Failed to create new database file", e);
-        return Collections.emptyList();
-      }
-    }
+    lock.readLock().lock();
     try {
-      return objectMapper.readValue(file, new TypeReference<>() {});
-    } catch (DatabindException e) {
-      log.error("Error reading data from file", e);
-      return Collections.emptyList();
-    } catch (IOException e) {
-      log.error("IO error reading data from file", e);
-      return Collections.emptyList();
+      // MDN 변경 확인
+      checkAndUpdateMdnChange();
+      
+      if (!file.exists()) {
+        try {
+          lock.readLock().unlock();
+          lock.writeLock().lock();
+          try {
+            // 다시 체크 (다른 스레드가 파일을 생성했을 수 있음)
+            if (!file.exists()) {
+              boolean isFileCreated = file.createNewFile();
+              if (isFileCreated) {
+                objectMapper.writeValue(file, new ArrayList<>());
+              }
+            }
+          } finally {
+            lock.writeLock().unlock();
+            lock.readLock().lock();
+          }
+        } catch (IOException e) {
+          log.error("Failed to create new database file", e);
+          return new ArrayList<>();
+        }
+      }
+      try {
+        List<CarIdentity> result = objectMapper.readValue(file, new TypeReference<>() {});
+        return result != null ? result : new ArrayList<>();
+      } catch (DatabindException e) {
+        log.error("Error reading data from file", e);
+        throw new IllegalArgumentException("데이터 변환 중 오류 발생", e);
+      } catch (IOException e) {
+        log.error("IO error reading data from file", e);
+        throw new IllegalArgumentException("파일 읽기 중 오류 발생", e);
+      }
+    } finally {
+      lock.readLock().unlock();
     }
   }
 
   public void writeData(List<CarIdentity> data) {
+    Objects.requireNonNull(data, "데이터는 null이 될 수 없습니다");
+    
+    lock.writeLock().lock();
     try {
       objectMapper.writeValue(file, data);
     } catch (DatabindException e) {
       log.error("Error writing data to file", e);
+      throw new IllegalArgumentException("데이터 변환 중 오류 발생", e);
     } catch (IOException e) {
       log.error("IO error writing data to file", e);
+      throw new IllegalArgumentException("파일 쓰기 중 오류 발생", e);
+    } finally {
+      lock.writeLock().unlock();
     }
   }
 
   public void createCarIdentity(CarIdentity carIdentity) {
+    Objects.requireNonNull(carIdentity, "CarIdentity는 null이 될 수 없습니다");
+    
     List<CarIdentity> data = readData();
     data.add(carIdentity);
     writeData(data);
   }
 
   public Optional<CarIdentity> getCarIdentityByMdn(String mdn) {
+    Objects.requireNonNull(mdn, "MDN은 null이 될 수 없습니다");
+    
     List<CarIdentity> data = readData();
     return data.stream().filter(car -> car.getMdn().equals(mdn)).findFirst();
   }
 
   public void updateCarIdentity(CarIdentity updatedCarIdentity) {
+    Objects.requireNonNull(updatedCarIdentity, "CarIdentity는 null이 될 수 없습니다");
+    
     List<CarIdentity> data = readData();
+    boolean updated = false;
+    
     for (int i = 0; i < data.size(); i++) {
       if (data.get(i).getMdn().equals(updatedCarIdentity.getMdn())) {
         data.set(i, updatedCarIdentity);
         writeData(data);
-        return;
+        updated = true;
+        break;
       }
     }
-    log.error("CarIdentity with MDN {} not found", updatedCarIdentity.getMdn());
+    
+    if (!updated) {
+      log.error("CarIdentity with MDN {} not found", updatedCarIdentity.getMdn());
+      throw new IllegalArgumentException(String.format("MDN %s를 가진 CarIdentity를 찾을 수 없습니다", updatedCarIdentity.getMdn()));
+    }
   }
 
   public void deleteCarIdentityByMdn(String mdn) {
+    Objects.requireNonNull(mdn, "MDN은 null이 될 수 없습니다");
+    
     List<CarIdentity> data = readData();
+    int previousSize = data.size();
     data.removeIf(car -> car.getMdn().equals(mdn));
+    
+    if (data.size() == previousSize) {
+      log.warn("MDN {}에 해당하는 데이터가 존재하지 않아 삭제되지 않았습니다", mdn);
+    }
+    
     writeData(data);
   }
 }
