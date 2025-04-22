@@ -1,7 +1,7 @@
 package com.wherecar.rest.geolog.application;
 
 import com.wherecar.rest.car.domain.Car;
-import com.wherecar.rest.car.infrastructure.infra.CarReader;
+import com.wherecar.rest.car.infrastructure.CarReader;
 import com.wherecar.rest.geolog.application.dto.GeoLogRequest;
 import com.wherecar.rest.geolog.application.dto.GeoLogResponse;
 import com.wherecar.rest.geolog.domain.GeoLog;

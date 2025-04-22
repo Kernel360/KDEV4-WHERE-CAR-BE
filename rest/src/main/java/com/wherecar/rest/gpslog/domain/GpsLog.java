@@ -1,6 +1,7 @@
 package com.wherecar.rest.gpslog.domain;
 
 import com.wherecar.rest.common.domain.BaseEntity;
+import com.wherecar.rest.gpslog.domain.constant.GpsConditionType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class GpsLog extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name ="gps_log_id")
     private Long id;
 
@@ -25,7 +26,8 @@ public class GpsLog extends BaseEntity {
     private LocalDateTime timestamp;
 
     @Column(name = "gps_condition")
-    private String gpsCondition;
+    @Enumerated(EnumType.STRING)
+    private GpsConditionType gpsCondition;
 
     @Column(name = "latitude")
     private Double latitude;

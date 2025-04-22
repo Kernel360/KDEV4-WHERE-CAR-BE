@@ -1,0 +1,11 @@
+package com.wherecar.collector.gpslog.infrastructure;
+
+import com.wherecar.collector.car.domain.Car;
+import com.wherecar.collector.gpslog.domain.GpsLog;
+
+import java.util.List;
+
+public interface GpsLogStore {
+
+    void store(List<GpsLog> gpsLogList, Car car, List<String> batList);
+}
