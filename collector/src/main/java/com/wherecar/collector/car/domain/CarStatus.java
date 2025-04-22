@@ -12,7 +12,7 @@ import lombok.*;
 @ToString(exclude = "car")
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarStatus  extends BaseEntity {
+public class CarStatus extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
