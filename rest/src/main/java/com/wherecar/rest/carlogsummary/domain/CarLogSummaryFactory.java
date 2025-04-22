@@ -63,9 +63,15 @@ public class CarLogSummaryFactory {
             );
         }
 
-        averageDistance = totalDistance / carLogSummaries.size();
-        averageSpeed = (totalDistance * 3600) / totalDriveTime;
-        averageDriveTime = totalDriveTime / carLogSummaries.size();
+        try{
+            averageDistance = totalDistance / carLogSummaries.size();
+            averageSpeed = (totalDistance * 3600) / totalDriveTime;
+            averageDriveTime = totalDriveTime / carLogSummaries.size();
+        } catch (Exception e) {
+            averageDistance = 0;
+            averageSpeed = 0;
+            averageDriveTime = 0;
+        }
 
 
 
