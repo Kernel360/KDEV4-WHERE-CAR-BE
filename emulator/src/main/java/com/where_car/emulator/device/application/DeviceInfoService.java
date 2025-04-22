@@ -17,15 +17,6 @@ import com.where_car.emulator.gps.application.GpsPathService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * <pre>
- *   디바이스 정보 서비스 클래스
- *   차량 데이터 생성과 관련된 기능을 제공합니다.
- * </pre>
- *
- * @since 2025-03-30
- * @version 1.0
- */
 @Slf4j
 @Service
 public class DeviceInfoService {
@@ -61,11 +52,7 @@ public class DeviceInfoService {
     initializeTotalDistance();
   }
 
-  /**
-   * 차량 누적 주행거리 초기화
-   */
   public void initializeTotalDistance() {
-    // MDN 변경 여부를 확인하고 필요시 새 데이터를 생성
     jsonDatabase.checkAndUpdateMdnChange();
     
     Optional<CarIdentity> carIdentityOptional = jsonDatabase.getCarIdentityByMdn(carIdentity.getMdn());
@@ -78,9 +65,6 @@ public class DeviceInfoService {
     }
   }
 
-  /**
-   * 차량 시동 ON 이벤트 생성 및 전송
-   */
   public void generateAndSendCarStart() {
     Resource gpxFile = gpsPathService.getRandomGpxFile();
     
@@ -97,10 +81,6 @@ public class DeviceInfoService {
     deviceEventExecutor.sendCarStart(carStartDto);
   }
 
-  /**
-   * 차량 주기 정보 생성
-   * @return 생성된 주기 정보
-   */
   public CarCycleInfo generateCarCycleInfo() {
     Resource gpxFile = gpsPathService.getRandomGpxFile();
     

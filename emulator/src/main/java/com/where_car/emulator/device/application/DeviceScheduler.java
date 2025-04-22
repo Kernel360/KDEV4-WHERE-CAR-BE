@@ -8,15 +8,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * <pre>
- *   디바이스 스케줄러 서비스 클래스
- *   에뮬레이터의 스케줄링 작업을 관리합니다.
- * </pre>
- *
- * @since 2025-03-30
- * @version 1.0
- */
 @Slf4j
 @Service
 public class DeviceScheduler {

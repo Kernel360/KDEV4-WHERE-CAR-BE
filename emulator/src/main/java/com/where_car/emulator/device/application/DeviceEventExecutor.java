@@ -21,26 +21,18 @@ public class DeviceEventExecutor {
     
     private final RestTemplate restTemplate;
     private static final int RETRY_DELAY_SECONDS = 60;
-    
-    /**
-     * 차량 시동 ON 이벤트 전송
-     */
+
     public void sendCarStart(CarDto carStartDto) {
         log.info("CarStartData 전송: {}", carStartDto);
         sendRequestWithRetry("/api/on", carStartDto, "시동 ON 정보 API");
     }
     
-    /**
-     * 주기 정보 전송
-     */
+
     public void sendCycleInfo(CycleInfoDto cycleInfoDto) {
         log.info("CycleInfo 전송: {}", cycleInfoDto);
         sendRequestWithRetry("/api/gps", cycleInfoDto, "주기 정보 API");
     }
-    
-    /**
-     * 차량 시동 OFF 이벤트 전송
-     */
+
     public void sendCarStop(CarDto carStopDto) {
         log.info("CarStopData 전송: {}", carStopDto);
         sendRequestWithRetry("/api/off", carStopDto, "시동 OFF 정보 API");

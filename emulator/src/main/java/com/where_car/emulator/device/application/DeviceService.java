@@ -14,15 +14,6 @@ import com.where_car.emulator.gps.application.GpsPathService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * <pre>
- *   디바이스 서비스 클래스
- *   에뮬레이터의 상태를 관리하고 주기적으로 데이터를 생성 및 전송합니다.
- * </pre>
- *
- * @since 2025-03-30
- * @version 1.0
- */
 @Slf4j
 @Service
 public class DeviceService {
@@ -54,11 +45,6 @@ public class DeviceService {
     log.info("에뮬레이터의 주행 경로를 선택했습니다: {}", gpsPathService.getRandomGpxFile().getFilename());
   }
 
-  /**
-   *  에뮬레이터 상태 변경
-   *  Key-On: 시동 ON 정보 전송 -> 1초 마다 차량 주기 정보 생성 -> 1분 마다 전체 차량 주기 정보 생성 ->
-   *  Key-Off: 정보 생성
-   */
   public void toggleDevice() {
     if (!deviceEntity.isOn()) {
       try {
@@ -84,29 +70,21 @@ public class DeviceService {
   }
   
   private void startDevice() {
-    // 차량 시동 ON 이벤트 생성 및 전송
     deviceInfoService.generateAndSendCarStart();
-    // 스케줄러 시작
     schedulerService.startScheduler(this::handleScheduledTask);
   }
   
   private void stopDevice() {
-    // 스케줄러 중지
     schedulerService.stopScheduler();
-    // 남은 데이터 처리
     deviceInfoService.generateAndSendCycleInfo();
-    // 차량 시동 OFF 이벤트 생성 및 전송
     deviceInfoService.generateAndSendCarStop();
     
-    // 시동 OFF 시점에 누적 주행거리 저장
     updateTotalDistanceInDatabase();
   }
   
   private void handleScheduledTask() {
-    // 차량 주기 정보 생성
     deviceInfoService.generateCarCycleInfo();
 
-    // 60개의 주기 정보가 쌓이면 서버로 전송
     if (deviceInfoService.getCycleInfoListSize() >= 60) {
       deviceInfoService.generateAndSendCycleInfo();
     }
@@ -142,7 +120,7 @@ public class DeviceService {
         }
       }
     } catch (Exception e) {
-      // 예외 발생 시 기본값 사용
+        log.error("파일 이름에서 위치 정보를 추출하는 중 오류 발생: {}", e.getMessage());
     }
 
     return new LocationDto(departure, destination);
