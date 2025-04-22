@@ -27,13 +27,14 @@ public class EmulAuthServiceImpl implements EmulAuthService{
 
         emulTokenStore.saveToken(mdn, token, EXPIRE_DAYS);
 
-        return new EmulTokenResponseDto(
-                "000",
-                "Success",
-                mdn,
-                token,
-                String.valueOf(EXPIRE_DAYS)
-        );
+        return EmulTokenResponseDto.builder()
+                .rstCd("000")
+                .rstMsg("Success")
+                .mdn(mdn)
+                .token(token)
+                .exPeriod(String.valueOf(EXPIRE_DAYS))
+                .build();
+
     }
 
 }
