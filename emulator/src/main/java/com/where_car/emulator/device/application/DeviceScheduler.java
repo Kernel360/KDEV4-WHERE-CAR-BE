@@ -45,8 +45,4 @@ public class DeviceScheduler {
       }
     }
   }
-
-  public boolean isSchedulerRunning() {
-    return scheduler != null && !scheduler.isShutdown();
-  }
 }

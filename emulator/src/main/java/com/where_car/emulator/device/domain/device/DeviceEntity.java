@@ -45,14 +45,4 @@ public class DeviceEntity {
     this.deviceStatus = false;
     log.debug("디바이스 상태가 OFF로 변경되었습니다.");
   }
-
-  /**
-   * 디바이스 상태 전환 (ON -> OFF, OFF -> ON)
-   * @return 전환 후 상태
-   */
-  public boolean toggle() {
-    this.deviceStatus = !this.deviceStatus;
-    log.debug("디바이스 상태가 {}(으)로 전환되었습니다.", this.deviceStatus ? "ON" : "OFF");
-    return this.deviceStatus;
-  }
 }

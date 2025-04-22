@@ -165,14 +165,6 @@ public class JsonDatabase {
     }
   }
 
-  public void createCarIdentity(CarIdentity carIdentity) {
-    Objects.requireNonNull(carIdentity, "CarIdentity는 null이 될 수 없습니다");
-    
-    List<CarIdentity> data = readData();
-    data.add(carIdentity);
-    writeData(data);
-  }
-
   public Optional<CarIdentity> getCarIdentityByMdn(String mdn) {
     Objects.requireNonNull(mdn, "MDN은 null이 될 수 없습니다");
     
@@ -199,19 +191,5 @@ public class JsonDatabase {
       log.error("CarIdentity with MDN {} not found", updatedCarIdentity.getMdn());
       throw new IllegalArgumentException(String.format("MDN %s를 가진 CarIdentity를 찾을 수 없습니다", updatedCarIdentity.getMdn()));
     }
-  }
-
-  public void deleteCarIdentityByMdn(String mdn) {
-    Objects.requireNonNull(mdn, "MDN은 null이 될 수 없습니다");
-    
-    List<CarIdentity> data = readData();
-    int previousSize = data.size();
-    data.removeIf(car -> car.getMdn().equals(mdn));
-    
-    if (data.size() == previousSize) {
-      log.warn("MDN {}에 해당하는 데이터가 존재하지 않아 삭제되지 않았습니다", mdn);
-    }
-    
-    writeData(data);
   }
 }
