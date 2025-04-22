@@ -18,11 +18,4 @@ public class EmulTokenStoreImpl implements EmulTokenStore{
         String key = "token:" + mdn;
         redisTemplate.opsForValue().set(key, token, expireDays, TimeUnit.DAYS);
     }
-
-    @Override
-    public String getToken(String mdn) {
-        String key = "token:" + mdn;
-        Object value = redisTemplate.opsForHash().get(key, "token");
-        return value != null ? value.toString() : null;
-    }
 }
