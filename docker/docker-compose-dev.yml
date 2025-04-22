@@ -32,7 +32,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: 1234
     ports:
-      - 3306:3306
+      - 3308:3306
     networks:
       - wherecar-network
     volumes:
