@@ -18,7 +18,7 @@ public class EmulAuthServiceImpl implements EmulAuthService{
 
     private final EmulTokenStore emulTokenStore;
 
-    private static final long EXPIRE_DAYS = 4; // 3일 = 259200초
+    private static final long EXPIRE_DAYS = 4;
 
     @Override
     public EmulTokenResponseDto issueToken(EmulTokenRequestDto requestDto) {
