@@ -103,25 +103,25 @@ public class CarLogServiceImpl implements CarLogService {
         long count = currentMonthLogs.size();
 
         // 총 주행 거리 계산
-        long totalMileage = currentMonthLogs.stream()
-                .mapToLong(log -> log.getOffMileage() - log.getOnMileage())
+        double totalMileage = currentMonthLogs.stream()
+                .mapToDouble(log -> log.getOffMileage() - log.getOnMileage())
                 .sum();
 
         // 최근 6개월간 총 주행거리 계산
-        Map<String, Integer> monthlyMileageMap = new LinkedHashMap<>();
+        Map<String, Double> monthlyMileageMap = new LinkedHashMap<>();
         for (int i = 5; i >= 0; i--) {
             LocalDate targetDate = now.minusMonths(i);
             int year = targetDate.getYear();
             int month = targetDate.getMonthValue();
 
-            int mileage = logs.stream()
+            Double mileage = logs.stream()
                     .filter(log -> {
                         LocalDateTime onTime = log.getOnTime();
                         return onTime != null
                                 && onTime.getYear() == year
                                 && onTime.getMonthValue() == month;
                     })
-                    .mapToInt(log -> log.getOffMileage() - log.getOnMileage())
+                    .mapToDouble(log -> log.getOffMileage() - log.getOnMileage())
                     .sum();
 
             String key = String.format("%d-%02d", year, month);
@@ -133,7 +133,7 @@ public class CarLogServiceImpl implements CarLogService {
                 .collect(Collectors.toList());
 
         return CarLogResponse.builder()
-                .totalMileage((int) totalMileage)
+                .totalMileage(totalMileage)
                 .carLogsCount(String.valueOf(count))
                 .monthlyMileages(monthlyMileages)
                 .build();

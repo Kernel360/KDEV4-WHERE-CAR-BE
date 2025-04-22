@@ -18,14 +18,14 @@ public class CarStatus  extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="car_status_id")
-    private long id;
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="car_id")
     private Car car;
 
     @Column(name="mileage")
-    private Integer mileage;
+    private Double mileage;
 
     @Column(name="battery_voltage")
     private Integer batteryVoltage;
