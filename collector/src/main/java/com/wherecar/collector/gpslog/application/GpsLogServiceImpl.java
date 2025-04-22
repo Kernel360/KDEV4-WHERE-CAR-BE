@@ -34,7 +34,7 @@ public class GpsLogServiceImpl implements GpsLogService {
                     .map(GpsLogInfo::getBat)
                     .toList();
             List<GpsLog> gpsLogList = gpsLogFactory.toGpsLogList(gpsLogRequest);
-            gpsLogStore.storeGpsLogs(gpsLogList, car, batList);
+            gpsLogStore.store(gpsLogList, car, batList);
         } catch (Exception e) {
             log.error("GPS 로그 저장 비동기 처리 예외 발생", e);
         }

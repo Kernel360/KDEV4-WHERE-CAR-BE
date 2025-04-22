@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface GpsLogStore {
 
-    void storeGpsLogs(List<GpsLog> gpsLogList, Car car, List<String> batList);
+    void store(List<GpsLog> gpsLogList, Car car, List<String> batList);
 }

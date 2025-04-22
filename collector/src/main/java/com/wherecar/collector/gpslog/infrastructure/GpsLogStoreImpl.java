@@ -1,7 +1,6 @@
 package com.wherecar.collector.gpslog.infrastructure;
 
 import com.wherecar.collector.car.domain.Car;
-import com.wherecar.collector.car.domain.CarStatus;
 import com.wherecar.collector.gpslog.domain.GpsLog;
 import com.wherecar.collector.car.infrastructure.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ public class GpsLogStoreImpl implements GpsLogStore {
 
     @Override
     @Transactional
-    public void storeGpsLogs(List<GpsLog> gpsLogList, Car car, List<String> batList) {
+    public void store(List<GpsLog> gpsLogList, Car car, List<String> batList) {
 
         for (int i = 0; i < gpsLogList.size(); i++) {
             GpsLog gpsLog = gpsLogList.get(i);
