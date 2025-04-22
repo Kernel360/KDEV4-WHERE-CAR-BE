@@ -5,7 +5,7 @@ spring:
       port: 6379
   config:
     activate:
-      on-profile: prod # 'dev' 프로파일이 활성화될 때 이 설정을 사용합니다.
+      on-profile: prod # 'prod' 프로파일이 활성화될 때 이 설정을 사용합니다.
   jpa:
     hibernate:
       ddl-auto: update

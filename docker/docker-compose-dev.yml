@@ -1,21 +1,42 @@
 version: '3.8'
 
 services:
-  db:
+  meta-db:
     image: mysql:8.0
-    container_name: wherecar-mysql
-    restart: unless-stopped # 사용자 중지 외 모든 경우 재시작
+    container_name: meta-db
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: meta
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+    ports:
+      - 3307:3306
+    networks:
+      - wherecar-network
+    volumes:
+      - meta-db-data:/var/lib/mysql
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  main-db:
+    image: mysql:8.0
+    container_name: main-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: wherecar
       MYSQL_USER: user
       MYSQL_PASSWORD: 1234
     ports:
       - 3306:3306
-    volumes:
-      - mysql-data:/var/lib/mysql
     networks:
       - wherecar-network
+    volumes:
+      - mysql-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-p1234"]
       interval: 10s
@@ -26,6 +47,27 @@ services:
         limits:
           cpus: '1'
           memory: 1G
+
+  stat-db:
+    image: mysql:8.0
+    container_name: stat-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: stat
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+    ports:
+      - 3309:3306
+    networks:
+      - wherecar-network
+    volumes:
+      - stat-db-data:/var/lib/mysql
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
 
   redis:
     image: redis:7.2
@@ -45,6 +87,12 @@ services:
 
 volumes:
   mysql-data:
+    driver: local
+  meta-db-data:
+    driver: local
+  stat-db-data:
+    driver: local
+  redis-data:
     driver: local
 
 networks:
