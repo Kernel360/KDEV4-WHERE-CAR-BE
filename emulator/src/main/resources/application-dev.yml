@@ -7,10 +7,15 @@ server:
   port: 8090
 
 wherecar:
-  server:
-    url: http://localhost:8080
-  emulator:
-    car-mdn: 01234567890
-    car-vrp: 12가3456
+  device:
+    mdn: 01234567890
+    vrp: 34가5678
   db:
-    file-name: device_db.json
+    storage-file-name: device_db.json
+  api:
+    rest:
+      url: http://localhost:8080
+    collector:
+      url: http://localhost:8090
+    hub:
+      url: http://localhost:8085
