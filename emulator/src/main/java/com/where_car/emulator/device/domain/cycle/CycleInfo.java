@@ -24,15 +24,28 @@ import lombok.ToString;
  */
 
 @Getter
-@Builder
 @ToString
 public class CycleInfo {
 
-  private CarIdentity carIdentity;
-  private CarDevice carDevice;
+  private final CarIdentity carIdentity;
+  private final CarDevice carDevice;
 
-  private String oTime;
-  private String cCnt;
+  private final String oTime;
+  private final String cCnt;
 
-  private List<CarCycleInfo> cList;
+  private final List<CarCycleInfo> cList;
+
+  @Builder
+  public CycleInfo(CarIdentity carIdentity, CarDevice carDevice, String oTime, String cCnt, List<CarCycleInfo> cList) {
+
+    if (carIdentity.getMdn() == null) {
+        throw new IllegalArgumentException("MDN 값이 없습니다.");
+    }
+
+    this.carIdentity = carIdentity;
+    this.carDevice = carDevice;
+    this.oTime = oTime;
+    this.cCnt = cCnt;
+    this.cList = cList;
+  }
 }

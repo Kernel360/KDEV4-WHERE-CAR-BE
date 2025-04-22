@@ -8,7 +8,7 @@ import lombok.ToString;
  * <pre>
  *   차량 주기 정보 도메인
  *   sec : 발생시간 (초) | 'ss'
- *   gcd : GPS 상태 | ‘A’ : 정상, ‘V’ : 비정상 ‘0’ : 미장착
+ *   gcd : GPS 상태 | 'A' : 정상, 'V' : 비정상 '0' : 미장착
  *   lat : GPS 위도 | 위도X1000000한값(소수점6자리)
  *   lon : GPS 경도 | 경도X1000000한값(소수점6자리)
  *   ang : GPS 방향 | 범위: 0~ 365
@@ -21,18 +21,36 @@ import lombok.ToString;
  * </pre>
  */
 
-
 @Getter
-@Builder
 @ToString
 public class CarCycleInfo {
 
-  private String sec;
-  private String gcd;
-  private String lat;
-  private String lon;
-  private String ang;
-  private String spd;
-  private String sum;
-  private String bat;
+  private final String sec;
+  private final String gcd;
+  private final String lat;
+  private final String lon;
+  private final String ang;
+  private final String spd;
+  private final String sum;
+  private final String bat;
+
+  @Builder
+  public CarCycleInfo(String sec, String gcd, String lat, String lon, String ang, String spd, String sum, String bat) {
+
+    if (lat == null || sec.isEmpty()) {
+      throw new IllegalArgumentException("위도 값이 없습니다.");
+    }
+    if (lon == null || lat.isEmpty()) {
+      throw new IllegalArgumentException("경도 값이 없습니다.");
+    }
+
+    this.sec = sec;
+    this.gcd = gcd;
+    this.lat = lat;
+    this.lon = lon;
+    this.ang = ang;
+    this.spd = spd;
+    this.sum = sum;
+    this.bat = bat;
+  }
 }
