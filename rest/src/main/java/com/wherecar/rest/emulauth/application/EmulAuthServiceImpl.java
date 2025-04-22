@@ -18,21 +18,21 @@ public class EmulAuthServiceImpl implements EmulAuthService{
 
     private final EmulTokenStore emulTokenStore;
 
-    private static final long EXPIRE_SECONDS = 4 * 24 * 60 * 60; // 3일 = 259200초
+    private static final long EXPIRE_DAYS = 4; // 3일 = 259200초
 
     @Override
     public EmulTokenResponseDto issueToken(EmulTokenRequestDto requestDto) {
         String mdn = requestDto.getMdn();
         String token = UUID.randomUUID().toString();
 
-        emulTokenStore.saveToken(mdn, token, EXPIRE_SECONDS);
+        emulTokenStore.saveToken(mdn, token, EXPIRE_DAYS);
 
         return new EmulTokenResponseDto(
                 "000",
                 "Success",
                 mdn,
                 token,
-                String.valueOf(EXPIRE_SECONDS)
+                String.valueOf(EXPIRE_DAYS)
         );
     }
 
