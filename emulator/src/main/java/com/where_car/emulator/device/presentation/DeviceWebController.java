@@ -52,7 +52,7 @@ public class DeviceWebController {
   @GetMapping("/dashboard")
   public String deviceShowDashboard(Model model) {
     model.addAttribute("deviceStatus", deviceService.getDeviceStatus());
-    model.addAttribute("mdn", deviceService.getCarMdn());
+    model.addAttribute("carIdentity", deviceService.getCarIdentity());
 
     LocationDto locationInfo = deviceService.getLocationInfo();
     model.addAttribute("departure", locationInfo.getDeparture());

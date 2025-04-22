@@ -141,8 +141,8 @@ public class DeviceService {
     return deviceEntity.isOn();
   }
 
-  public String getCarMdn() {
-    return carIdentity.getMdn();
+  public CarIdentity getCarIdentity() {
+    return carIdentity;
   }
 
   public String getFilename() {
