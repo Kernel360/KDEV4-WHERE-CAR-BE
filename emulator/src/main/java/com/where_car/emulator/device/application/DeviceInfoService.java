@@ -81,7 +81,7 @@ public class DeviceInfoService {
     deviceEventExecutor.sendCarStart(carStartDto);
   }
 
-  public CarCycleInfo generateCarCycleInfo() {
+  public void generateCarCycleInfo() {
     Resource gpxFile = gpsPathService.getRandomGpxFile();
     
     CarCycleInfo carCycleInfo = deviceEventFactory.generateCarCycleInfo(
@@ -96,8 +96,6 @@ public class DeviceInfoService {
     totalDistance = deviceEventFactory.getTotalDistance();
 
     log.info("CarCycleInfo 생성: {}", carCycleInfo);
-    
-    return carCycleInfo;
   }
 
   /**
