@@ -32,21 +32,21 @@ public class GpsLogConsumerServiceImpl implements GpsLogConsumerService {
             // 정상 처리 후 ack
             channel.basicAck(tag, false);
         } catch (JsonProcessingException e) {
-            log.error("GPS 로그 변환 오류: {}", e.getMessage(), e);
+            log.error("GPS 로그 변환 오류: ", e);
 
             // 처리 실패 시 메시지를 다시 큐로 보내고 싶다면
             try {
                 channel.basicNack(tag, false, true);
             } catch (IOException ioException) {
-                log.error("메시지 Nack 실패", ioException);
+                log.error("메시지 Nack 실패: ", ioException);
             }
         } catch (Exception e) {
-            log.error("GPS 로그 처리 중 오류", e);
+            log.error("GPS 로그 처리 중 오류: ", e);
             try {
                 channel.basicAck(tag, false);
 //                channel.basicNack(tag, false, true);
             } catch (IOException ioException) {
-                log.error("메시지 Nack 실패", ioException);
+                log.error("메시지 Nack 실패: ", ioException);
             }
         }
     }

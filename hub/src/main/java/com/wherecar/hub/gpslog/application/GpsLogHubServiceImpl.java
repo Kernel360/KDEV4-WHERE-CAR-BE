@@ -17,12 +17,12 @@ public class GpsLogHubServiceImpl implements GpsLogHubService {
 
     private final RabbitTemplate rabbitTemplate;
     private final MessageFactory messageFactory;
+    private final ObjectMapper objectMapper;
 
     @Override
     public MessageResponse sendGpsLogMessage(GpsLogRequest gpsLogRequest) {
         try {
             // 객체를 JSON으로 변환후에 큐에 전송합니다.
-            ObjectMapper objectMapper = new ObjectMapper();
             String objectToJSON = objectMapper.writeValueAsString(gpsLogRequest);
 
             log.info("message :: {}", gpsLogRequest.toString());

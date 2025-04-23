@@ -17,13 +17,13 @@ public class CarLogHubServiceImpl implements CarLogHubService {
 
     private final RabbitTemplate rabbitTemplate;
     private final MessageFactory messageFactory;
+    private final ObjectMapper objectMapper;
 
     @Override
     public MessageResponse sendCarOnLogMessage(CarLogRequest onLogRequest) {
         try {
             // 객체를 JSON으로 변환후에 큐에 전송합니다.
-            ObjectMapper objectMappper = new ObjectMapper();
-            String objectToJSON = objectMappper.writeValueAsString(onLogRequest);
+            String objectToJSON = objectMapper.writeValueAsString(onLogRequest);
 
             log.info("message :: {}", onLogRequest.toString());
             log.info("objectToJSON :: {}", objectToJSON);
@@ -40,8 +40,7 @@ public class CarLogHubServiceImpl implements CarLogHubService {
     public MessageResponse sendCarOffLogMessage(CarLogRequest offLogRequest) {
         try {
             // 객체를 JSON으로 변환후에 큐에 전송합니다.
-            ObjectMapper objectMappper = new ObjectMapper();
-            String objectToJSON = objectMappper.writeValueAsString(offLogRequest);
+            String objectToJSON = objectMapper.writeValueAsString(offLogRequest);
 
             log.info("message :: {}", offLogRequest.toString());
             log.info("objectToJSON :: {}", objectToJSON);
