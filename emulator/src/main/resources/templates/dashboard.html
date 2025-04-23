@@ -409,96 +409,154 @@
   <p class="text-sm text-gray-600 dark:text-gray-400">&copy; 2025 WHERECAR. All rights reserved.</p>
 </footer>
 
-<script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
   const themeToggle = document.getElementById('theme-toggle');
   const modeToggle = document.getElementById('mode-toggle');
   const simulationModeIcon = document.getElementById('simulation-mode-icon');
   const realtimeModeIcon = document.getElementById('realtime-mode-icon');
   const modeBadge = document.getElementById('mode-badge');
   const html = document.documentElement;
-  const deviceStatus = [[${deviceStatus}]];
-  let watchId = null;
+  const deviceStatus = /*[[${deviceStatus}]]*/ false;
+  let locationInterval = null;
+  let retryCount = 0;
+  const MAX_RETRIES = 3;
+  let lastLatitude = null;
+  let lastLongitude = null;
+  let isLocationAvailable = false;
 
-  // GPS 기반 위치 정보 수집 함수
-  function startRealtimeLocationTracking() {
+  // 위치 정보를 가져오는 함수
+  function getLocation() {
     if (!navigator.geolocation) {
       console.error('Geolocation이 지원되지 않는 브라우저입니다.');
       return;
     }
 
     const options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0
+      enableHighAccuracy: true,  // 높은 정확도 사용
+      timeout: 15000,           // 10초 타임아웃
+      maximumAge: 0             // 캐시된 위치 정보 사용 안함
     };
 
-    // 위치 정보를 주기적으로 가져오는 함수
-    function updateLocation() {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          const timestamp = new Date().toISOString();
-          
-          // Nominatim API로 위치 정보 검증
-          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18`)
-            .then(response => response.json())
-            .then(data => {
-              console.log(`[${timestamp}] 위도: ${latitude}, 경도: ${longitude}`);
-            })
-            .catch(error => {
-              console.log(`[${timestamp}] 위도: ${latitude}, 경도: ${longitude}`);
-            });
-        },
-        (error) => {
-          const timestamp = new Date().toISOString();
-          switch(error.code) {
-            case error.PERMISSION_DENIED:
-              console.error(`[${timestamp}] 위치 권한이 거부되었습니다.`);
-              break;
-            case error.POSITION_UNAVAILABLE:
-              console.error(`[${timestamp}] 위치 정보를 사용할 수 없습니다.`);
-              break;
-            case error.TIMEOUT:
-              console.error(`[${timestamp}] 위치 정보를 가져오는데 시간이 너무 오래 걸립니다.`);
-              break;
-            default:
-              console.error(`[${timestamp}] 위치 정보를 가져오는데 실패했습니다: ${error.message}`);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const timestamp = new Date().toISOString();
+        
+        // 좌표 변경 여부 확인
+        let positionChanged = false;
+        if (lastLatitude !== null && lastLongitude !== null) {
+          // 소수점 6자리까지 비교하여 미세한 변화도 감지
+          if (lastLatitude.toFixed(6) !== latitude.toFixed(6) || 
+              lastLongitude.toFixed(6) !== longitude.toFixed(6)) {
+            positionChanged = true;
           }
-        },
-        options
-      );
+        }
+        
+        // 변경 여부에 따른 메시지 출력
+        const changeMessage = positionChanged ? ' [좌표 변경됨]' : ' [좌표 유지]';
+        console.log(`[${timestamp}] 위도: ${latitude}, 경도: ${longitude}${changeMessage}`);
+        
+        // 이전 좌표 저장
+        lastLatitude = latitude;
+        lastLongitude = longitude;
+        retryCount = 0; // 성공 시 재시도 카운트 초기화
+        isLocationAvailable = true;
+      },
+      (error) => {
+        const timestamp = new Date().toISOString();
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            console.error(`[${timestamp}] 위치 권한이 거부되었습니다. 브라우저 설정에서 위치 권한을 허용해주세요.`);
+            stopLocationTracking();
+            break;
+          case error.POSITION_UNAVAILABLE:
+            console.error(`[${timestamp}] 위치 정보를 사용할 수 없습니다. GPS가 켜져 있는지 확인해주세요.`);
+            handleRetry();
+            break;
+          case error.TIMEOUT:
+            console.error(`[${timestamp}] 위치 정보를 가져오는데 시간이 너무 오래 걸립니다.`);
+            handleRetry();
+            break;
+          default:
+            console.error(`[${timestamp}] 위치 정보를 가져오는데 실패했습니다: ${error.message}`);
+            handleRetry();
+        }
+        isLocationAvailable = false;
+      },
+      options
+    );
+  }
+
+  // 재시도 처리 함수
+  function handleRetry() {
+    retryCount++;
+    if (retryCount >= MAX_RETRIES) {
+      console.error('최대 재시도 횟수를 초과했습니다. 위치 추적을 중지합니다.');
+      stopLocationTracking();
+    } else {
+      // 재시도 전에 잠시 대기
+      setTimeout(() => {
+        if (locationInterval) {
+          getLocation();
+        }
+      }, 1000); // 1초 대기 후 재시도
     }
+  }
 
+  // 위치 추적 시작 함수
+  function startLocationTracking() {
+    if (locationInterval) {
+      clearInterval(locationInterval);
+    }
+    
+    // 초기화
+    lastLatitude = null;
+    lastLongitude = null;
+    retryCount = 0;
+    isLocationAvailable = false;
+    
     // 초기 위치 정보 가져오기
-    updateLocation();
-
+    getLocation();
+    
     // 1초마다 위치 정보 업데이트
-    const intervalId = setInterval(updateLocation, 1000);
+    locationInterval = setInterval(() => {
+      if (isLocationAvailable) {
+        getLocation();
+      } else {
+        console.log('위치 정보를 사용할 수 없습니다. GPS 상태를 확인해주세요.');
+      }
+    }, 1000);
+  }
 
-    // 에뮬레이터 중지 시 인터벌 정리 함수 반환
-    return () => clearInterval(intervalId);
+  // 위치 추적 중지 함수
+  function stopLocationTracking() {
+    if (locationInterval) {
+      clearInterval(locationInterval);
+      locationInterval = null;
+    }
+    retryCount = 0;
+    lastLatitude = null;
+    lastLongitude = null;
+    isLocationAvailable = false;
   }
 
   // 에뮬레이터 시작/중지 버튼 클릭 이벤트
   const toggleButton = document.querySelector('button[type="submit"]');
-  let locationInterval = null;
 
   toggleButton.addEventListener('click', () => {
     const currentMode = localStorage.getItem('mode') || 'simulation';
     
     if (deviceStatus) {
       // 에뮬레이터 중지
-      if (locationInterval) {
-        locationInterval();
-        locationInterval = null;
-      }
+      stopLocationTracking();
       console.log('위치 추적이 중지되었습니다.');
       updateModeToggleState(false);
     } else {
       // 에뮬레이터 시작
       if (currentMode === 'realtime') {
         console.log('실시간 모드에서 위치 추적을 시작합니다.');
-        locationInterval = startRealtimeLocationTracking();
+        startLocationTracking();
       } else {
         console.log('시뮬레이션 모드입니다. 위치 추적을 시작하지 않습니다.');
       }
@@ -511,7 +569,7 @@
     const currentMode = localStorage.getItem('mode') || 'simulation';
     if (deviceStatus && currentMode === 'realtime') {
       console.log('페이지 로드: 실시간 모드에서 위치 추적을 시작합니다.');
-      locationInterval = startRealtimeLocationTracking();
+      startLocationTracking();
     }
   });
 
@@ -629,6 +687,7 @@
       modeBadge.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-800', 'dark:text-green-100', 'border-green-200', 'dark:border-green-700');
     }
   }
+  /*]]>*/
 </script>
 </body>
 </html>
