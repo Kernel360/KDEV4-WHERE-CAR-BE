@@ -3,8 +3,9 @@ package com.wherecar.rest.emulauth.hubtmp.token.applicatiom;
 import com.wherecar.rest.emulauth.hubtmp.token.infrastructure.EmulTokenReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class TokenValidationService {
 
