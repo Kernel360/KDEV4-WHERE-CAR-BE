@@ -30,15 +30,10 @@ public class RabbitmqConfig {
 
     /**
     * 1. Exchange 구성
-    * "hello.exchange" 라는 이름으로 Driect Exchange를 생성.
+    * "{xxxx}.exchange" 라는 이름으로 Driect Exchange를 생성.
     *
     * @return DirectExchange
     */
-    @Bean
-    DirectExchange directExchange() {
-        return new DirectExchange("hello.exchange");
-    }
-
     @Bean
     DirectExchange carOnExchange() {
         return new DirectExchange("car.on.exchange");
@@ -56,15 +51,10 @@ public class RabbitmqConfig {
 
     /**
     * 2. 큐를 구성
-    * "hello.queue"의 이름으로 큐를 구성
+    * "{xxxx}.queue"의 이름으로 큐를 구성
     *
     * @return Queue
     */
-    @Bean
-    Queue queue() {
-        return new Queue("hello.queue", true);
-    }
-
     @Bean
     Queue carOnQueue() {
         return new Queue("car.on.queue", true);
@@ -84,14 +74,10 @@ public class RabbitmqConfig {
     * 3. 큐와 DirectExchange를 바인딩
     * "hello.key"의 이름으로 바인딩 구성
     *
-    * @param directExchange
-    * @param queue
+    * @param {***}Exchange
+    * @param {***}queue
     * @return Binding
     */
-    @Bean
-    Binding binding(DirectExchange directExchange, Queue queue) {
-        return BindingBuilder.bind(queue).to(directExchange).with("hello.key");
-    }
 
     @Bean
     Binding carOnBinding(DirectExchange carOnExchange, Queue carOnQueue) {

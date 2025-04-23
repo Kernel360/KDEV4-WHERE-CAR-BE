@@ -1,6 +1,6 @@
-package com.wherecar.hub.domain;
+package com.wherecar.hub.common;
 
-import com.wherecar.hub.application.dto.MessageResponse;
+import com.wherecar.hub.common.application.dto.MessageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

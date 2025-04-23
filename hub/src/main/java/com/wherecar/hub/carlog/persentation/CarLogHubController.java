@@ -1,7 +1,7 @@
-package com.wherecar.hub.persentation;
+package com.wherecar.hub.carlog.persentation;
 
-import com.wherecar.hub.application.CarLogHubService;
-import com.wherecar.hub.application.dto.CarLogRequest;
+import com.wherecar.hub.carlog.application.CarLogHubService;
+import com.wherecar.hub.carlog.application.dto.CarLogRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;

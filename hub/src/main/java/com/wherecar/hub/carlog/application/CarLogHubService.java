@@ -1,7 +1,7 @@
-package com.wherecar.hub.application;
+package com.wherecar.hub.carlog.application;
 
-import com.wherecar.hub.application.dto.CarLogRequest;
-import com.wherecar.hub.application.dto.MessageResponse;
+import com.wherecar.hub.carlog.application.dto.CarLogRequest;
+import com.wherecar.hub.common.application.dto.MessageResponse;
 
 public interface CarLogHubService {
     MessageResponse sendCarOnLogMessage(CarLogRequest onLogRequest);

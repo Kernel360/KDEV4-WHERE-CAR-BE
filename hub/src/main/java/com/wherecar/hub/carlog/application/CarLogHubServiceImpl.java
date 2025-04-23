@@ -1,10 +1,10 @@
-package com.wherecar.hub.application;
+package com.wherecar.hub.carlog.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wherecar.hub.application.dto.CarLogRequest;
-import com.wherecar.hub.application.dto.MessageResponse;
-import com.wherecar.hub.domain.MessageFactory;
+import com.wherecar.hub.carlog.application.dto.CarLogRequest;
+import com.wherecar.hub.common.application.dto.MessageResponse;
+import com.wherecar.hub.common.MessageFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

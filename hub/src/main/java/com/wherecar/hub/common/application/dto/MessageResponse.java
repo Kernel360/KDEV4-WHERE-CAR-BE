@@ -1,4 +1,4 @@
-package com.wherecar.hub.application.dto;
+package com.wherecar.hub.common.application.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

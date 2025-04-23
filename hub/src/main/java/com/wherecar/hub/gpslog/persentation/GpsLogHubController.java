@@ -1,7 +1,7 @@
-package com.wherecar.hub.persentation;
+package com.wherecar.hub.gpslog.persentation;
 
-import com.wherecar.hub.application.GpsLogHubService;
-import com.wherecar.hub.application.dto.GpsLogRequest;
+import com.wherecar.hub.gpslog.application.GpsLogHubService;
+import com.wherecar.hub.gpslog.application.dto.GpsLogRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
