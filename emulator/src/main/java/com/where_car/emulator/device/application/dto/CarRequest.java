@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CarDto {
+public class CarRequest {
 
 	private String mdn;
 	private String tid;

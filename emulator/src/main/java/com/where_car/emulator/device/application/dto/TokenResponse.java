@@ -9,7 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LocationDto {
-	private String departure;
-	private String destination;
+public class TokenResponse {
+
+	private String rstCd;
+	private String rstMsg;
+	private String mdn;
+	private String token;
+	private String exPeriod;
 }

@@ -13,8 +13,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.where_car.emulator.device.application.dto.CarDto;
-import com.where_car.emulator.device.application.dto.CycleInfoDto;
+import com.where_car.emulator.device.application.dto.CarRequest;
+import com.where_car.emulator.device.application.dto.CycleInfoRequest;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,17 +51,17 @@ public class DeviceEventExecutor {
             startEndpoint, cycleEndpoint, stopEndpoint);
     }
 
-    public void sendCarStart(CarDto carStartDto) {
+    public void sendCarStart(CarRequest carStartDto) {
         log.info("CarStartData 전송: {}", carStartDto);
         sendRequestWithRetry(startEndpoint, carStartDto, "시동 ON 정보 API", 0);
     }
     
-    public void sendCycleInfo(CycleInfoDto cycleInfoDto) {
-        log.info("CycleInfo 전송: {}", cycleInfoDto);
-        sendRequestWithRetry(cycleEndpoint, cycleInfoDto, "주기 정보 API", 0);
+    public void sendCycleInfo(CycleInfoRequest cycleInfoRequest) {
+        log.info("CycleInfo 전송: {}", cycleInfoRequest);
+        sendRequestWithRetry(cycleEndpoint, cycleInfoRequest, "주기 정보 API", 0);
     }
 
-    public void sendCarStop(CarDto carStopDto) {
+    public void sendCarStop(CarRequest carStopDto) {
         log.info("CarStopData 전송: {}", carStopDto);
         sendRequestWithRetry(stopEndpoint, carStopDto, "시동 OFF 정보 API", 0);
     }
@@ -157,7 +157,7 @@ public class DeviceEventExecutor {
 
     private <T> String extractMdn(T requestDto) {
         try {
-            // CarDto와 CycleInfoDto 모두 mdn 필드를 가지고 있다고 가정
+            // CarDto와 CycleInfoRequest 모두 mdn 필드를 가지고 있다고 가정
             return objectMapper.convertValue(requestDto, JsonNode.class)
                 .path("mdn").asText("00");  // 기본값으로 "00" 사용
         } catch (Exception e) {

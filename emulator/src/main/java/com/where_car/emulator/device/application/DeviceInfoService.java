@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import com.where_car.emulator.device.application.dto.CarDto;
-import com.where_car.emulator.device.application.dto.CycleInfoDto;
+import com.where_car.emulator.device.application.dto.CarRequest;
+import com.where_car.emulator.device.application.dto.CycleInfoRequest;
 import com.where_car.emulator.device.domain.car.CarIdentity;
 import com.where_car.emulator.device.domain.cycle.CarCycleInfo;
 import com.where_car.emulator.device.infrastructure.JsonDatabase;
@@ -68,7 +68,7 @@ public class DeviceInfoService {
   public void generateAndSendCarStart() {
     Resource gpxFile = gpsPathService.getRandomGpxFile();
     
-    CarDto carStartDto = deviceEventFactory.generateCarStart(
+    CarRequest carStartDto = deviceEventFactory.generateCarStart(
         carIdentity, 
         gpxFile, 
         totalDistance
@@ -108,13 +108,13 @@ public class DeviceInfoService {
       return;
     }
     
-    CycleInfoDto cycleInfoDto = deviceEventFactory.generateCycleInfo(
+    CycleInfoRequest cycleInfoRequest = deviceEventFactory.generateCycleInfo(
         carIdentity,
         carCycleInfoList
     );
 
-    log.info("CycleInfo 생성 ({}): {}", carCycleInfoList.size(), cycleInfoDto);
-    deviceEventExecutor.sendCycleInfo(cycleInfoDto);
+    log.info("CycleInfo 생성 ({}): {}", carCycleInfoList.size(), cycleInfoRequest);
+    deviceEventExecutor.sendCycleInfo(cycleInfoRequest);
     carCycleInfoList.clear();
   }
 
@@ -124,7 +124,7 @@ public class DeviceInfoService {
   public void generateAndSendCarStop() {
     Resource gpxFile = gpsPathService.getRandomGpxFile();
     
-    CarDto carStopDto = deviceEventFactory.generateCarStop(
+    CarRequest carStopDto = deviceEventFactory.generateCarStop(
         carIdentity,
         gpxFile,
         startTime,

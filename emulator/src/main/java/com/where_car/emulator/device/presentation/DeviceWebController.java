@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.where_car.emulator.device.application.DeviceService;
-import com.where_car.emulator.device.application.dto.LocationDto;
+import com.where_car.emulator.device.application.dto.LocationRequest;
 import com.where_car.emulator.global.error.DeviceException;
 
 /**
@@ -54,7 +54,7 @@ public class DeviceWebController {
     model.addAttribute("deviceStatus", deviceService.getDeviceStatus());
     model.addAttribute("carIdentity", deviceService.getCarIdentity());
 
-    LocationDto locationInfo = deviceService.getLocationInfo();
+    LocationRequest locationInfo = deviceService.getLocationInfo();
     model.addAttribute("departure", locationInfo.getDeparture());
     model.addAttribute("destination", locationInfo.getDestination());
     

@@ -14,7 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.where_car.emulator.device.application.dto.TokenDto;
+import com.where_car.emulator.device.application.dto.TokenRequest;
+import com.where_car.emulator.device.application.dto.TokenResponse;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +81,7 @@ public class TokenService {
 	 * 새 토큰을 요청합니다.
 	 */
 	private TokenInfo requestNewToken(String mdn) {
-		TokenDto.Request request = TokenDto.Request.builder()
+		TokenRequest request = TokenRequest.builder()
 			.mdn(mdn)
 			.tid("TID001")
 			.mid("MID001")
@@ -92,17 +93,17 @@ public class TokenService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		HttpEntity<TokenDto.Request> entity = new HttpEntity<>(request, headers);
+		HttpEntity<TokenRequest> entity = new HttpEntity<>(request, headers);
 
 		String tokenUrl = tokenEndpoint;
 		log.debug("토큰 요청 URL: {}, MDN: {}", tokenUrl, mdn);
 
 		try {
-			ResponseEntity<TokenDto.Response> response =
-				restTemplate.exchange(tokenUrl, HttpMethod.POST, entity, TokenDto.Response.class);
+			ResponseEntity<TokenResponse> response =
+				restTemplate.exchange(tokenUrl, HttpMethod.POST, entity, TokenResponse.class);
 
 			if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-				TokenDto.Response responseDto = response.getBody();
+				TokenResponse responseDto = response.getBody();
 
 				if ("000".equals(responseDto.getRstCd())) {
 					int expiryHours = Integer.parseInt(responseDto.getExPeriod());

@@ -2,8 +2,8 @@ package com.where_car.emulator.device.domain;
 
 import org.springframework.stereotype.Component;
 
-import com.where_car.emulator.device.application.dto.CarDto;
-import com.where_car.emulator.device.application.dto.CycleInfoDto;
+import com.where_car.emulator.device.application.dto.CarRequest;
+import com.where_car.emulator.device.application.dto.CycleInfoRequest;
 import com.where_car.emulator.device.domain.car.CarDevice;
 import com.where_car.emulator.device.domain.car.CarIdentity;
 import com.where_car.emulator.device.domain.cycle.CarCycleInfo;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class DeviceFactory {
 
-	public CarDto createCarStartDto(CarStart carStart) {
+	public CarRequest createCarStartDto(CarStart carStart) {
 		return getCarDto(
 			carStart.getCarIdentity(),
 			carStart.getCarDevice(),
@@ -27,7 +27,7 @@ public class DeviceFactory {
 		);
 	}
 
-	public CarDto createCarStopDto(CarStop carStop) {
+	public CarRequest createCarStopDto(CarStop carStop) {
 		return getCarDto(carStop.getCarIdentity(),
 			carStop.getCarDevice(),
 			carStop.getOnTime(),
@@ -36,8 +36,8 @@ public class DeviceFactory {
 		);
 	}
 
-	public CycleInfoDto createCycleInfoDto(CycleInfo cycleInfo) {
-		return CycleInfoDto.builder()
+	public CycleInfoRequest createCycleInfoDto(CycleInfo cycleInfo) {
+		return CycleInfoRequest.builder()
 			.mdn(cycleInfo.getCarIdentity().getMdn())
 			.tid(cycleInfo.getCarDevice().getTid())
 			.mid(cycleInfo.getCarDevice().getMid())
@@ -49,9 +49,9 @@ public class DeviceFactory {
 			.build();
 	}
 
-	private CarDto getCarDto(CarIdentity carIdentity, CarDevice carDevice, String onTime, String offTime,
+	private CarRequest getCarDto(CarIdentity carIdentity, CarDevice carDevice, String onTime, String offTime,
 		CarCycleInfo cycleInfo) {
-		return CarDto.builder()
+		return CarRequest.builder()
 			.mdn(carIdentity.getMdn())
 			.tid(carDevice.getTid())
 			.mid(carDevice.getMid())

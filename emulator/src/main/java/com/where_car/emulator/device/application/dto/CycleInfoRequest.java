@@ -16,7 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CycleInfoDto {
+public class CycleInfoRequest {
 
 	private String mdn;
 	private String tid;
