@@ -63,12 +63,12 @@ public class CarLogServiceImpl implements CarLogService {
 
     //운행일지 상세 정보 수정
     @Override
-    public void updateCarLogDetails(Long carLogId, CarLogsUpdateRequest carLogsUpdateRequest) {
+    public CarLogResponse updateCarLogDetails(Long carLogId, CarLogsUpdateRequest carLogsUpdateRequest) {
 
         CarLog carLog = carLogReader.getCarLogById(carLogId);
         carLog.updateCarLog(carLogsUpdateRequest);
-        carLogStore.store(carLog);
-
+        carLog = carLogStore.store(carLog);
+        return carLogFactory.toCarLogResponse(carLog);
     }
 
     //운행일지 상세 정보 삭제

@@ -1,8 +1,9 @@
 package com.wherecar.rest.geoinfo.presentation;
 
+import com.wherecar.rest.common.response.BaseResponse;
+import com.wherecar.rest.geoinfo.application.GeoInfoService;
 import com.wherecar.rest.geoinfo.application.dto.GeoInfoRequest;
 import com.wherecar.rest.geoinfo.application.dto.GeoInfoResponse;
-import com.wherecar.rest.geoinfo.application.GeoInfoService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,12 @@ public class GeoInfoController {
     private final GeoInfoService geoInfoService;
 
     // GeoFence 정보 등록
-    @PostMapping("/create")
-
-    public ResponseEntity<Void> geoInfoCreate(HttpServletRequest request, @RequestBody GeoInfoRequest geoInfoRequest) {
+    @PostMapping
+    public ResponseEntity<BaseResponse<GeoInfoResponse>> geoInfoCreate(HttpServletRequest request, @RequestBody GeoInfoRequest geoInfoRequest) {
         Long companyId = (Long)request.getAttribute("companyId");
-        geoInfoService.createGeoInfo(companyId, geoInfoRequest);
+        GeoInfoResponse geoInfoResponse = geoInfoService.createGeoInfo(companyId, geoInfoRequest);
 
-        return ResponseEntity.ok().build();
+        return BaseResponse.created(geoInfoResponse);
 
     }
 
@@ -36,37 +36,37 @@ public class GeoInfoController {
 
     // GeoInfo 조회
     @GetMapping("/{id}")
-    public ResponseEntity<GeoInfoResponse> geoInfoGet(@PathVariable Long id) {
+    public ResponseEntity<BaseResponse<GeoInfoResponse>> geoInfoGet(@PathVariable Long id) {
 
         GeoInfoResponse geoInfoResponse = geoInfoService.getGeoInfo(id);
 
-        return ResponseEntity.ok(geoInfoResponse);
+        return BaseResponse.ok(geoInfoResponse);
 
     }
 
     // GeoInfo 수정
     @PutMapping("/{id}")
-    public ResponseEntity<Void> geoInfoUpdate(@PathVariable Long id, @RequestBody GeoInfoRequest geoInfoRequest) {
+    public ResponseEntity<BaseResponse<GeoInfoResponse>> geoInfoUpdate(@PathVariable Long id, @RequestBody GeoInfoRequest geoInfoRequest) {
 
-        geoInfoService.updateGeoInfo(id, geoInfoRequest);
+        GeoInfoResponse geoInfoResponse = geoInfoService.updateGeoInfo(id, geoInfoRequest);
 
-        return ResponseEntity.ok().build();
+        return BaseResponse.created(geoInfoResponse);
     }
 
     // GeoInfo 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> geoInfoDelete(@PathVariable Long id) {
+    public ResponseEntity<BaseResponse<Void>> geoInfoDelete(@PathVariable Long id) {
 
         geoInfoService.deleteGeoInfo(id);
 
-        return ResponseEntity.ok().build();
+        return BaseResponse.ok();
 
     }
 
     @GetMapping("/companies/my")
-    public ResponseEntity<List<GeoInfoResponse>> geoInfoGetByMyCompany(HttpServletRequest request) {
+    public ResponseEntity<BaseResponse<List<GeoInfoResponse>>> geoInfoGetByMyCompany(HttpServletRequest request) {
         Long companyId = (Long)request.getAttribute("companyId");
         List<GeoInfoResponse> geoInfoResponses = geoInfoService.getGeoInfosByCompanyId(companyId);
-        return ResponseEntity.ok(geoInfoResponses);
+        return BaseResponse.ok(geoInfoResponses);
     }
 }
