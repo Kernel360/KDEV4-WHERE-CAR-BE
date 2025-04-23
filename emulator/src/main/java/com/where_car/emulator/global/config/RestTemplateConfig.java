@@ -9,15 +9,27 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class RestTemplateConfig {
 
-  @Value("${wherecar.server.url}")
-  private String serverUrl;
+  @Value("${wherecar.api.rest.url}")
+  private String restUrl;
 
-  // restTemplate Bean으로 등록
-  @Bean
+  @Value("${wherecar.api.collector.url}")
+  private String collectorUrl;
+
+  @Value("${wherecar.api.hub.url}")
+  private String hubUrl;
+
+  @Bean(name = "restTemplate")
   public RestTemplate restTemplate(RestTemplateBuilder builder) {
-    return builder
-        .rootUri(serverUrl) // 호출할 API 서비스 도메인 URL
-        // ... 기타 설정 필요하면 추가 ...
-        .build();
+    return builder.rootUri(restUrl).build();
+  }
+
+  @Bean(name = "collectorTemplate")
+  public RestTemplate collectorTemplate(RestTemplateBuilder builder) {
+    return builder.rootUri(collectorUrl).build();
+  }
+
+  @Bean(name = "hubTemplate")
+  public RestTemplate hubTemplate(RestTemplateBuilder builder) {
+    return builder.rootUri(hubUrl).build();
   }
 }

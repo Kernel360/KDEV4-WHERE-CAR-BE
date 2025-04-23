@@ -1,14 +1,15 @@
 package com.where_car.emulator.device.application.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class LocationDto {
-	private final String departure;
-	private final String destination;
-
-	public LocationDto(String departure, String destination) {
-		this.departure = departure;
-		this.destination = destination;
-	}
+	private String departure;
+	private String destination;
 }
