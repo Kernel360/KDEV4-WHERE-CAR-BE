@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class EmulTokenResponseDto {
+public class EmulTokenResponse {
 
     private final String rstCd;
     private final String rstMsg;

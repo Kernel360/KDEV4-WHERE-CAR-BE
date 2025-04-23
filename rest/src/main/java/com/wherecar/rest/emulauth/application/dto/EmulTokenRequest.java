@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class EmulTokenRequestDto {
+public class EmulTokenRequest {
 
     private String mdn;
     private String tid;

@@ -1,10 +1,10 @@
 package com.wherecar.rest.emulauth.application;
 
-import com.wherecar.rest.emulauth.application.dto.EmulTokenRequestDto;
-import com.wherecar.rest.emulauth.application.dto.EmulTokenResponseDto;
+import com.wherecar.rest.emulauth.application.dto.EmulTokenRequest;
+import com.wherecar.rest.emulauth.application.dto.EmulTokenResponse;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface EmulAuthService {
-    EmulTokenResponseDto issueToken(EmulTokenRequestDto requestDto);
+    EmulTokenResponse issueToken(EmulTokenRequest requestDto);
 }
