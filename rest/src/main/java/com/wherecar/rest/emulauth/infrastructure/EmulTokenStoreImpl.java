@@ -2,12 +2,13 @@ package com.wherecar.rest.emulauth.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class EmulTokenStoreImpl implements EmulTokenStore{
 

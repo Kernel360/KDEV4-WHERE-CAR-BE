@@ -1,8 +1,7 @@
-package com.wherecar.rest.emulauth.hubtmp.token.applicatiom;
+package com.wherecar.rest.emulauth.hubtmp.token.application;
 
 import com.wherecar.rest.emulauth.hubtmp.token.infrastructure.EmulTokenReader;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service

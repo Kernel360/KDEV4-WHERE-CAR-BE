@@ -1,4 +1,4 @@
-package com.wherecar.rest.emulauth.hubtmp.token.applicatiom.dto;
+package com.wherecar.rest.emulauth.hubtmp.token.application.dto;
 
 import lombok.Builder;
 import lombok.Getter;

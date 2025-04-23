@@ -1,4 +1,4 @@
-package com.wherecar.rest.emulauth.hubtmp.token.applicatiom;
+package com.wherecar.rest.emulauth.hubtmp.token.application;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
