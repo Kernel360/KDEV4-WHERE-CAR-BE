@@ -27,7 +27,7 @@ public class DeviceEventExecutor {
     
     private final RestTemplate restTemplate;
     private final TokenService tokenService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Value("${wherecar.api.hub.event.start-endpoint}")
     private String startEndpoint;
@@ -44,10 +44,12 @@ public class DeviceEventExecutor {
     private static final String TOKEN_MISSING_CODE = "200";
     private static final String TOKEN_INVALID_CODE = "201";
 
-    public DeviceEventExecutor(@Qualifier("hubTemplate") RestTemplate restTemplate, TokenService tokenService) {
+    public DeviceEventExecutor(@Qualifier("hubTemplate") RestTemplate restTemplate, TokenService tokenService,
+		ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.tokenService = tokenService;
-        log.info("DeviceEventExecutor 초기화됨. 사용 엔드포인트 - 시동 ON: {}, 주기정보: {}, 시동 OFF: {}",
+		this.objectMapper = objectMapper;
+		log.info("DeviceEventExecutor 초기화됨. 사용 엔드포인트 - 시동 ON: {}, 주기정보: {}, 시동 OFF: {}",
             startEndpoint, cycleEndpoint, stopEndpoint);
     }
 
