@@ -1,6 +1,7 @@
 package com.wherecar.rest.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wherecar.rest.common.response.BaseResponse;
 import com.wherecar.rest.security.jwt.dto.TokenPair;
 import com.wherecar.rest.user.application.dto.UserLoginRequest;
 import io.jsonwebtoken.io.IOException;
@@ -69,13 +70,33 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("Authorization", "Bearer " + tokens.getAccessToken());
         response.addCookie(CookieUtil.createRefreshTokenCookie(tokens.getRefreshToken()));
         response.setStatus(HttpStatus.OK.value());
+        response.setContentType("application/json;charset=UTF-8");
+
+        BaseResponse<TokenPair> successResponse = BaseResponse.ok();
+
+        try {
+            response.getWriter().write(successResponse.toString());  // toString 내부에 ObjectMapper 있음!
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         log.info("unsuccessfulAuthentication");
-        response.setStatus(401);
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType("application/json;charset=UTF-8");
+
+        BaseResponse<?> errorResponse = BaseResponse.unauthorized("아이디 또는 비밀번호가 올바르지 않습니다.");
+
+        try {
+            response.getWriter().write(errorResponse.toString());
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

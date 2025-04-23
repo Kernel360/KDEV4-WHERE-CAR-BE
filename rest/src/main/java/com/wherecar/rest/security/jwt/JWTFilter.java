@@ -1,5 +1,6 @@
 package com.wherecar.rest.security.jwt;
 
+import com.wherecar.rest.common.response.BaseResponse;
 import com.wherecar.rest.user.domain.User;
 import com.wherecar.rest.user.infrastructure.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -36,33 +37,22 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        String accessToken = authorization.split(" ")[1];
+        String accessToken = authorization.substring(7).trim();
 
 
         try {
             jwtUtil.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
-
-            PrintWriter writer = response.getWriter();
-            writer.print("access token expired");
-
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            sendErrorResponse(response, BaseResponse.unauthorized("토큰이 만료되었습니다."));
             return;
         }
-
 
         // 토큰이 access인지 확인
         String category = jwtUtil.getCategory(accessToken);
-
-        if (!category.equals("access")) {
-
-            PrintWriter writer = response.getWriter();
-            writer.print("invalid access token");
-
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        if (!"access".equals(category)) {
+            sendErrorResponse(response, BaseResponse.unauthorized("유효하지 않은 엑세스 토큰입니다."));
             return;
         }
-
 
         String email = jwtUtil.getEmail(accessToken);
 
@@ -74,10 +64,25 @@ public class JWTFilter extends OncePerRequestFilter {
                 .map(userPermission -> userPermission.getPermission().getType())
                 .collect(Collectors.toSet()));
 
-        Authentication authToken = new UsernamePasswordAuthenticationToken(new org.springframework.security.core.userdetails.User(email,"[PROTECTED]",List.of()), null, List.of());
+        Authentication authToken = new UsernamePasswordAuthenticationToken(
+                new org.springframework.security.core.userdetails.User(
+                        email,
+                        "[PROTECTED]",
+                        List.of()
+                ),
+                null,
+                List.of()
+        );
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
     }
+
+    private void sendErrorResponse(HttpServletResponse response, BaseResponse<?> baseResponse) throws IOException {
+        response.setStatus(baseResponse.getStatusCode());
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(baseResponse.toString());
+    }
+
 }
