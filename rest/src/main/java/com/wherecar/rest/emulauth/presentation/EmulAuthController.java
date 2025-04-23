@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/emulator")
+@RequestMapping("/api/emulator")
 @RequiredArgsConstructor
 public class EmulAuthController {
 
