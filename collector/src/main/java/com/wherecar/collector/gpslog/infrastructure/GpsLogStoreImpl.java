@@ -27,6 +27,7 @@ public class GpsLogStoreImpl implements GpsLogStore {
             String bat = batList.get(i);
 
             gpsLogRepository.save(gpsLog);
+            log.info("gggggggggggg: {}", gpsLog.getId());
 
 //            CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
 //            CarStatus carStatus = carStatusRepository.findByCarIdForUpdate(car.getId())
