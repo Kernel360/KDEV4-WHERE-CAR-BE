@@ -23,62 +23,26 @@ public class CarLogConsumerServiceImpl implements CarLogConsumerService {
 
     @Override
     @RabbitListener(queues = "car.on.queue", ackMode = "MANUAL")
-    public void receiveOnLog(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) {
-        try {
-            log.info("ON 로그 수신: {}", message);
-            CarLogRequest carLogRequest = objectMapper.readValue(message, CarLogRequest.class);
-            carLogService.receiveOnLog(carLogRequest);
+    public void receiveOnLog(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+        log.info("ON 로그 수신: {}", message);
 
-            // 정상 처리 후 ack
-            channel.basicAck(tag, false);
-        } catch (JsonProcessingException e) {
-            log.error("ON 로그 변환 오류: ", e);
+        CarLogRequest carLogRequest = objectMapper.readValue(message, CarLogRequest.class);
+        carLogService.receiveOnLog(carLogRequest);
 
-            // 처리 실패 시 메시지를 다시 큐로 보내고 싶다면
-            try {
-                channel.basicNack(tag, false, true);
-            } catch (IOException ioException) {
-                log.error("메시지 Nack 실패: ", ioException);
-            }
-        } catch (Exception e) {
-            log.error("ON 로그 처리 중 오류: ", e);
-            try {
-                channel.basicAck(tag, false);
-//                channel.basicNack(tag, false, true);
-            } catch (IOException ioException) {
-                log.error("메시지 Nack 실패: ", ioException);
-            }
-        }
+        // 정상 처리 후 ack
+        channel.basicAck(tag, false);
     }
 
     @Override
     @RabbitListener(queues = "car.off.queue", ackMode = "MANUAL")
-    public void receiveOffLog(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) {
-        try {
-            log.info("OFF 로그 수신: {}", message);
-            CarLogRequest carLogRequest = objectMapper.readValue(message, CarLogRequest.class);
-            carLogService.receiveOnLog(carLogRequest);
+    public void receiveOffLog(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+        log.info("OFF 로그 수신: {}", message);
 
-            // 정상 처리 후 ack
-            channel.basicAck(tag, false);
-        } catch (JsonProcessingException e) {
-            log.error("OFF 로그 변환 오류: ", e);
+        CarLogRequest carLogRequest = objectMapper.readValue(message, CarLogRequest.class);
+        carLogService.receiveOffLog(carLogRequest);
 
-            // 처리 실패 시 메시지를 다시 큐로 보내고 싶다면
-            try {
-                channel.basicNack(tag, false, true);
-            } catch (IOException ioException) {
-                log.error("메시지 Nack 실패: ", ioException);
-            }
-        } catch (Exception e) {
-            log.error(" OFF 로그 처리 중 오류: ", e);
-            try {
-                channel.basicAck(tag, false);
-//                channel.basicNack(tag, false, true);
-            } catch (IOException ioException) {
-                log.error("메시지 Nack 실패: ", ioException);
-            }
-        }
+        // 정상 처리 후 ack
+        channel.basicAck(tag, false);
     }
 
 }

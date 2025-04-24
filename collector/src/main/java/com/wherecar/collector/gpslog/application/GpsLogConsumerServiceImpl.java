@@ -23,31 +23,13 @@ public class GpsLogConsumerServiceImpl implements GpsLogConsumerService {
 
     @Override
     @RabbitListener(queues = "gps.queue", ackMode = "MANUAL")
-    public void receiveGpsLog(String message, Channel channel,  @Header(AmqpHeaders.DELIVERY_TAG) long tag) {
-        try {
-            log.info("GPS 로그 수신: {}", message);
-            GpsLogRequest gpsLogRequest = objectMapper.readValue(message, GpsLogRequest.class);
-            gpsLogService.receiveGpsLogs(gpsLogRequest);
+    public void receiveGpsLog(String message, Channel channel,  @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
+        log.info("GPS 로그 수신: {}", message);
 
-            // 정상 처리 후 ack
-            channel.basicAck(tag, false);
-        } catch (JsonProcessingException e) {
-            log.error("GPS 로그 변환 오류: ", e);
+        GpsLogRequest gpsLogRequest = objectMapper.readValue(message, GpsLogRequest.class);
+        gpsLogService.receiveGpsLogs(gpsLogRequest);
 
-            // 처리 실패 시 메시지를 다시 큐로 보내고 싶다면
-            try {
-                channel.basicNack(tag, false, true);
-            } catch (IOException ioException) {
-                log.error("메시지 Nack 실패: ", ioException);
-            }
-        } catch (Exception e) {
-            log.error("GPS 로그 처리 중 오류: ", e);
-            try {
-                channel.basicAck(tag, false);
-//                channel.basicNack(tag, false, true);
-            } catch (IOException ioException) {
-                log.error("메시지 Nack 실패: ", ioException);
-            }
-        }
+        // 정상 처리 후 ack
+        channel.basicAck(tag, false);
     }
 }
