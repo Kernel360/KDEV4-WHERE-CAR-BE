@@ -12,7 +12,7 @@ public interface CarLogService {
 
     CarLogResponse getCarLogDetails(Long carLogId);
 
-    void updateCarLogDetails(Long carLogId, CarLogsUpdateRequest carLogsUpdateRequest);
+    CarLogResponse updateCarLogDetails(Long carLogId, CarLogsUpdateRequest carLogsUpdateRequest);
 
     void deleteCarLogDetails(Long carLogId);
 
