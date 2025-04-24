@@ -6,11 +6,14 @@ import com.wherecar.rest.geoinfo.application.dto.GeoInfoRequest;
 import com.wherecar.rest.geoinfo.application.dto.GeoInfoResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+// Todo: 권한 체크 추후 추가 예정
 
+import java.util.List;
+@Slf4j
 @RestController
 @RequestMapping("/api/geoInfos")
 @RequiredArgsConstructor

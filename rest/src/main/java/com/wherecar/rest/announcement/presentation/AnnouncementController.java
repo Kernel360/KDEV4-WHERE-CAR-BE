@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Todo: 권한 체크 추후 추가 예정
+
 @Slf4j
 @RestController
 @RequestMapping("/api/announcements")

@@ -16,6 +16,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+// Todo: 권한 체크 추후 추가 예정
+
 @Slf4j
 @RestController
 @RequestMapping("/api/stat")

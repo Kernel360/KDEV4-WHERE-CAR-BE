@@ -6,9 +6,13 @@ import com.wherecar.rest.company.application.dto.CompanyRequest;
 import com.wherecar.rest.company.application.dto.CompanyResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Todo: 권한 체크 추후 추가 예정
+
+@Slf4j
 @RestController
 @RequestMapping("/api/companies")
 @RequiredArgsConstructor
