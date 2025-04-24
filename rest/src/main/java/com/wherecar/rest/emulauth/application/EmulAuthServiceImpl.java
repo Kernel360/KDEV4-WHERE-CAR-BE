@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class EmulAuthServiceImpl implements EmulAuthService{
 
