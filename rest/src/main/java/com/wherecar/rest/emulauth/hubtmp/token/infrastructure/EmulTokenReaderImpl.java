@@ -11,7 +11,7 @@ public class EmulTokenReaderImpl implements EmulTokenReader {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public String getTokenBymdn(String mdn) {
+    public String getTokenByMdn(String mdn) {
         return redisTemplate.opsForValue().get("token:" + mdn);
     }
 }

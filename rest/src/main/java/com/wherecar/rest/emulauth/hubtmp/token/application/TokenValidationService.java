@@ -11,7 +11,7 @@ public class TokenValidationService {
     private final EmulTokenReader emulTokenReader;
 
     public TokenValidationResult validate(String mdn, String token) {
-        String storedToken = emulTokenReader.getTokenBymdn(mdn);
+        String storedToken = emulTokenReader.getTokenByMdn(mdn);
 
         if (storedToken == null) {
             return TokenValidationResult.MISSING;
