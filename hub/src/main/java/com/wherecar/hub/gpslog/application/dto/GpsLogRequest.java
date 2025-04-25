@@ -1,4 +1,4 @@
-package com.wherecar.collector.gpslog.application.dto;
+package com.wherecar.hub.gpslog.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -8,8 +8,8 @@ import java.util.List;
 
 // 주기 정보 요청 폼
 @Builder
-@Getter
 @Setter
+@Getter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
