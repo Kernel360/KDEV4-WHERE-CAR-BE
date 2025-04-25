@@ -100,8 +100,6 @@ public class JsonDatabase {
 
   private CarIdentity createData() {
     CarIdentity carIdentity = new CarIdentity();
-    carIdentity.setMdn(mdn);
-    carIdentity.setVrp(vrp);
     carIdentity.setTotalDistance(String.valueOf(0));
     return carIdentity;
   }
