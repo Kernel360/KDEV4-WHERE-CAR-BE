@@ -29,7 +29,7 @@ public class JsonDatabase {
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final File file;
   private final ReadWriteLock lock = new ReentrantReadWriteLock();
-  private String currentMdn;
+  private String currentMdn = "";
 
   @Value("${wherecar.device.mdn}")
   private String mdn;
@@ -45,7 +45,7 @@ public class JsonDatabase {
   @PostConstruct
   public void initialize() {
     try {
-      currentMdn = mdn;
+      this.currentMdn = mdn;
       if (!file.exists()) {
         // 파일이 없는 경우 새 파일 생성
         boolean isFileCreated = file.createNewFile();
@@ -99,9 +99,7 @@ public class JsonDatabase {
   }
 
   private CarIdentity createData() {
-    CarIdentity carIdentity = new CarIdentity();
-    carIdentity.setTotalDistance(String.valueOf(0));
-    return carIdentity;
+	  return new CarIdentity(mdn, vrp);
   }
 
   public List<CarIdentity> readData() {
