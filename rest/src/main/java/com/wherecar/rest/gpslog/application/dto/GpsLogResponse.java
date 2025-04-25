@@ -1,13 +1,16 @@
 package com.wherecar.rest.gpslog.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
+@ToString
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class GpsLogResponse {
     private String mdn;
     private double latitude;

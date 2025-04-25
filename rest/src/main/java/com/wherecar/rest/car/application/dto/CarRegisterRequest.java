@@ -2,15 +2,11 @@ package com.wherecar.rest.car.application.dto;
 
 import com.wherecar.rest.car.domain.constant.AcquisitionType;
 import com.wherecar.rest.car.domain.constant.OwnerType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Setter
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@ToString
 public class CarRegisterRequest {
 
     private String mdn;

@@ -2,15 +2,11 @@ package com.wherecar.rest.geolog.application.dto;
 
 import com.wherecar.rest.geoinfo.application.dto.GeoInfoResponse;
 import com.wherecar.rest.gpslog.domain.constant.GpsConditionType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
+@Getter
+@ToString
 public class GeoLogRequest {
     private Long id;
     private String mdn;
