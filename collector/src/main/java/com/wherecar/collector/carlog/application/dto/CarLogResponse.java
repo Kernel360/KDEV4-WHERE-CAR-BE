@@ -4,7 +4,9 @@ import com.wherecar.collector.common.constant.ResponseCode;
 import lombok.*;
 
 // 온 오프 로그 응답 폼
-@Data
+@Setter
+@Getter
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

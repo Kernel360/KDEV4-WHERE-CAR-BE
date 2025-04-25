@@ -3,7 +3,9 @@ package com.wherecar.collector.gpslog.application.dto;
 import lombok.*;
 
 // 주기 정보 리스트
-@Data
+@Setter
+@Getter
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -4,7 +4,9 @@ import com.wherecar.collector.common.constant.ResponseCode;
 import lombok.*;
 
 // 주기 정보 응답 폼
-@Data
+@Setter
+@Getter
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
