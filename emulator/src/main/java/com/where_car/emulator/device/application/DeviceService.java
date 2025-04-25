@@ -5,54 +5,41 @@ import org.springframework.stereotype.Service;
 import com.where_car.emulator.device.application.dto.LocationRequest;
 import com.where_car.emulator.device.domain.car.CarIdentity;
 import com.where_car.emulator.device.domain.device.DeviceEntity;
-import com.where_car.emulator.device.infrastructure.JsonDatabase;
 import com.where_car.emulator.global.error.DeviceErrorCode;
 import com.where_car.emulator.global.error.DeviceException;
 import com.where_car.emulator.global.utill.FileUtils;
 import com.where_car.emulator.gps.application.GpsPathService;
 
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DeviceService {
 
+  @Getter
+  private final CarIdentity carIdentity;
   private final DeviceScheduler schedulerService;
   private final DeviceInfoService deviceInfoService;
+  private final DeviceEventFactory deviceEventFactory;
   private final GpsPathService gpsPathService;
-  private final CarIdentity carIdentity;
   private final DeviceEntity deviceEntity;
-  private final JsonDatabase jsonDatabase;
-
-  public DeviceService(
-      DeviceScheduler schedulerService,
-      DeviceInfoService deviceInfoService,
-      GpsPathService gpsPathService,
-      CarIdentity carIdentity,
-      DeviceEntity deviceEntity,
-      JsonDatabase jsonDatabase) {
-    this.schedulerService = schedulerService;
-    this.deviceInfoService = deviceInfoService;
-    this.gpsPathService = gpsPathService;
-    this.carIdentity = carIdentity;
-    this.deviceEntity = deviceEntity;
-    this.jsonDatabase = jsonDatabase;
-  }
 
   @PostConstruct
   public void init() {
-    log.info("에뮬레이터의 주행 경로를 선택했습니다: {}", gpsPathService.getRandomGpxFile().getFilename());
+    log.info("에뮬레이터의 주행 경로를 선택했습니다: {}", gpsPathService.getSelectGpxFile().getFilename());
   }
 
   public void toggleDevice() {
     if (!deviceEntity.isOn()) {
       try {
-        log.info("차량의 Key-On 신호가 감지되었습니다, 스케줄러를 작동합니다.");
         deviceEntity.turnOn();
         startDevice();
       } catch (Exception e) {
-        deviceEntity.turnOff(); // 상태를 원래대로 되돌림
+        deviceEntity.turnOff(); // 상태를 원래대��� 되돌림
         log.error("차량 시동 과정에서 오류 발생: {}", e.getMessage());
         throw new DeviceException(DeviceErrorCode.DEVICE_START_FAILED, e);
       }
@@ -68,38 +55,25 @@ public class DeviceService {
       }
     }
   }
-  
+
   private void startDevice() {
     deviceInfoService.generateAndSendCarStart();
     schedulerService.startScheduler(this::handleScheduledTask);
   }
-  
+
   private void stopDevice() {
     schedulerService.stopScheduler();
     deviceInfoService.generateAndSendCycleInfo();
     deviceInfoService.generateAndSendCarStop();
-    
-    updateTotalDistanceInDatabase();
+    deviceEventFactory.saveTotalDistance();
+    deviceEventFactory.saveGpsIndex();
   }
-  
+
   private void handleScheduledTask() {
-    deviceInfoService.generateCarCycleInfo();
+    deviceInfoService.generateAndSendCarCycleInfo();
 
-    if (deviceInfoService.getCycleInfoListSize() >= 60) {
+    if (deviceInfoService.getCarCycleInfoList().size() >= 60) {
       deviceInfoService.generateAndSendCycleInfo();
-    }
-  }
-
-  private void updateTotalDistanceInDatabase() {
-    try {
-      Integer currentTotalDistance = deviceInfoService.getTotalDistance();
-      jsonDatabase.getCarIdentityByMdn(carIdentity.getMdn()).ifPresent(identity -> {
-        identity.setTotalDistance(String.valueOf(currentTotalDistance));
-        jsonDatabase.updateCarIdentity(identity);
-        log.info("차량 누적 주행거리 업데이트 완료: {} m", currentTotalDistance);
-      });
-    } catch (Exception e) {
-      log.error("누적 주행거리 저장 중 오류 발생: {}", e.getMessage());
     }
   }
 
@@ -127,7 +101,7 @@ public class DeviceService {
   }
 
   public LocationRequest getLocationInfo() {
-    String fileName = getFilename();
+    String fileName = gpsPathService.getSelectGpxFile().getFilename();
     return extractLocationInfoFromFilename(fileName);
   }
 
@@ -137,13 +111,5 @@ public class DeviceService {
 
   public boolean getDeviceStatus() {
     return deviceEntity.isOn();
-  }
-
-  public CarIdentity getCarIdentity() {
-    return carIdentity;
-  }
-
-  public String getFilename() {
-    return gpsPathService.getRandomGpxFile().getFilename();
   }
 }

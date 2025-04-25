@@ -27,7 +27,7 @@ public class DeviceEventExecutor {
     
     private final RestTemplate restTemplate;
     private final TokenService tokenService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Value("${wherecar.api.hub.event.start-endpoint}")
     private String startEndpoint;
@@ -44,26 +44,25 @@ public class DeviceEventExecutor {
     private static final String TOKEN_MISSING_CODE = "200";
     private static final String TOKEN_INVALID_CODE = "201";
 
-    public DeviceEventExecutor(@Qualifier("hubTemplate") RestTemplate restTemplate, TokenService tokenService) {
+    public DeviceEventExecutor(@Qualifier("hubTemplate") RestTemplate restTemplate, TokenService tokenService, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.tokenService = tokenService;
-        log.info("DeviceEventExecutor 초기화됨. 사용 엔드포인트 - 시동 ON: {}, 주기정보: {}, 시동 OFF: {}",
-            startEndpoint, cycleEndpoint, stopEndpoint);
+        this.objectMapper = objectMapper;
     }
 
-    public void sendCarStart(CarRequest carStartDto) {
-        log.info("CarStartData 전송: {}", carStartDto);
-        sendRequestWithRetry(startEndpoint, carStartDto, "시동 ON 정보 API", 0);
-    }
-    
     public void sendCycleInfo(CycleInfoRequest cycleInfoRequest) {
-        log.info("CycleInfo 전송: {}", cycleInfoRequest);
+        log.info("CycleInfo 전송 [{}] : {}", cycleInfoRequest.getCCnt(), cycleInfoRequest);
         sendRequestWithRetry(cycleEndpoint, cycleInfoRequest, "주기 정보 API", 0);
     }
 
-    public void sendCarStop(CarRequest carStopDto) {
-        log.info("CarStopData 전송: {}", carStopDto);
-        sendRequestWithRetry(stopEndpoint, carStopDto, "시동 OFF 정보 API", 0);
+    public void sendCarStart(CarRequest carStartRequest) {
+        log.info("CarStartData 전송: {}", carStartRequest);
+        sendRequestWithRetry(startEndpoint, carStartRequest, "시동 ON 정보 API", 0);
+    }
+
+    public void sendCarStop(CarRequest carStopRequest) {
+        log.info("CarStopData 전송: {}", carStopRequest);
+        sendRequestWithRetry(stopEndpoint, carStopRequest, "시동 OFF 정보 API", 0);
     }
     
     private <T> void sendRequestWithRetry(String url, T requestDto, String action, int retryCount) {
@@ -71,8 +70,7 @@ public class DeviceEventExecutor {
         
         try {
             String token = tokenService.getToken(mdn);
-            log.info("{} 요청 시 사용하는 토큰: {}", action, maskToken(token));
-            
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("Authorization", "Bearer " + token);
@@ -87,20 +85,6 @@ public class DeviceEventExecutor {
             log.error("{} 정보 전달 중 예외 발생: {}", action, e.getMessage());
             handleRetry(url, requestDto, action, retryCount);
         }
-    }
-
-    // 토큰 마스킹 유틸리티 메소드
-    private String maskToken(String token) {
-        if (token == null || token.length() <= 8) {
-            return "***마스킹된 토큰***";
-        }
-        
-        int length = token.length();
-        String prefix = token.substring(0, 4);
-        String suffix = token.substring(length - 4);
-
-        return prefix + "*".repeat(length - 8)
-			+ suffix;
     }
 
     private <T> void handleRequestException(HttpClientErrorException e, String url, T requestDto, String action, int retryCount) {
@@ -124,7 +108,6 @@ public class DeviceEventExecutor {
                 // 토큰 무효화 및 재발급
                 String newToken = tokenService.invalidateAndGetNewToken(mdn);
                 
-                log.info("{} 정보 재전송 시도 (토큰 재발급 후)", action);
                 retryWithNewToken(url, requestDto, action, mdn, newToken, retryCount);
             } else {
                 log.error("{} 정보 전송 실패. 응답 코드: {}, 메시지: {}", 
@@ -139,8 +122,6 @@ public class DeviceEventExecutor {
 
     private <T> void retryWithNewToken(String url, T requestDto, String action, String mdn, String token, int retryCount) {
         try {
-            log.info("{} 재시도 시 사용하는 새 토큰: {}", action, maskToken(token));
-            
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("Authorization", "Bearer " + token);
