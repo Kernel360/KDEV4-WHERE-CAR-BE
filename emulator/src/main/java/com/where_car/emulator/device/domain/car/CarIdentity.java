@@ -18,13 +18,21 @@ import lombok.Setter;
  */
 @Component
 @Getter
+@Setter
 public class CarIdentity {
 
   @Value("${wherecar.device.mdn}")
   private String mdn;
+
   @Value("${wherecar.device.vrp}")
   private String vrp;
-
-  @Setter
   private String totalDistance;
+  private Integer gpsIndex;
+
+  public CarIdentity(String mdn, String vrp) {
+    this.mdn = mdn;
+    this.vrp = vrp;
+    this.totalDistance = "0";
+    this.gpsIndex = 0;
+  }
 }
