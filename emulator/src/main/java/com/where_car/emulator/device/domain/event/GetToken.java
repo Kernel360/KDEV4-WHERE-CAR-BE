@@ -2,7 +2,7 @@ package com.where_car.emulator.device.domain.event;
 
 import com.where_car.emulator.device.domain.car.CarDevice;
 import com.where_car.emulator.device.domain.car.CarIdentity;
-import com.where_car.emulator.global.constants.DomainConstant;
+import com.where_car.emulator.global.constants.DeviceConstant;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -27,5 +27,5 @@ public class GetToken {
   private CarDevice carDevice;
 
   @Builder.Default
-  private String dFWVer = DomainConstant.FIRMWARE_VERSION;
+  private String dFWVer = DeviceConstant.FIRMWARE_VERSION;
 }
