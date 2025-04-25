@@ -16,17 +16,15 @@ import lombok.Setter;
  * @version 1.0
  * @since 2025-03-27
  */
-
 @Component
 @Getter
-@Setter
 public class CarIdentity {
 
   @Value("${wherecar.device.mdn}")
   private String mdn;
-
   @Value("${wherecar.device.vrp}")
   private String vrp;
 
+  @Setter
   private String totalDistance;
 }

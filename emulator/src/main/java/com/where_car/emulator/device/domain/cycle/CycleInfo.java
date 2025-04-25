@@ -3,7 +3,6 @@ package com.where_car.emulator.device.domain.cycle;
 import java.util.List;
 
 import com.where_car.emulator.device.domain.car.CarDevice;
-import com.where_car.emulator.device.domain.car.CarIdentity;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -27,7 +26,7 @@ import lombok.ToString;
 @ToString
 public class CycleInfo {
 
-  private final CarIdentity carIdentity;
+  private final String mdn;
   private final CarDevice carDevice;
 
   private final String oTime;
@@ -36,13 +35,13 @@ public class CycleInfo {
   private final List<CarCycleInfo> cList;
 
   @Builder
-  public CycleInfo(CarIdentity carIdentity, CarDevice carDevice, String oTime, String cCnt, List<CarCycleInfo> cList) {
+  public CycleInfo(String mdn, CarDevice carDevice, String oTime, String cCnt, List<CarCycleInfo> cList) {
 
-    if (carIdentity.getMdn() == null) {
+    if (mdn == null) {
         throw new IllegalArgumentException("MDN 값이 없습니다.");
     }
 
-    this.carIdentity = carIdentity;
+    this.mdn = mdn;
     this.carDevice = carDevice;
     this.oTime = oTime;
     this.cCnt = cCnt;
