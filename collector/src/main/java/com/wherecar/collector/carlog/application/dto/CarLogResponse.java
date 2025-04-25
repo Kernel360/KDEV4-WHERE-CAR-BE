@@ -1,13 +1,10 @@
 package com.wherecar.collector.carlog.application.dto;
 
 import com.wherecar.collector.common.constant.ResponseCode;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 // 온 오프 로그 응답 폼
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -3,8 +3,7 @@ package com.wherecar.collector.gpslog.application.dto;
 import lombok.*;
 
 // 주기 정보 리스트
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,17 +18,4 @@ public class GpsLogInfo {
     private String sum;     // 누적 주행 거리.  범위: 0 ~ 9999999(단위: m)
     private String bat;     // 배터리 전압.     범위: 0 ~ 9999(실제 값 X 10, 단위: V)
 
-    @Override
-    public String toString() {
-        return "GpsLogInfo{" +
-                "sec='" + sec + '\'' +
-                ", gcd='" + gcd + '\'' +
-                ", lat='" + lat + '\'' +
-                ", lon='" + lon + '\'' +
-                ", ang='" + ang + '\'' +
-                ", spd='" + spd + '\'' +
-                ", sum='" + sum + '\'' +
-                ", bat='" + bat + '\'' +
-                '}';
-    }
 }

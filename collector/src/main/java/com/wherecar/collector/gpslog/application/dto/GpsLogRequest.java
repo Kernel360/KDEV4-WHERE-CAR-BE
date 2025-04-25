@@ -7,10 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 // 주기 정보 요청 폼
+@Data
 @Builder
-@Getter
-@Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class GpsLogRequest {

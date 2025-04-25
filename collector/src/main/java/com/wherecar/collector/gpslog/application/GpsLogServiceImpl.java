@@ -11,10 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,6 +26,8 @@ public class GpsLogServiceImpl implements GpsLogService {
     @Override
     @Async
     public void receiveGpsLogs(GpsLogRequest gpsLogRequest) {
+        log.info("[GPSLOG][GpsLogServiceImpl][receiveGpsLogs] 시작 | gpsLogRequest = {}", gpsLogRequest);
+
         try {
             Car car = carReader.getCarByMdn(gpsLogRequest.getMdn());
             List<String> batList = gpsLogRequest.getCList().stream()
@@ -54,6 +54,7 @@ public class GpsLogServiceImpl implements GpsLogService {
 //
 //    @Override
 //    public void receiveGpsLogs(GpsLogRequest gpsLogRequest) {
+//        log.info("[GPSLOG][GpsLogServiceImpl][receiveGpsLogs] 시작 | gpsLogRequest = {}", gpsLogRequest);
 //
 //        Car car = carReader.getCarByMdn(gpsLogRequest.getMdn());
 //        List<String> batList = gpsLogRequest.getCList().stream()

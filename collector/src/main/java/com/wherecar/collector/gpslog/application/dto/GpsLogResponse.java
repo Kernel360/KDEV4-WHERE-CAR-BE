@@ -1,13 +1,10 @@
 package com.wherecar.collector.gpslog.application.dto;
 
 import com.wherecar.collector.common.constant.ResponseCode;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 // 주기 정보 응답 폼
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
