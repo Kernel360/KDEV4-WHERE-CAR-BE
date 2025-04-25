@@ -23,6 +23,7 @@ wherecar:
   device:
     mdn: 01234567890
     vrp: 34가5678
+    select-file: gwangju-to-muju_formatted.gpx
   db:
     storage-file-name: device_db.json
   api:
