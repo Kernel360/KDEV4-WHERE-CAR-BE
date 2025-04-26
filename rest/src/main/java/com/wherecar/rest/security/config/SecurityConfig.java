@@ -1,10 +1,11 @@
 package com.wherecar.rest.security.config;
 
-import com.wherecar.rest.security.jwt.TokenService;
-import com.wherecar.rest.user.infrastructure.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wherecar.rest.security.jwt.JWTFilter;
 import com.wherecar.rest.security.jwt.JWTUtil;
 import com.wherecar.rest.security.jwt.LoginFilter;
+import com.wherecar.rest.security.jwt.TokenService;
+import com.wherecar.rest.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,7 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
     private final TokenService tokenService;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -50,7 +52,7 @@ public class SecurityConfig {
 //                        .anyRequest().authenticated()
 
                 )
-                .addFilterBefore(new JWTFilter(jwtUtil, userRepository), LoginFilter.class)
+                .addFilterBefore(new JWTFilter(jwtUtil, userRepository, objectMapper), LoginFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), tokenService), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
