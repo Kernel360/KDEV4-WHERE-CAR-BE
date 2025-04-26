@@ -376,7 +376,7 @@
       </p>
     </div>
     <div class="p-8">
-      <form th:action="@{/device/toggle}" th:object="${carIdentity}" method="post" class="space-y-6">
+      <form th:action="@{/device/simulation/toggle}" th:object="${carIdentity}" method="post" class="space-y-6">
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-3">
             <label for="carIdentity" class="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-white">차량 번호</label>
@@ -420,92 +420,119 @@
   const deviceStatus = /*[[${deviceStatus}]]*/ false;
   let locationInterval = null;
   let retryCount = 0;
-  const MAX_RETRIES = 3;
+  const MAX_RETRIES = 10;
   let lastLatitude = null;
   let lastLongitude = null;
   let isLocationAvailable = false;
+  let locationHistory = [];
+  const MAX_HISTORY_SIZE = 60;
+  let isTrackingActive = false;
+  let isFirstLocation = true;  // 첫 번째 위치 정보 여부를 추적하는 플래그 추가
 
   // 위치 정보를 가져오는 함수
-  function getLocation() {
-    if (!navigator.geolocation) {
-      console.error('Geolocation이 지원되지 않는 브라우저입니다.');
-      return;
-    }
+  async function getLocation() {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error('이 브라우저에서는 위치 정보를 지원하지 않습니다.'));
+        return;
+      }
 
-    const options = {
-      enableHighAccuracy: true,  // 높은 정확도 사용
-      timeout: 15000,           // 10초 타임아웃
-      maximumAge: 0             // 캐시된 위치 정보 사용 안함
-    };
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const timestamp = new Date().toISOString();
-        
-        // 좌표 변경 여부 확인
-        let positionChanged = false;
-        if (lastLatitude !== null && lastLongitude !== null) {
-          // 소수점 6자리까지 비교하여 미세한 변화도 감지
-          if (lastLatitude.toFixed(6) !== latitude.toFixed(6) || 
-              lastLongitude.toFixed(6) !== longitude.toFixed(6)) {
-            positionChanged = true;
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const timestamp = new Date().toISOString();
+            
+            if (isNaN(latitude) || isNaN(longitude)) {
+              throw new Error('유효하지 않은 위치 정보입니다.');
+            }
+
+            // 첫 번째 위치 정보인 경우에만 on 요청을 보냄
+            if (isFirstLocation) {
+              const response = await fetch('/device/realtime/on', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  latitude: latitude,
+                  longitude: longitude,
+                  timeStamp: timestamp
+                })
+              });
+              
+              if (!response.ok) {
+                throw new Error('위치 정보 전송 실패');
+              }
+              isFirstLocation = false;
+            }
+
+            // 위치 정보를 히스토리에 추가
+            locationHistory.push({
+              latitude: latitude,
+              longitude: longitude,
+              timeStamp: timestamp
+            });
+
+            // 60개의 위치 정보가 모이면 cycleInfo 요청을 보냄
+            if (locationHistory.length >= MAX_HISTORY_SIZE) {
+              const response = await fetch('/device/realtime/cycleInfo', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(locationHistory)
+              });
+              
+              if (!response.ok) {
+                throw new Error('위치 정보 전송 실패');
+              }
+              
+              locationHistory = [];
+            }
+            
+            lastLatitude = latitude;
+            lastLongitude = longitude;
+            isLocationAvailable = true;
+            retryCount = 0;
+            resolve({ latitude, longitude, timestamp });
+          } catch (error) {
+            console.error('위치 정보 처리 중 오류 발생:', error);
+            reject(error);
           }
-        }
-        
-        // 변경 여부에 따른 메시지 출력
-        const changeMessage = positionChanged ? ' [좌표 변경됨]' : ' [좌표 유지]';
-        console.log(`[${timestamp}] 위도: ${latitude}, 경도: ${longitude}${changeMessage}`);
-        
-        // 이전 좌표 저장
-        lastLatitude = latitude;
-        lastLongitude = longitude;
-        retryCount = 0; // 성공 시 재시도 카운트 초기화
-        isLocationAvailable = true;
-      },
-      (error) => {
-        const timestamp = new Date().toISOString();
-        switch(error.code) {
-          case error.PERMISSION_DENIED:
-            console.error(`[${timestamp}] 위치 권한이 거부되었습니다. 브라우저 설정에서 위치 권한을 허용해주세요.`);
-            stopLocationTracking();
-            break;
-          case error.POSITION_UNAVAILABLE:
-            console.error(`[${timestamp}] 위치 정보를 사용할 수 없습니다. GPS가 켜져 있는지 확인해주세요.`);
-            handleRetry();
-            break;
-          case error.TIMEOUT:
-            console.error(`[${timestamp}] 위치 정보를 가져오는데 시간이 너무 오래 걸립니다.`);
-            handleRetry();
-            break;
-          default:
-            console.error(`[${timestamp}] 위치 정보를 가져오는데 실패했습니다: ${error.message}`);
-            handleRetry();
-        }
-        isLocationAvailable = false;
-      },
-      options
-    );
-  }
-
-  // 재시도 처리 함수
-  function handleRetry() {
-    retryCount++;
-    if (retryCount >= MAX_RETRIES) {
-      console.error('최대 재시도 횟수를 초과했습니다. 위치 추적을 중지합니다.');
-      stopLocationTracking();
-    } else {
-      // 재시도 전에 잠시 대기
-      setTimeout(() => {
-        if (locationInterval) {
-          getLocation();
-        }
-      }, 1000); // 1초 대기 후 재시도
-    }
+        },
+        (error) => {
+          console.error('위치 정보를 가져오는 중 오류 발생:', error);
+          let errorMessage = '위치 정보를 가져오는데 실패했습니다.';
+          
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = '위치 정보 접근이 거부되었습니다. 브라우저 설정에서 위치 정보 접근을 허용해주세요.';
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = '위치 정보를 사용할 수 없습니다. GPS가 켜져있는지 확인해주세요.';
+              break;
+            case error.TIMEOUT:
+              errorMessage = '위치 정보 요청 시간이 초과되었습니다. 다시 시도해주세요.';
+              break;
+          }
+          
+          reject(new Error(errorMessage));
+        },
+        options
+      );
+    });
   }
 
   // 위치 추적 시작 함수
-  function startLocationTracking() {
+  async function startLocationTracking() {
     if (locationInterval) {
       clearInterval(locationInterval);
     }
@@ -515,61 +542,150 @@
     lastLongitude = null;
     retryCount = 0;
     isLocationAvailable = false;
+    locationHistory = [];
+    isTrackingActive = true;
+    isFirstLocation = true;  // 첫 번째 위치 정보 플래그 초기화
     
-    // 초기 위치 정보 가져오기
-    getLocation();
+    // 버튼 상태 업데이트
+    updateButtonState(true);
     
-    // 1초마다 위치 정보 업데이트
-    locationInterval = setInterval(() => {
-      if (isLocationAvailable) {
-        getLocation();
-      } else {
-        console.log('위치 정보를 사용할 수 없습니다. GPS 상태를 확인해주세요.');
-      }
-    }, 1000);
+    try {
+      await getLocation();
+      
+      locationInterval = setInterval(async () => {
+        if (isTrackingActive) {
+          try {
+            await getLocation();
+          } catch (error) {
+            console.error('위치 정보 업데이트 중 오류 발생:', error);
+            retryCount++;
+            
+            if (retryCount >= MAX_RETRIES) {
+              clearInterval(locationInterval);
+              locationInterval = null;
+              isTrackingActive = false;
+              updateButtonState(false);
+              createModal(error.message, () => {});
+            }
+          }
+        }
+      }, 1000);
+    } catch (error) {
+      console.error('위치 추적 시작 중 오류 발생:', error);
+      isTrackingActive = false;
+      updateButtonState(false);
+      createModal(error.message, () => {});
+    }
   }
 
   // 위치 추적 중지 함수
-  function stopLocationTracking() {
+  async function stopLocationTracking() {
     if (locationInterval) {
       clearInterval(locationInterval);
       locationInterval = null;
     }
+
+    isTrackingActive = false;
+    isFirstLocation = true;  // 첫 번째 위치 정보 플래그 초기화
+    
+    // 버튼 상태 업데이트
+    updateButtonState(false);
+
+    // 남은 위치 정보가 있으면 전송
+    if (locationHistory.length > 0) {
+      try {
+        const response = await fetch('/device/realtime/cycleInfo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(locationHistory)
+        });
+        
+        if (!response.ok) {
+          throw new Error('위치 정보 전송 실패');
+        }
+      } catch (error) {
+        console.error('마지막 위치 정보 전송 중 오류 발생:', error);
+      }
+    }
+
+    // 마지막 위치 정보를 off 요청으로 전송
+    if (lastLatitude && lastLongitude) {
+      try {
+        const timestamp = new Date().toISOString();
+
+        const response = await fetch('/device/realtime/off', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            latitude: lastLatitude,
+            longitude: lastLongitude,
+            timeStamp: timestamp
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('마지막 위치 정보 전송 실패');
+        }
+      } catch (error) {
+        console.error('마지막 위치 정보 전송 중 오류 발생:', error);
+      }
+    }
+
     retryCount = 0;
     lastLatitude = null;
     lastLongitude = null;
     isLocationAvailable = false;
+    locationHistory = [];
   }
+
+  // 버튼 상태 업데이트 함수
+  function updateButtonState(isActive) {
+    const toggleButton = document.querySelector('button[type="submit"]');
+    if (isActive) {
+      toggleButton.classList.remove('bg-primary', 'hover:bg-primary/90');
+      toggleButton.classList.add('bg-red-500', 'hover:bg-red-600');
+      toggleButton.textContent = '에뮬레이터 중지';
+    } else {
+      toggleButton.classList.remove('bg-red-500', 'hover:bg-red-600');
+      toggleButton.classList.add('bg-primary', 'hover:bg-primary/90');
+      toggleButton.textContent = '에뮬레이터 작동';
+    }
+  }
+
+  // 페이지 언로드 시 위치 추적 중지
+  window.addEventListener('beforeunload', async () => {
+    if (isTrackingActive) {
+      await stopLocationTracking();
+    }
+  });
 
   // 에뮬레이터 시작/중지 버튼 클릭 이벤트
   const toggleButton = document.querySelector('button[type="submit"]');
 
-  toggleButton.addEventListener('click', () => {
+  toggleButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    
     const currentMode = localStorage.getItem('mode') || 'simulation';
     
-    if (deviceStatus) {
-      // 에뮬레이터 중지
-      stopLocationTracking();
-      console.log('위치 추적이 중지되었습니다.');
-      updateModeToggleState(false);
+    if (currentMode === 'simulation') {
+      // 시뮬레이션 모드에서는 기존 API 사용
+      const form = document.querySelector('form');
+      form.submit();
     } else {
-      // 에뮬레이터 시작
-      if (currentMode === 'realtime') {
-        console.log('실시간 모드에서 위치 추적을 시작합니다.');
-        startLocationTracking();
+      // 실시간 모드에서는 위치 추적 시작/중지
+      if (isTrackingActive) {
+        // 실시간 모드 중지
+        await stopLocationTracking();
+        updateModeToggleState(false);
       } else {
-        console.log('시뮬레이션 모드입니다. 위치 추적을 시작하지 않습니다.');
+        // 실시간 모드 시작
+        startLocationTracking();
+        updateModeToggleState(true);
       }
-      updateModeToggleState(true);
-    }
-  });
-
-  // 페이지 로드 시 현재 모드와 에뮬레이터 상태 확인
-  document.addEventListener('DOMContentLoaded', () => {
-    const currentMode = localStorage.getItem('mode') || 'simulation';
-    if (deviceStatus && currentMode === 'realtime') {
-      console.log('페이지 로드: 실시간 모드에서 위치 추적을 시작합니다.');
-      startLocationTracking();
     }
   });
 
