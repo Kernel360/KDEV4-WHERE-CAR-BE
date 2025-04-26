@@ -1,17 +1,20 @@
 services:
   rest:
     build:
+      # dockerfile, volumes 설정은 해당 경로를 기본 경로로 가지고 있음
       context: ../repository/KDEV4-WHERE-CAR-BE/
       dockerfile: ../../docker/rest/Dockerfile
     container_name: wherecar-rest-api
     restart: unless-stopped
     ports:
+      # 외부포트 : 내부포트
       - "8080:8080"
     volumes:
       - ./rest/application-prod.yml:/app/config/application-prod.yml:rw
       - ./logs/rest:/app/logs:rw
     deploy:
       resources:
+        # 리소스 제한
         limits:
           memory: 768M
           cpus: '0.5'
@@ -30,7 +33,6 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - wherecar-network
-
   collector:
     build:
       context: ../repository/KDEV4-WHERE-CAR-BE/
@@ -62,7 +64,6 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - wherecar-network
-
   emulator:
     build:
       context: ../repository/KDEV4-WHERE-CAR-BE/
