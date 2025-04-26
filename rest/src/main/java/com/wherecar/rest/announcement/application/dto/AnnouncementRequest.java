@@ -1,15 +1,11 @@
 package com.wherecar.rest.announcement.application.dto;
 
 import com.wherecar.rest.announcement.domain.constant.AnnouncementType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Setter
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@ToString
 public class AnnouncementRequest {
 
     private String title;

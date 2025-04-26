@@ -1,17 +1,16 @@
 package com.wherecar.collector.gpslog.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // 주기 정보 요청 폼
-@Getter
 @Builder
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class GpsLogRequest {
@@ -32,17 +31,4 @@ public class GpsLogRequest {
     @JsonProperty("cList")
     private List<GpsLogInfo> cList = new ArrayList<>(); // 주기 정보 리스트
 
-    @Override
-    public String toString() {
-        return "GpsLogRequest{" +
-                "mdn='" + mdn + '\'' +
-                ", tid='" + tid + '\'' +
-                ", mid='" + mid + '\'' +
-                ", pv='" + pv + '\'' +
-                ", did='" + did + '\'' +
-                ", oTime='" + oTime + '\'' +
-                ", cCnt='" + cCnt + '\'' +
-                ", cList=" + cList +
-                '}';
-    }
 }

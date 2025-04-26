@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .anyRequest().permitAll()
                         //Todo: ** 확인
-//                        .requestMatchers("/","/join", "/login", "/token/**").permitAll()
+//                        .requestMatchers("/","/join", "/login", "/token/**","/api/emulator/**").permitAll()
 //                        .anyRequest().authenticated()
 
                 )

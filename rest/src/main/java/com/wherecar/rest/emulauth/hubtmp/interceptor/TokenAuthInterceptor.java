@@ -1,9 +1,9 @@
 package com.wherecar.rest.emulauth.hubtmp.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wherecar.rest.emulauth.hubtmp.token.applicatiom.dto.EmulTokenResponse;
-import com.wherecar.rest.emulauth.hubtmp.token.applicatiom.TokenValidationResult;
-import com.wherecar.rest.emulauth.hubtmp.token.applicatiom.TokenValidationService;
+import com.wherecar.rest.emulauth.hubtmp.token.application.dto.EmulTokenResponse;
+import com.wherecar.rest.emulauth.hubtmp.token.application.TokenValidationResult;
+import com.wherecar.rest.emulauth.hubtmp.token.application.TokenValidationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

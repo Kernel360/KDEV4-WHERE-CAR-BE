@@ -3,10 +3,9 @@ package com.wherecar.rest.company.application.dto;
 
 import lombok.*;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
+@Getter
+@ToString
 public class CompanyRequest {
     private String id;
     private String address;
