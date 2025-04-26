@@ -33,7 +33,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # 빌드 스테이지에서 JAR 파일 복사
-COPY --from=builder /build/build/libs/*.jar app.jar
+COPY --from=builder /build/build/libs/*.jar collector.jar
 
 # 환경 변수 설정
 ENV SPRING_PROFILES_ACTIVE=prod
