@@ -1,11 +1,10 @@
 package com.wherecar.rest.car.application.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Setter
+@Getter
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

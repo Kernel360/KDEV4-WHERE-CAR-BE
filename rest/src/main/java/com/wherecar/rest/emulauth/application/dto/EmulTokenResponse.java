@@ -1,16 +1,19 @@
 package com.wherecar.rest.emulauth.application.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
+@Setter
 @Getter
+@ToString
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmulTokenResponse {
 
-    private final String rstCd;
-    private final String rstMsg;
-    private final String mdn;
-    private final String token;
-    private final String exPeriod;
+    private String rstCd;
+    private String rstMsg;
+    private String mdn;
+    private String token;
+    private String exPeriod;
 
 }

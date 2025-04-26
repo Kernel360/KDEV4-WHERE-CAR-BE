@@ -1,14 +1,13 @@
 package com.wherecar.rest.carlogsummary.application.dto;
 
 import com.wherecar.rest.gpslog.application.dto.GpsPoint;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Setter
+@Getter
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

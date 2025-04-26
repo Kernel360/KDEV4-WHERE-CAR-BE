@@ -1,8 +1,12 @@
 package com.wherecar.rest.user.application.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Setter
+@Getter
+@ToString
 public class UserRequest {
     private String name;
     private String email;

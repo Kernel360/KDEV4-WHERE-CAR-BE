@@ -2,12 +2,11 @@ package com.wherecar.rest.geolog.application.dto;
 
 import com.wherecar.rest.geoinfo.application.dto.GeoInfoResponse;
 import com.wherecar.rest.gpslog.domain.constant.GpsConditionType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Setter
 @Getter
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

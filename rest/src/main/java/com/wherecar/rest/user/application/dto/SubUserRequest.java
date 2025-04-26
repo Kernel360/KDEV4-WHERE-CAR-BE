@@ -1,10 +1,10 @@
 package com.wherecar.rest.user.application.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
-@Builder
+@Setter
+@Getter
+@ToString
 public class SubUserRequest {
     PermissionRequest permission;
     UserRequest user;
