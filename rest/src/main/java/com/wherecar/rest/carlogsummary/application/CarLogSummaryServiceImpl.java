@@ -22,13 +22,25 @@ public class CarLogSummaryServiceImpl implements CarLogSummaryService {
 
     @Override
     public CarLogSummaryOverviewResponse getCarLogSummaryOverviewByCompanyId(Long companyId, LocalDateTime from, LocalDateTime to) {
+        log.info("[CarLogSummary][CarLogSummaryServiceImpl][getCarLogSummaryOverviewByCompanyId] 시작 | companyId = {}, from = {}, to = {}",companyId, from, to);
+
         List<CarLogSummary> carLogSummaries = carLogSummaryReader.getCarLogSummariesByCompanyIdAndOffTimeBetween(companyId, from, to);
-        return carLogSummaryFactory.toCarLogSummaryOverviewResponse(carLogSummaries);
+        CarLogSummaryOverviewResponse carLogSummaryOverviewResponse = carLogSummaryFactory.toCarLogSummaryOverviewResponse(carLogSummaries);
+
+        log.info("[CarLogSummary][CarLogSummaryServiceImpl][getCarLogSummaryOverviewByCompanyId] 종료 | carLogSummaryOverviewResponse = {}", carLogSummaryOverviewResponse);
+
+        return carLogSummaryOverviewResponse;
     }
 
     @Override
     public CarLogSummaryOverviewResponse getCarLogSummaryOverviewByMdn(String mdn, LocalDateTime from, LocalDateTime to) {
+        log.info("[CarLogSummary][CarLogSummaryServiceImpl][getCarLogSummaryOverviewByMdn] 시작 | mdn = {}, from = {}, to = {}", mdn, from, to);
+
         List<CarLogSummary> carLogSummaries = carLogSummaryReader.getCarLogSummariesByMdnAndOffTimeBetween(mdn, from, to);
-        return carLogSummaryFactory.toCarLogSummaryOverviewResponse(carLogSummaries);
+        CarLogSummaryOverviewResponse carLogSummaryOverviewResponse = carLogSummaryFactory.toCarLogSummaryOverviewResponse(carLogSummaries);
+
+        log.info("[CarLogSummary][CarLogSummaryServiceImpl][getCarLogSummaryOverviewByMdn] 종료 | carLogSummaryOverviewResponse = {}", carLogSummaryOverviewResponse);
+
+        return carLogSummaryOverviewResponse;
     }
 }

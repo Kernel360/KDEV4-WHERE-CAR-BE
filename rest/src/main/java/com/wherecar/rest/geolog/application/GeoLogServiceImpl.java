@@ -30,31 +30,48 @@ public class GeoLogServiceImpl implements GeoLogService {
     @Override
     @Transactional(readOnly = true)
     public List<GeoLogResponse> getGeoLogsByCarId(Long carId) {
+        log.info("[GeoLog][GeoLogServiceImpl][getGeoLogsByCarId] 시작 | carId = {}", carId);
+
         Car car = carReader.getCarById(carId);
         List<GeoLog> geoLogs = geoLogReader.getGeoLogsByMdn(car.getMdn());
-        log.info("GeoLogs : {}", geoLogs);
 
-        return geoLogFactory.toGeoLogListResponse(geoLogs);
+        List<GeoLogResponse> geoLogResponseList = geoLogFactory.toGeoLogListResponse(geoLogs);
+        log.info("[GeoLog][GeoLogServiceImpl][getGeoLogsByCarId] 종료 | geoLogResponseList = {}", geoLogResponseList);
+
+        return geoLogResponseList;
     }
 
     @Override
     @Transactional(readOnly = true)
     public GeoLogResponse getGeoLog(Long geoLogId) {
+        log.info("[GeoLog][GeoLogServiceImpl][getGeoLog] 시작 | geoLogId = {}", geoLogId);
+
         GeoLog geoLog = geoLogReader.getGeoLogById(geoLogId);
 
-        return geoLogFactory.toGeoLogResponse(geoLog);
+        GeoLogResponse geoLogResponse = geoLogFactory.toGeoLogResponse(geoLog);
+        log.info("[GeoLog][GeoLogServiceImpl][getGeoLog] 종료 | geoLogResponse = {}", geoLogResponse);
+
+        return geoLogResponse;
     }
 
     @Override
     public GeoLogResponse updateGeoLog(Long geoLogId, GeoLogRequest geoLogRequest) {
+        log.info("[GeoLog][GeoLogServiceImpl][updateGeoLog] 시작 | geoLogId = {}, geoLogRequest = {}", geoLogId, geoLogRequest);
+
         GeoLog geoLog = geoLogReader.getGeoLogById(geoLogId);
         geoLog.updateGeoLog(geoLogRequest);
         geoLog = geoLogStore.store(geoLog);
-        return geoLogFactory.toGeoLogResponse(geoLog);
+        GeoLogResponse geoLogResponse = geoLogFactory.toGeoLogResponse(geoLog);
+        log.info("[GeoLog][GeoLogServiceImpl][updateGeoLog] 종료 | geoLogResponse = {}", geoLogResponse);
+
+        return geoLogResponse;
     }
 
     @Override
     public void deleteGeoLog(Long geoLogId) {
+        log.info("[GeoLog][GeoLogServiceImpl][deleteGeoLog] 시작 | geoLogId = {}", geoLogId);
+
         geoLogStore.delete(geoLogId);
+        log.info("[GeoLog][GeoLogServiceImpl][deleteGeoLog] 종료");
     }
 }

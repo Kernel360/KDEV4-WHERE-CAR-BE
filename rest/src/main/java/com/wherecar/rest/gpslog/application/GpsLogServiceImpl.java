@@ -25,20 +25,27 @@ public class GpsLogServiceImpl implements GpsLogService {
 
     @Override
     public GpsLogResponse getLatestGpsLogByMdn(String mdn) {
+        log.info("[GpsLog][GpsLogServiceImpl][getLatestGpsLogByMdn] 시작 | mdn = {}", mdn);
 
         GpsLog gpslog = gpsLogReader.findTopByMdnOrderByTimestampDesc(mdn);
 
-        return gpsFactory.toGpsLogResponse(gpslog);
+        GpsLogResponse gpsLogResponse = gpsFactory.toGpsLogResponse(gpslog);
+        log.info("[GpsLog][GpsLogServiceImpl][getLatestGpsLogByMdn] 종료 | gpsLogResponse = {}", gpsLogResponse);
 
+        return gpsLogResponse;
     }
 
     @Override
     public GpsRouteResponse getGpsPointsByMdn(String mdn, LocalDateTime startTime, LocalDateTime endTime) {
+        log.info("[GpsLog][GpsLogServiceImpl][getGpsPointsByMdn] 시작 | mdn = {}, startTime = {}, endTime = {}", mdn, startTime, endTime);
 
         List<GpsLog> route = gpsLogReader.getGpsPointsByTimestamp(mdn, startTime, endTime);
         List<GpsPoint> gpsPoints = gpsFactory.route(route);
 
-        return gpsFactory.toRouteResponse(gpsPoints, mdn);
+        GpsRouteResponse gpsRouteResponse = gpsFactory.toRouteResponse(gpsPoints, mdn);
+        log.info("[GpsLog][GpsLogServiceImpl][getGpsPointsByMdn] 종료 | gpsRouteResponse = {}", gpsRouteResponse);
+
+        return gpsRouteResponse;
     }
 
 }
