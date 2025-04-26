@@ -4,13 +4,24 @@ spring:
       on-profile: dev
 
 server:
-  port: 8090
+  port: 8095
 
 wherecar:
-  server:
-    url: http://localhost:8080
-  emulator:
-    car-mdn: 01234567890
-    car-vrp: 12가3456
+  device:
+    mdn: 01234567890
+    vrp: 12가3456
   db:
-    file-name: device_db.json
+    storage-file-name: device_db.json
+  api:
+    rest:
+      url: http://localhost:8080
+      token:
+        endpoint: /emulator/token
+    collector:
+      url: http://localhost:8090
+    hub:
+      url: http://localhost:8090 # TODO: 실제로는 허브로 주기및 시동 정보를 보내야 함!
+      event:
+        start-endpoint: /api/on
+        cycle-endpoint: /api/gps
+        stop-endpoint: /api/off

@@ -7,8 +7,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
 
-import com.where_car.emulator.device.application.dto.CarDto;
-import com.where_car.emulator.device.application.dto.CycleInfoDto;
+import com.where_car.emulator.device.application.dto.CarRequest;
+import com.where_car.emulator.device.application.dto.CycleInfoRequest;
 import com.where_car.emulator.device.domain.DeviceFactory;
 import com.where_car.emulator.device.domain.car.CarDevice;
 import com.where_car.emulator.device.domain.car.CarIdentity;
@@ -41,7 +41,7 @@ public class DeviceEventFactory {
     @Getter
     private Integer totalDistance = 0;
 
-    public CarDto generateCarStart(CarIdentity carIdentity, Resource gpxFile, Integer initialDistance) {
+    public CarRequest generateCarStart(CarIdentity carIdentity, Resource gpxFile, Integer initialDistance) {
         List<Element> firstTrkpt = gpsPathService.getFirstTrkpt(gpxFile);
         totalDistance = initialDistance;
         
@@ -96,7 +96,7 @@ public class DeviceEventFactory {
             .build();
     }
 
-    public CycleInfoDto generateCycleInfo(CarIdentity carIdentity, List<CarCycleInfo> carCycleInfoList) {
+    public CycleInfoRequest generateCycleInfo(CarIdentity carIdentity, List<CarCycleInfo> carCycleInfoList) {
         CycleInfo cycleInfo = CycleInfo.builder()
             .carIdentity(carIdentity)
             .carDevice(CarDevice.builder().build())
@@ -108,7 +108,7 @@ public class DeviceEventFactory {
         return deviceFactory.createCycleInfoDto(cycleInfo);
     }
 
-    public CarDto generateCarStop(CarIdentity carIdentity, Resource gpxFile, String startTime, Integer currentTotalDistance) {
+    public CarRequest generateCarStop(CarIdentity carIdentity, Resource gpxFile, String startTime, Integer currentTotalDistance) {
         totalDistance = currentTotalDistance;
         List<Element> lastTrkpt = gpsPathService.getLastTrkpt(gpxFile);
 

@@ -2,7 +2,7 @@ package com.where_car.emulator.device.application;
 
 import org.springframework.stereotype.Service;
 
-import com.where_car.emulator.device.application.dto.LocationDto;
+import com.where_car.emulator.device.application.dto.LocationRequest;
 import com.where_car.emulator.device.domain.car.CarIdentity;
 import com.where_car.emulator.device.domain.device.DeviceEntity;
 import com.where_car.emulator.device.infrastructure.JsonDatabase;
@@ -103,7 +103,7 @@ public class DeviceService {
     }
   }
 
-  private LocationDto extractLocationInfoFromFilename(String fileName) {
+  private LocationRequest extractLocationInfoFromFilename(String fileName) {
     String departure = "기본 출발지";
     String destination = "기본 도착지";
 
@@ -123,10 +123,10 @@ public class DeviceService {
         log.error("파일 이름에서 위치 정보를 추출하는 중 오류 발생: {}", e.getMessage());
     }
 
-    return new LocationDto(departure, destination);
+    return new LocationRequest(departure, destination);
   }
 
-  public LocationDto getLocationInfo() {
+  public LocationRequest getLocationInfo() {
     String fileName = getFilename();
     return extractLocationInfoFromFilename(fileName);
   }
