@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.where_car.emulator.device.application.dto.TokenRequest;
 import com.where_car.emulator.device.application.dto.TokenResponse;
+import com.where_car.emulator.global.constants.DomainConstant;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -83,11 +84,11 @@ public class TokenService {
 	private TokenInfo requestNewToken(String mdn) {
 		TokenRequest request = TokenRequest.builder()
 			.mdn(mdn)
-			.tid("TID001")
-			.mid("MID001")
-			.pv("1.0")
-			.did("DEVICE001")
-			.dFWVer("1.0.0")
+			.tid(DomainConstant.TERMINAL_ID)
+			.mid(DomainConstant.MAKE_ID)
+			.pv(DomainConstant.PACKET_ID)
+			.did(DomainConstant.DEVICE_ID)
+			.dFWVer(DomainConstant.FIRMWARE_VERSION)
 			.build();
 
 		HttpHeaders headers = new HttpHeaders();
