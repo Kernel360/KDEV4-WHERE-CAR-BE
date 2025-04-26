@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.where_car.emulator.device.application.dto.CarRequest;
 import com.where_car.emulator.device.application.dto.CycleInfoRequest;
+import com.where_car.emulator.global.utill.TokenUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -74,7 +75,7 @@ public class DeviceEventExecutor {
         
         try {
             String token = tokenService.getToken(mdn);
-            log.info("{} 요청 시 사용하는 토큰: {}", action, maskToken(token));
+            log.info("{} 요청 시 사용하는 토큰: {}", action, TokenUtils.maskToken(token));
             
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -90,20 +91,6 @@ public class DeviceEventExecutor {
             log.error("{} 정보 전달 중 예외 발생: {}", action, e.getMessage());
             handleRetry(url, requestDto, action, retryCount);
         }
-    }
-
-    // 토큰 마스킹 유틸리티 메소드
-    private String maskToken(String token) {
-        if (token == null || token.length() <= 8) {
-            return "***마스킹된 토큰***";
-        }
-        
-        int length = token.length();
-        String prefix = token.substring(0, 4);
-        String suffix = token.substring(length - 4);
-
-        return prefix + "*".repeat(length - 8)
-			+ suffix;
     }
 
     private <T> void handleRequestException(HttpClientErrorException e, String url, T requestDto, String action, int retryCount) {
@@ -142,7 +129,7 @@ public class DeviceEventExecutor {
 
     private <T> void retryWithNewToken(String url, T requestDto, String action, String mdn, String token, int retryCount) {
         try {
-            log.info("{} 재시도 시 사용하는 새 토큰: {}", action, maskToken(token));
+            log.info("{} 재시도 시 사용하는 새 토큰: {}", action, TokenUtils.maskToken(token));
             
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
