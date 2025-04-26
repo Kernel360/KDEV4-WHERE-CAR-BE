@@ -4,10 +4,10 @@ services:
     container_name: main-db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: wherecar_main
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 1234
+      MYSQL_USER: ${MYSQL_USER_NAME}
+      MYSQL_PASSWORD: ${MYSQL_USER_PASSWORD}
     ports:
       - 3308:3306
     networks:
@@ -24,10 +24,10 @@ services:
     container_name: stat-db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: wherecar_stat
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 1234
+      MYSQL_USER: ${MYSQL_USER_NAME}
+      MYSQL_PASSWORD: ${MYSQL_USER_PASSWORD}
     ports:
       - 3309:3306
     networks:
@@ -44,10 +44,10 @@ services:
     container_name: meta-db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: wherecar_meta
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 1234
+      MYSQL_USER: ${MYSQL_USER_NAME}
+      MYSQL_PASSWORD: ${MYSQL_USER_PASSWORD}
     ports:
       - 3307:3306
     networks:
@@ -63,6 +63,9 @@ services:
     image: redis:7.2
     container_name: redis-db
     restart: unless-stopped
+    command: >
+      --requirepass ${REDIS_PASSWORD}
+      --user ${REDIS_USER_NAME} on >${REDIS_USER_PASSWORD} ~* +@read +@write
     ports:
       - 6379:6379
     networks:
