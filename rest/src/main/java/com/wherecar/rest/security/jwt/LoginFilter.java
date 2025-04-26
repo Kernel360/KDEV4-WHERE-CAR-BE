@@ -72,7 +72,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json;charset=UTF-8");
 
-        BaseResponse<TokenPair> successResponse = BaseResponse.ok();
+        BaseResponse<Void> successResponse = new BaseResponse<>(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
 
         try {
             response.getWriter().write(successResponse.toString());  // toString 내부에 ObjectMapper 있음!
@@ -89,7 +89,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json;charset=UTF-8");
 
-        BaseResponse<?> errorResponse = BaseResponse.unauthorized("아이디 또는 비밀번호가 올바르지 않습니다.");
+        BaseResponse<?> errorResponse = new BaseResponse<Void>("아이디 또는 비밀번호가 올바르지 않습니다.", HttpStatus.UNAUTHORIZED.value());
 
         try {
             response.getWriter().write(errorResponse.toString());
