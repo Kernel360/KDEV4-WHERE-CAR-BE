@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
         log.info("[USER][UserServiceImpl][getUserById] 시작 | userId={}", userId);
         User user = userReader.getUserById(userId);
         UserResponse userResponse = userFactory.toUserResponse(user);
-        log.info("[USER][UserServiceImpl][getUserById] 끝 | userResponses={}", userResponse);
+        log.info("[USER][UserServiceImpl][getUserById] 끝 | userResponse={}", userResponse);
         return userResponse;
     }
 
