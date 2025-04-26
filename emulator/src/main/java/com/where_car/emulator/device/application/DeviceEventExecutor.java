@@ -41,6 +41,7 @@ public class DeviceEventExecutor {
     private static final int RETRY_DELAY_SECONDS = 60;
     private static final int MAX_IMMEDIATE_RETRIES = 5;
     private static final int IMMEDIATE_RETRY_DELAY_MS = 500;
+    private static final String TOKEN_SUCESS_CODE = "000";
     private static final String TOKEN_MISSING_CODE = "200";
     private static final String TOKEN_INVALID_CODE = "201";
 
@@ -119,7 +120,7 @@ public class DeviceEventExecutor {
             JsonNode root = objectMapper.readTree(response.getBody());
             String rstCd = root.path("rstCd").asText();
             
-            if ("000".equals(rstCd)) {
+            if (TOKEN_SUCESS_CODE.equals(rstCd)) {
                 log.info("{} 정보 전송 성공", action);
             } else if (TOKEN_MISSING_CODE.equals(rstCd) || TOKEN_INVALID_CODE.equals(rstCd)) {
                 log.warn("토큰 오류 발생 (코드: {}): {}", rstCd, root.path("rstMsg").asText());
