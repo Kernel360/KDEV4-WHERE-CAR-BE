@@ -1,6 +1,5 @@
 package com.wherecar.collector.gpslog.application;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.wherecar.collector.gpslog.application.dto.GpsLogRequest;
@@ -23,13 +22,14 @@ public class GpsLogConsumerServiceImpl implements GpsLogConsumerService {
 
     @Override
     @RabbitListener(queues = "gps.queue", ackMode = "MANUAL")
-    public void receiveGpsLog(String message, Channel channel,  @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
-        log.info("GPS 로그 수신: {}", message);
-
+    public void receiveGpsLog(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
         GpsLogRequest gpsLogRequest = objectMapper.readValue(message, GpsLogRequest.class);
+        log.info("[GPSLOG][GpsLogConsumerServiceImpl][receiveGpsLog] 시작 | gpsLogRequest = {}", gpsLogRequest);
+
         gpsLogService.receiveGpsLogs(gpsLogRequest);
 
         // 정상 처리 후 ack
         channel.basicAck(tag, false);
+        log.info("[GPSLOG][GpsLogConsumerServiceImpl][receiveGpsLog] 끝");
     }
 }
