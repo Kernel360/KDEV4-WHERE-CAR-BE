@@ -1,6 +1,7 @@
 package com.wherecar.rest.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wherecar.rest.common.constants.ErrorCode;
 import com.wherecar.rest.common.response.BaseResponse;
 import com.wherecar.rest.user.domain.User;
 import com.wherecar.rest.user.infrastructure.UserRepository;
@@ -29,7 +30,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -48,7 +49,7 @@ public class JWTFilter extends OncePerRequestFilter {
             // 토큰이 access인지 확인
             String category = jwtUtil.getCategory(accessToken);
             if (!"access".equals(category)) {
-                sendErrorResponse(response, new BaseResponse<Void>("유효하지 않은 엑세스 토큰입니다.", HttpStatus.UNAUTHORIZED.value()));
+                sendErrorResponse(response, new BaseResponse<Void>(ErrorCode.INVALID_TOKEN.toString(), HttpStatus.UNAUTHORIZED.value()));
                 return;
             }
 
@@ -77,11 +78,11 @@ public class JWTFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
         } catch (ExpiredJwtException e) {
-            sendErrorResponse(response, new BaseResponse<Void>("토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED.value()));
+            sendErrorResponse(response, new BaseResponse<Void>(ErrorCode.ACCESS_TOKEN_EXPIRED.toString(), HttpStatus.UNAUTHORIZED.value()));
         } catch (JwtException | IllegalArgumentException e) {
-            sendErrorResponse(response, new BaseResponse<Void>("유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED.value()));
+            sendErrorResponse(response, new BaseResponse<Void>(ErrorCode.INVALID_TOKEN.toString(), HttpStatus.UNAUTHORIZED.value()));
         } catch (Exception e) {
-            sendErrorResponse(response, new BaseResponse<Void>("서버 내부 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+            sendErrorResponse(response, new BaseResponse<Void>(ErrorCode.INTERNAL_SERVER_ERROR.toString(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
         }
     }
 
