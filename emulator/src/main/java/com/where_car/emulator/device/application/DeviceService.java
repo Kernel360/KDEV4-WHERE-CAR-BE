@@ -23,8 +23,9 @@ public class DeviceService {
   @Getter
   private final CarIdentity carIdentity;
   private final DeviceScheduler schedulerService;
-  private final DeviceInfoService deviceInfoService;
-  private final DeviceEventFactory deviceEventFactory;
+  private final DeviceSimulatorService deviceSimulatorService;
+  private final DeviceRealTimeService deviceRealTimeService;
+  private final SimulationEventFactory simulationEventFactory;
   private final GpsPathService gpsPathService;
   private final DeviceEntity deviceEntity;
 
@@ -33,7 +34,7 @@ public class DeviceService {
     log.info("에뮬레이터의 주행 경로를 선택했습니다: {}", gpsPathService.getSelectGpxFile().getFilename());
   }
 
-  public void toggleDevice() {
+  public void toggleDeviceSimulation() {
     if (!deviceEntity.isOn()) {
       try {
         deviceEntity.turnOn();
@@ -57,23 +58,23 @@ public class DeviceService {
   }
 
   private void startDevice() {
-    deviceInfoService.generateAndSendCarStart();
-    schedulerService.startScheduler(this::handleScheduledTask);
+    deviceSimulatorService.generateAndSendCarStart();
+    schedulerService.startScheduler(this::simulatorHandleScheduledTask);
   }
 
   private void stopDevice() {
     schedulerService.stopScheduler();
-    deviceInfoService.generateAndSendCycleInfo();
-    deviceInfoService.generateAndSendCarStop();
-    deviceEventFactory.saveTotalDistance();
-    deviceEventFactory.saveGpsIndex();
+    deviceSimulatorService.generateAndSendCycleInfo();
+    deviceSimulatorService.generateAndSendCarStop();
+    simulationEventFactory.saveTotalDistance();
+    simulationEventFactory.saveGpsIndex();
   }
 
-  private void handleScheduledTask() {
-    deviceInfoService.generateAndSendCarCycleInfo();
+  private void simulatorHandleScheduledTask() {
+    deviceSimulatorService.generateAndSendCarCycleInfo();
 
-    if (deviceInfoService.getCarCycleInfoList().size() >= 60) {
-      deviceInfoService.generateAndSendCycleInfo();
+    if (deviceSimulatorService.getCarCycleInfoList().size() >= 60) {
+      deviceSimulatorService.generateAndSendCycleInfo();
     }
   }
 

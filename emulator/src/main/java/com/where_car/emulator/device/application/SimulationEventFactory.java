@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DeviceEventFactory {
+public class SimulationEventFactory {
     
     private final DeviceFactory deviceFactory;
     private final GpsPathService gpsPathService;

@@ -16,32 +16,32 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DeviceInfoService {
+public class DeviceSimulatorService {
 
-  private final DeviceEventFactory deviceEventFactory;
+  private final SimulationEventFactory simulationEventFactory;
   private final DeviceEventExecutor deviceEventExecutor;
 
   @Getter
   private List<CarCycleInfo> carCycleInfoList = new ArrayList<>();
 
   public void generateAndSendCycleInfo() {
-    CycleInfoRequest cycleInfoRequest = deviceEventFactory.generateCycleInfo(carCycleInfoList);
+    CycleInfoRequest cycleInfoRequest = simulationEventFactory.generateCycleInfo(carCycleInfoList);
     deviceEventExecutor.sendCycleInfo(cycleInfoRequest);
     carCycleInfoList.clear();
   }
 
   public void generateAndSendCarCycleInfo() {
-    CarCycleInfo carCycleInfo = deviceEventFactory.generateCarCycleInfo();
+    CarCycleInfo carCycleInfo = simulationEventFactory.generateCarCycleInfo();
     carCycleInfoList.add(carCycleInfo);
   }
 
   public void generateAndSendCarStart() {
-    CarRequest generateCarStart = deviceEventFactory.generateCarStart();
+    CarRequest generateCarStart = simulationEventFactory.generateCarStart();
     deviceEventExecutor.sendCarStart(generateCarStart);
   }
 
   public void generateAndSendCarStop() {
-    CarRequest carStopDto = deviceEventFactory.generateCarStop();
+    CarRequest carStopDto = simulationEventFactory.generateCarStop();
     deviceEventExecutor.sendCarStop(carStopDto);
   }
 }
