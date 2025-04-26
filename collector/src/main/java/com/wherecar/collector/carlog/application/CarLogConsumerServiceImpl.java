@@ -30,6 +30,7 @@ public class CarLogConsumerServiceImpl implements CarLogConsumerService {
 
         // 정상 처리 후 ack
         channel.basicAck(tag, false);
+        log.info("[CARLOG][CarLogConsumerServiceImpl][receiveOnLog] 끝");
     }
 
     @Override
@@ -42,6 +43,7 @@ public class CarLogConsumerServiceImpl implements CarLogConsumerService {
 
         // 정상 처리 후 ack
         channel.basicAck(tag, false);
+        log.info("[CARLOG][CarLogConsumerServiceImpl][receiveOffLog] 끝");
     }
 
 }

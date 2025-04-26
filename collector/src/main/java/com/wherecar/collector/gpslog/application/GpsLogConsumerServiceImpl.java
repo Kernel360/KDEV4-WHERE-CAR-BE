@@ -30,5 +30,6 @@ public class GpsLogConsumerServiceImpl implements GpsLogConsumerService {
 
         // 정상 처리 후 ack
         channel.basicAck(tag, false);
+        log.info("[GPSLOG][GpsLogConsumerServiceImpl][receiveGpsLog] 끝");
     }
 }

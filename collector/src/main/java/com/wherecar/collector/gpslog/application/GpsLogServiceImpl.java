@@ -35,8 +35,10 @@ public class GpsLogServiceImpl implements GpsLogService {
                     .toList();
             List<GpsLog> gpsLogList = gpsLogFactory.toGpsLogList(gpsLogRequest);
             gpsLogStore.store(gpsLogList, car, batList);
+            log.info("[GPSLOG][GpsLogServiceImpl][receiveGpsLogs] 끝");
         } catch (Exception e) {
             log.error("GPS 로그 저장 비동기 처리 예외 발생", e);
+            log.info("[GPSLOG][GpsLogServiceImpl][receiveGpsLogs] 끝");
         }
     }
 }
@@ -62,5 +64,6 @@ public class GpsLogServiceImpl implements GpsLogService {
 //                .toList();
 //        List<GpsLog> gpsLogList = gpsLogFactory.toGpsLogList(gpsLogRequest);
 //        gpsLogStore.storeGpsLogs(gpsLogList, car, batList);
+//        log.info("[GPSLOG][GpsLogServiceImpl][receiveGpsLogs] 끝");
 //    }
 //}
