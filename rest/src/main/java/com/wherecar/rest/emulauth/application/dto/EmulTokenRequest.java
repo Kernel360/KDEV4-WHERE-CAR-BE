@@ -1,0 +1,19 @@
+package com.wherecar.rest.emulauth.application.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Setter
+@Getter
+@ToString
+public class EmulTokenRequest {
+
+    private String mdn;
+    private String tid;
+    private String mid;
+    private String pv;
+    private String did;
+    private String dFWVer;
+}
+

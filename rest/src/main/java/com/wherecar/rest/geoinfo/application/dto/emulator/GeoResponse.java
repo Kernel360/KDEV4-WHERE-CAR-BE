@@ -1,5 +1,6 @@
 package com.wherecar.rest.geoinfo.application.dto.emulator;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,10 @@ public class GeoResponse {
     private String geoRange;        // 지오펜스 반경
     private Integer latitude;        // 위도
     private Integer longitude;       // 경도
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime onTime;   // 시작 시간
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime offTime;  // 종료 시간
 }

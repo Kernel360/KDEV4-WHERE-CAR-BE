@@ -27,6 +27,7 @@ public class CarLogServiceImpl implements CarLogService {
 
     @Override
     public void receiveOnLog(CarLogRequest onLogRequest) {
+        log.info("[CARLOG][CarLogServiceImpl][receiveOnLog] 시작 | onLogRequest = {}", onLogRequest);
 
         Car car = carReader.getCarByMdn(onLogRequest.getMdn());
         Optional<CarLog> optionalPreviousCarLog = carLogReader.findPreviousOffLogByMdn(car.getMdn());
@@ -38,15 +39,18 @@ public class CarLogServiceImpl implements CarLogService {
             CarLog carLog = carLogFactory.toOnLog(onLogRequest, optionalPreviousCarLog.get().getOffMileage());
             carLogStore.storeOnLog(onLogRequest, car, optionalPreviousCarLog.get(), carLog);
         }
+        log.info("[CARLOG][CarLogServiceImpl][receiveOnLog] 끝");
     }
 
     @Override
     public void receiveOffLog(CarLogRequest offLogRequest) {
+        log.info("[CARLOG][CarLogServiceImpl][receiveOffLog] 시작 | offLogRequest = {}", offLogRequest);
 
         Car car = carReader.getCarByMdn(offLogRequest.getMdn());
         CarLog previousCarLog = carLogReader.getPreviousOnLogByMdn(car.getMdn());
         CarLog carLog = carLogFactory.toOffLog(offLogRequest, previousCarLog);
         carLogStore.storeOffLog(offLogRequest, car, previousCarLog, carLog);
+        log.info("[CARLOG][CarLogServiceImpl][receiveOffLog] 끝");
     }
 
 }

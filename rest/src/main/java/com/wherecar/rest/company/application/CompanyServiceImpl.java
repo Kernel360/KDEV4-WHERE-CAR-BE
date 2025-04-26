@@ -26,21 +26,29 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional(readOnly = true)
     public CompanyResponse getCompanyDetails(Long companyId) {
+        log.info("[COMPANY][CompanyServiceImpl][getCompanyDetails] 시작 | companyId={}", companyId);
         Company company = companyReader.getCompanyById(companyId);
 
-        return companyFactory.toCompanyResponse(company);
+        CompanyResponse companyResponse = companyFactory.toCompanyResponse(company);
+        log.info("[COMPANY][CompanyServiceImpl][getCompanyDetails] 끝 | companyResponse={}", companyResponse);
+        return companyResponse;
     }
 
     @Override
     public CompanyResponse updateCompany(Long companyId, CompanyRequest companyRequest) {
+        log.info("[COMPANY][CompanyServiceImpl][updateCompany] 시작 | companyId={}, companyRequest={}", companyId, companyRequest);
         Company company = companyReader.getCompanyById(companyId);
         company.updateCompany(companyRequest);
         company = companyStore.store(company);
-        return companyFactory.toCompanyResponse(company);
+        CompanyResponse companyResponse = companyFactory.toCompanyResponse(company);
+        log.info("[COMPANY][CompanyServiceImpl][updateCompany] 끝 | companyResponse={}", companyResponse);
+        return companyResponse;
     }
 
     @Override
     public void deleteCompany(Long companyId) {
+        log.info("[COMPANY][CompanyServiceImpl][deleteCompany] 시작 | companyId={}", companyId);
         companyStore.delete(companyId);
+        log.info("[COMPANY][CompanyServiceImpl][deleteCompany] 끝");
     }
 }

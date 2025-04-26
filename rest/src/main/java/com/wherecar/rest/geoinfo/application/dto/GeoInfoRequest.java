@@ -4,10 +4,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
 public class GeoInfoRequest {
     private String name;
