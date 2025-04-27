@@ -2,6 +2,7 @@ package com.wherecar.hub.carlog.persentation;
 
 import com.wherecar.hub.carlog.application.CarLogHubService;
 import com.wherecar.hub.carlog.application.dto.CarLogRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,14 +19,14 @@ public class CarLogHubController {
     private final CarLogHubService carLogHubService;
 
     @PostMapping("/on")
-    public void sendOnLogMessage(@RequestBody CarLogRequest onLogRequest) {
+    public void sendOnLogMessage(@RequestBody @Valid CarLogRequest onLogRequest) {
         carLogHubService.sendCarOnLogMessage(onLogRequest);
 
         // todo: return 수정예정 -> redis 토큰 검증 결과
     }
 
     @PostMapping("/off")
-    public void sendOffLogMessage(@RequestBody CarLogRequest offLogRequest) {
+    public void sendOffLogMessage(@RequestBody @Valid CarLogRequest offLogRequest) {
         carLogHubService.sendCarOffLogMessage(offLogRequest);
 
         // todo: reuturn 수정예정 -> redis 토큰 검증 결과

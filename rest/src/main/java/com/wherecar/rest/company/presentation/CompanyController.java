@@ -5,6 +5,7 @@ import com.wherecar.rest.company.application.CompanyService;
 import com.wherecar.rest.company.application.dto.CompanyRequest;
 import com.wherecar.rest.company.application.dto.CompanyResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class CompanyController {
     }
 
     @PutMapping("/my")
-    public ResponseEntity<BaseResponse<CompanyResponse>> myCompanyUpdate(HttpServletRequest request, @RequestBody CompanyRequest companyRequest) {
+    public ResponseEntity<BaseResponse<CompanyResponse>> myCompanyUpdate(HttpServletRequest request, @RequestBody @Valid CompanyRequest companyRequest) {
         Long companyId = (Long)request.getAttribute("companyId");
         CompanyResponse companyResponse = companyService.updateCompany(companyId, companyRequest);
         return BaseResponse.created(companyResponse);

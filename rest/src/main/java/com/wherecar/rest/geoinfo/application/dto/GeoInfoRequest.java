@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 public class GeoInfoRequest {
+
+    // TODO 지오펜스는 나중에?
+
     private String name;
     private String geoEventType;
     private String geoRange;

@@ -4,6 +4,7 @@ import com.wherecar.rest.common.response.BaseResponse;
 import com.wherecar.rest.user.application.UserService;
 import com.wherecar.rest.user.application.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/root")
-    public ResponseEntity<BaseResponse<UserResponse>> rootCreate(@RequestBody RootUserRequest rootUserRequest) {
+    public ResponseEntity<BaseResponse<UserResponse>> rootCreate(@RequestBody @Valid RootUserRequest rootUserRequest) {
         log.info("Creating root user with company: {}", rootUserRequest);
         UserResponse userResponse = userService.createRoot(rootUserRequest);
         return BaseResponse.created(userResponse);
@@ -28,7 +29,7 @@ public class UserController {
 
 //    @RequiredPermission(PermissionType.SUB_USER_CREATE)
     @PostMapping("/sub")
-    public ResponseEntity<BaseResponse<UserResponse>> subCreate(HttpServletRequest request, @RequestBody SubUserRequest subUserRequest) {
+    public ResponseEntity<BaseResponse<UserResponse>> subCreate(HttpServletRequest request, @RequestBody @Valid SubUserRequest subUserRequest) {
         log.info("Creating sub user: {}", subUserRequest);
         Long companyId = (Long)request.getAttribute("companyId");
         UserResponse userResponse = userService.createSub(subUserRequest, companyId);
@@ -96,7 +97,7 @@ public class UserController {
 
 //    @RequiredPermission(PermissionType.ROOT)
     @PutMapping("/password")
-    public ResponseEntity<BaseResponse<UserResponse>> passwordUpdate(HttpServletRequest request, @RequestBody PasswordRequest passwordRequest){
+    public ResponseEntity<BaseResponse<UserResponse>> passwordUpdate(HttpServletRequest request, @RequestBody @Valid PasswordRequest passwordRequest){
         Long userId = (Long)request.getAttribute("userId");
         log.info("Updating password");
         UserResponse userResponse = userService.updatePasswordById(userId, passwordRequest);
