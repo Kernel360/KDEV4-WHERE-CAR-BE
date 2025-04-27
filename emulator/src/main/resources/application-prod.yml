@@ -11,8 +11,6 @@ server:
     key-store-type: PKCS12
     key-store-password: ${KEY_STORE_PASSWORD}
     key-store-provider: SunJSSE
-    #trust-store: classpath:truststore.jks
-    #trust-store-password: ${TRUST_STORE_PASSWORD}
   http2:
     enabled: true
   error:
