@@ -45,41 +45,58 @@ public class CarLogServiceImpl implements CarLogService {
             int page,
             int size
     ) {
+        log.info("[CarLog][CarLogServiceImpl][getCarLogsFiltered] 시작 | companyId = {}, mdn = {}, startTime = {}, endTime = {}, page = {}, size = {}",
+                companyId, mdn, startTime, endTime, page, size);
 
         Page<CarLog> carLogs = carLogReader.getCarLogsFiltered(companyId, mdn, startTime, endTime, page, size);
-        return carLogFactory.toCarLogsResponsePage(carLogs);
+        Page<CarLogResponse> carLogResponses = carLogFactory.toCarLogsResponsePage(carLogs);
 
+        log.info("[CarLog][CarLogServiceImpl][getCarLogsFiltered] 종료 | carLogResponses = {}", carLogResponses);
+
+        return carLogResponses;
     }
 
     //운행일지 상세 정보
     @Override
     @Transactional(readOnly = true)
     public CarLogResponse getCarLogDetails(Long carLogId) {
+        log.info("[CarLog][CarLogServiceImpl][getCarLogDetails] 시작 | carLogId = {}", carLogId);
 
         CarLog carLog = carLogReader.getCarLogById(carLogId);
-        return carLogFactory.toCarLogResponse(carLog);
+        CarLogResponse carLogResponse = carLogFactory.toCarLogResponse(carLog);
 
+        log.info("[CarLog][CarLogServiceImpl][getCarLogDetails] 종료 | carLogResponse = {}", carLogResponse);
+
+        return carLogResponse;
     }
 
     //운행일지 상세 정보 수정
     @Override
     public CarLogResponse updateCarLogDetails(Long carLogId, CarLogsUpdateRequest carLogsUpdateRequest) {
+        log.info("[CarLog][CarLogServiceImpl][updateCarLogDetails] 시작 | carLogId = {}, carLogsUpdateRequest = {}", carLogId, carLogsUpdateRequest);
 
         CarLog carLog = carLogReader.getCarLogById(carLogId);
         carLog.updateCarLog(carLogsUpdateRequest);
         carLog = carLogStore.store(carLog);
-        return carLogFactory.toCarLogResponse(carLog);
+        CarLogResponse carLogResponse = carLogFactory.toCarLogResponse(carLog);
+
+        log.info("[CarLog][CarLogServiceImpl][updateCarLogDetails] 종료 | carLogResponse = {}", carLogResponse);
+
+        return carLogResponse;
     }
 
     //운행일지 상세 정보 삭제
     @Override
     public void deleteCarLogDetails(Long carLogId) {
+        log.info("[CarLog][CarLogServiceImpl][deleteCarLogDetails] 시작 | carLogId = {}", carLogId);
         carLogStore.delete(carLogId);
+        log.info("[CarLog][CarLogServiceImpl][deleteCarLogDetails] 종료");
     }
 
     //Todo: 대시보드 코드 추후 별도로 리팩토링 진행
     @Override
     public CarLogResponse getAllCarLogsStatics(Long companyId) {
+        log.info("[CarLog][CarLogServiceImpl][getAllCarLogsStatics] 시작 | companyId = {}", companyId);
 
         List<String> mdns = carRepository.findMdnsByCompanyId(companyId);
 
@@ -132,11 +149,15 @@ public class CarLogServiceImpl implements CarLogService {
                 .map(entry -> new MonthlyMileage(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
-        return CarLogResponse.builder()
+        CarLogResponse carLogResponse = CarLogResponse.builder()
                 .totalMileage(totalMileage)
                 .carLogsCount(String.valueOf(count))
                 .monthlyMileages(monthlyMileages)
                 .build();
+
+        log.info("[CarLog][CarLogServiceImpl][getAllCarLogsStatics] 종료 | carLogResponse = {}", carLogResponse);
+
+        return carLogResponse;
     }
 
 
