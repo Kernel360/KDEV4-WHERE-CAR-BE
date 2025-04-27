@@ -60,6 +60,51 @@
         </rollingPolicy>
     </appender>
 
+    <!-- JSON 형식의 로그 출력 설정 -->
+    <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${LOG_FILE_NAME}/${byDay}/json.log</file>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdc>true</includeMdc>
+            <customFields>{"application":"${APP_NAME}"}</customFields>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/${byDay}/archived/json_%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 설정에 JSON Appender 참조 추가 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ASYNC_FILE" />
+        <appender-ref ref="JSON_FILE" />
+        <appender-ref ref="ERROR" />
+    </root>
+
+    <!-- JSON 형식의 로그 출력 설정 -->
+    <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${LOG_FILE_NAME}/${byDay}/json.log</file>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdc>true</includeMdc>
+            <customFields>{"application":"${APP_NAME}","environment":"${spring.profiles.active:-default}"}</customFields>
+            <includeContext>true</includeContext>
+            <includeCallerData>true</includeCallerData>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/${byDay}/archived/json_%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 설정에 JSON Appender 참조 추가 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ASYNC_FILE" />
+        <appender-ref ref="JSON_FILE" />
+        <appender-ref ref="ERROR" />
+        <appender-ref ref="LOGSTASH" />
+    </root>
+
     <!-- 비동기 로깅 설정 -->
     <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="FILE" />
@@ -96,6 +141,7 @@
         <root level="WARN">
             <appender-ref ref="ASYNC_FILE" />
             <appender-ref ref="ERROR" />
+            <appender-ref ref="LOGSTASH" />
         </root>
     </springProfile>
 </configuration>
