@@ -1,0 +1,37 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    main-db:
+      jdbc-url: jdbc:mysql://${MAIN_DB_HOST_NAME}/${MAIN_DB_STORAGE_NAME}
+      username: ${MAIN_DB_USERNAME}
+      password: ${MAIN_DB_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    stat-db:
+      jdbc-url: jdbc:mysql://${STAT_DB_HOST_NAME}/${STAT_DB_STORAGE_NAME}
+      username: ${STAT_DB_USERNAME}
+      password: ${STAT_DB_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    batch-db:
+      jdbc-url: jdbc:mysql://${BATCH_DB_HOST_NAME}/${BATCH_DB_STORAGE_NAME}
+      username: ${BATCH_DB_USERNAME}
+      password: ${BATCH_DB_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 20000
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+
+server:
+  port: 8087
