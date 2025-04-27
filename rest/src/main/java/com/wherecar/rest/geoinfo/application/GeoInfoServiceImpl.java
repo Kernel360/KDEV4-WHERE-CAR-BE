@@ -29,11 +29,16 @@ public class GeoInfoServiceImpl implements GeoInfoService {
 
 
     public GeoInfoResponse createGeoInfo(Long companyId, GeoInfoRequest geoInfoRequest) {
+        log.info("[GeoInfo][GeoInfoServiceImpl][createGeoInfo] 시작 | companyId = {}, geoInfoRequest = {}", companyId, geoInfoRequest);
+
         Company company = companyReader.getCompanyById(companyId);
         GeoInfo geoInfo = geoInfoFactory.toGeoInfo(geoInfoRequest, company);
         geoInfo = geoInfoStore.store(geoInfo);
 
-        return geoInfoFactory.toGeoInfoResponse(geoInfo);
+        GeoInfoResponse geoInfoResponse = geoInfoFactory.toGeoInfoResponse(geoInfo);
+        log.info("[GeoInfo][GeoInfoServiceImpl][createGeoInfo] 종료 | geoInfoResponse = {}", geoInfoResponse);
+
+        return geoInfoResponse;
     }
 
     // todo: emulator GeoFence 정보 전송
@@ -41,26 +46,47 @@ public class GeoInfoServiceImpl implements GeoInfoService {
 
     @Transactional(readOnly = true)
     public GeoInfoResponse getGeoInfo (Long geoInfoId) {
+        log.info("[GeoInfo][GeoInfoServiceImpl][getGeoInfo] 시작 | geoInfoId = {}", geoInfoId);
+
         GeoInfo geoInfo = geoInfoReader.getGeoInfoById(geoInfoId);
-        return geoInfoFactory.toGeoInfoResponse(geoInfo);
+        GeoInfoResponse geoInfoResponse = geoInfoFactory.toGeoInfoResponse(geoInfo);
+
+        log.info("[GeoInfo][GeoInfoServiceImpl][getGeoInfo] 종료 | geoInfoResponse = {}", geoInfoResponse);
+
+        return geoInfoResponse;
     }
 
 
     public GeoInfoResponse updateGeoInfo(Long geoInfoId, GeoInfoRequest geoInfoRequest) {
+        log.info("[GeoInfo][GeoInfoServiceImpl][updateGeoInfo] 시작 | geoInfoId = {}, geoInfoRequest = {}", geoInfoId, geoInfoRequest);
+
         GeoInfo geoInfo = geoInfoReader.getGeoInfoById(geoInfoId);
         geoInfo.updateGeoInfo(geoInfoRequest);
         geoInfo = geoInfoStore.store(geoInfo);
-        return geoInfoFactory.toGeoInfoResponse(geoInfo);
+        GeoInfoResponse geoInfoResponse = geoInfoFactory.toGeoInfoResponse(geoInfo);
 
+        log.info("[GeoInfo][GeoInfoServiceImpl][updateGeoInfo] 종료 | geoInfoResponse = {}", geoInfoResponse);
+
+        return geoInfoResponse;
     }
 
 
     public void deleteGeoInfo(Long geoInfoId) {
+        log.info("[GeoInfo][GeoInfoServiceImpl][deleteGeoInfo] 시작 | geoInfoId = {}", geoInfoId);
+
         geoInfoStore.delete(geoInfoId);
+
+        log.info("[GeoInfo][GeoInfoServiceImpl][deleteGeoInfo] 종료");
     }
 
     public List<GeoInfoResponse> getGeoInfosByCompanyId(Long companyId) {
+        log.info("[GeoInfo][GeoInfoServiceImpl][getGeoInfosByCompanyId] 시작 | companyId = {}", companyId);
+
         List<GeoInfo> geoInfos = geoInfoReader.getGeoInfosByCompanyId(companyId);
-        return geoInfoFactory.toGeoInfoResponses(geoInfos);
+        List<GeoInfoResponse> geoInfoResponseList = geoInfoFactory.toGeoInfoResponses(geoInfos);
+
+        log.info("[GeoInfo][GeoInfoServiceImpl][getGeoInfosByCompanyId] 종료 | geoInfoResponseList = {}", geoInfoResponseList);
+
+        return geoInfoResponseList;
     }
 }

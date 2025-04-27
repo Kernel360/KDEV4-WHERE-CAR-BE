@@ -22,18 +22,24 @@ public class EmulAuthServiceImpl implements EmulAuthService{
 
     @Override
     public EmulTokenResponse issueToken(EmulTokenRequest requestDto) {
+        log.info("[EmulAuth][EmulAuthServiceImpl][issueToken] 시작 | requestDto = {}", requestDto);
+
         String mdn = requestDto.getMdn();
         String token = UUID.randomUUID().toString();
 
         emulTokenStore.saveToken(mdn, token, EXPIRE_DAYS);
 
-        return EmulTokenResponse.builder()
+        EmulTokenResponse emulTokenResponse = EmulTokenResponse.builder()
                 .rstCd("000")
                 .rstMsg("Success")
                 .mdn(mdn)
                 .token(token)
                 .exPeriod(String.valueOf(EXPIRE_DAYS))
                 .build();
+
+        log.info("[EmulAuth][EmulAuthServiceImpl][issueToken] 종료 | emulTokenResponse = {}", emulTokenResponse);
+
+        return emulTokenResponse;
 
     }
 
