@@ -9,7 +9,7 @@ COPY gradlew .
 COPY gradle gradle
 COPY settings.gradle .
 COPY build.gradle .
-COPY gradle.properties .
+#COPY gradle.properties .
 
 # Gradle 실행 권한 설정
 RUN chmod +x ./gradlew
