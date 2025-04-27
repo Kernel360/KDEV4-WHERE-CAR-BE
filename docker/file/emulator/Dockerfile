@@ -18,7 +18,7 @@ RUN chmod +x ./gradlew
 RUN ./gradlew dependencies --no-daemon
 
 # 소스 코드 복사 및 빌드
-COPY src src
+COPY emulator emulator
 RUN ./gradlew build -x test --no-daemon
 
 # 실행 스테이지
