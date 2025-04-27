@@ -3,7 +3,7 @@ services:
     build:
       # dockerfile, volumes 설정은 해당 경로를 기본 경로로 가지고 있음
       context: ../
-      dockerfile: file/rest/Dockerfile
+      dockerfile: docker/file/rest/Dockerfile
     container_name: wherecar-rest-api
     restart: unless-stopped
     ports:
@@ -36,7 +36,7 @@ services:
   collector:
     build:
       context: ../
-      dockerfile: file/collector/Dockerfile
+      dockerfile: docker/file/collector/Dockerfile
     container_name: wherecar-collector
     restart: unless-stopped
     ports:
@@ -67,7 +67,7 @@ services:
   emulator:
     build:
       context: ../
-      dockerfile: file/emulator/Dockerfile
+      dockerfile: docker/file/emulator/Dockerfile
     container_name: wherecar-emulator
     restart: unless-stopped
     ports:
@@ -98,7 +98,7 @@ services:
   hub:
     build:
       context: ../
-      dockerfile: file/hub/Dockerfile
+      dockerfile: docker/file/hub/Dockerfile
     container_name: wherecar-hub
     restart: unless-stopped
     ports:
@@ -129,7 +129,7 @@ services:
   batch:
     build:
       context: ../
-      dockerfile: file/batch/Dockerfile
+      dockerfile: docker/file/batch/Dockerfile
     container_name: wherecar-batch
     restart: unless-stopped
     ports:
