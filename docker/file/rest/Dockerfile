@@ -19,7 +19,8 @@ RUN ./gradlew dependencies --no-daemon
 
 # 소스 코드 복사 및 빌드
 COPY rest rest
-RUN ./gradlew build -x test --no-daemon
+WORKDIR /build/rest
+RUN ../gradlew bootJar -x test --no-daemon
 
 # 실행 스테이지
 FROM eclipse-temurin:17-jre
@@ -33,7 +34,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # 빌드 스테이지에서 JAR 파일 복사
-COPY --from=builder /build/build/libs/*.jar rest.jar
+COPY --from=builder /build/rest/build/libs/*.jar rest.jar
 
 # 환경 변수 설정
 ENV SPRING_PROFILES_ACTIVE=prod
