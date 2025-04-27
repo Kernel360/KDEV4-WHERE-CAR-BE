@@ -77,6 +77,7 @@ services:
         limits:
           cpus: '0.5'
           memory: 512M
+
 volumes:
   main-db-data:
     driver: local
