@@ -95,6 +95,68 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - wherecar-network
+  hub:
+    build:
+      context: ../repository/KDEV4-WHERE-CAR-BE/
+      dockerfile: ../../docker/hub/Dockerfile
+    container_name: wherecar-hub
+    restart: unless-stopped
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./hub/application-prod.yml:/app/config/application-prod.yml:rw
+      - ./logs/hub:/app/logs:rw
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+          cpus: '0.3'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs
+      - LOGGING_FILE_NAME=wherecar-hub.log
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+  batch:
+    build:
+      context: ../repository/KDEV4-WHERE-CAR-BE/
+      dockerfile: ../../docker/batch/Dockerfile
+    container_name: wherecar-batch
+    restart: unless-stopped
+    ports:
+      - "8087:8087"
+    volumes:
+      - ./batch/application-prod.yml:/app/config/application-prod.yml:rw
+      - ./logs/batch:/app/logs:rw
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+          cpus: '0.3'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs
+      - LOGGING_FILE_NAME=wherecar-batch.log
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
 
 networks:
   wherecar-network:
