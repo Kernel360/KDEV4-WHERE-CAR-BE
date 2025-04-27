@@ -32,6 +32,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - wherecar-network
+      - elk
   collector:
     build:
       context: ../
@@ -62,6 +63,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - wherecar-network
+      - elk
   emulator:
     build:
       context: ../
@@ -92,6 +94,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - wherecar-network
+      - elk
   hub:
     build:
       context: ../
@@ -122,6 +125,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - wherecar-network
+      - elk
   batch:
     build:
       context: ../
@@ -152,7 +156,10 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - wherecar-network
+      - elk
 
 networks:
   wherecar-network:
     driver: bridge
+  elk:
+    external: true
