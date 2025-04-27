@@ -19,8 +19,8 @@ services:
     depends_on:
       - elasticsearch
     volumes:
-      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./config/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./config/logstash/pipeline:/usr/share/logstash/pipeline:ro
       - ../logs:/logs:ro
     ports:
       - "5044:5044"
@@ -48,10 +48,10 @@ services:
     image: docker.elastic.co/beats/filebeat:8.12.1
     container_name: filebeat
     volumes:
-      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - ../logs:/logs:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ../logs:/logs:ro
     user: root
     networks:
       - elk
