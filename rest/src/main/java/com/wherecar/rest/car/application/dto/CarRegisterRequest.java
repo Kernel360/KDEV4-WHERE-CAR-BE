@@ -33,7 +33,6 @@ public class CarRegisterRequest {
     @NotNull(message = "acquisitionType은 필수입니다.")
     private AcquisitionType acquisitionType;
 
-    @NotNull(message = "companyId는 필수입니다.")
     private Long companyId;
 
     @NotNull(message = "batteryVoltage는 필수입니다.")
