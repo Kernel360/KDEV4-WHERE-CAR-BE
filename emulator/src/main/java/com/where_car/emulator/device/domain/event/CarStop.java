@@ -1,7 +1,6 @@
 package com.where_car.emulator.device.domain.event;
 
 import com.where_car.emulator.device.domain.car.CarDevice;
-import com.where_car.emulator.device.domain.car.CarIdentity;
 import com.where_car.emulator.device.domain.cycle.CarCycleInfo;
 
 import lombok.Builder;
@@ -26,7 +25,7 @@ import lombok.ToString;
 @ToString
 public class CarStop {
 
-  private final CarIdentity carIdentity;
+  private final String mdn;
   private final CarDevice carDevice;
 
   private final String onTime;
@@ -35,13 +34,13 @@ public class CarStop {
   private final CarCycleInfo cycleInfo;
 
   @Builder
-  public CarStop(CarIdentity carIdentity, CarDevice carDevice, String onTime, String offTime, CarCycleInfo cycleInfo) {
+  public CarStop(String mdn, CarDevice carDevice, String onTime, String offTime, CarCycleInfo cycleInfo) {
 
-    if (carIdentity.getMdn() == null) {
+    if (mdn == null) {
       throw new IllegalArgumentException("MDN 값이 없습니다.");
     }
 
-    this.carIdentity = carIdentity;
+    this.mdn = mdn;
     this.carDevice = carDevice;
     this.onTime = onTime;
     this.offTime = offTime;

@@ -1,27 +1,35 @@
 spring:
-  data:
-    redis:
-      host: localhost  # 배포 후에는 변경해야함
-      port: 6379
   config:
     activate:
-      on-profile: prod # 'prod' 프로파일이 활성화될 때 이 설정을 사용합니다.
+      on-profile: prod # 'prod' 프로파일이 활성화될 때 이 설정을 사용합니다
   jpa:
     hibernate:
       ddl-auto: update
-  datasource-main:
-    jdbc-url: jdbc:mysql://${MAIN_DB_HOST_NAME}/${MAIN_DB_STORAGE_NAME}
-    username: ${MAIN_DB_USERNAME}
-    password: ${MAIN_DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  datasource-stat:
-    jdbc-url: jdbc:mysql://${STAT_DB_HOST_NAME}/${STAT_DB_STORAGE_NAME}
-    username: ${STAT_DB_USERNAME}
-    password: ${STAT_DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  datasource:
+    main-db:
+      jdbc-url: jdbc:mysql://${MAIN_DB_HOST_NAME}/${MAIN_DB_STORAGE_NAME}
+      username: ${MAIN_DB_USERNAME}
+      password: ${MAIN_DB_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    stat-db:
+      jdbc-url: jdbc:mysql://${STAT_DB_HOST_NAME}/${STAT_DB_STORAGE_NAME}
+      username: ${STAT_DB_USERNAME}
+      password: ${STAT_DB_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 20000
+  data:
+    redis:
+      host: ${REDIS_HOST_NAME}
+      username: ${REDIS_USERNAME}
+      password: ${REDIS_PASSWORD}
+      port: 6379
   jwt:
-    secret: 1o23eoi21joiejoijsdoijoisdjfojafa # JWT 비밀 키
+    secret: ${JWT_SECRET_KEY} # JWT 비밀 키
 
 server:
   port: 8080

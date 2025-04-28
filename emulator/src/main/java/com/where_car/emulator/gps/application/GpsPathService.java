@@ -2,16 +2,14 @@ package com.where_car.emulator.gps.application;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.PostConstruct;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -36,39 +34,38 @@ public class GpsPathService {
   }
 
   /**
-   * 어플리케이션 동작 중에 사용될 랜덤 GPX 파일을 반환합니다.
+   * 어플리케이션 동작 중에 사용될 GPX 파일을 반환합니다.
    */
   @Getter
-  private Resource randomGpxFile;
+  private Resource selectGpxFile;
+  @Value("${wherecar.device.select-file}")
+  private String selectGpxFileName;
 
   /**
-   * 서비스가 초기화될 때 `resources/gpx` 폴더에서 랜덤으로 GPX 파일을 선택합니다.
+   * 서비스가 초기화될 때 기본 GPX 파일을 선택합니다.
    * @throws IOException 파일을 읽는 중 오류가 발생할 경우
    */
   @PostConstruct
   public void init() throws IOException {
-    this.randomGpxFile = getRandomGpxFile("gpx");
+    // 기본 GPX 파일 지정 (예: default.gpx)
+    this.selectGpxFile = getGpxFile("gpx", selectGpxFileName);
   }
 
   /**
-   * 지정된 폴더에서 랜덤으로 GPX 파일을 선택합니다.
+   * 지정된 폴더에서 특정 GPX 파일을 로드합니다.
    * @param folderPath GPX 파일이 위치한 폴더 경로
-   * @return 랜덤으로 선택된 GPX 파일
+   * @param fileName 로드할 GPX 파일의 이름
+   * @return 지정된 GPX 파일 리소스
    * @throws IOException 파일을 읽는 중 오류가 발생할 경우
    */
-  public Resource getRandomGpxFile(String folderPath) throws IOException {
-    Resource resource = resourceLoader.getResource("classpath:" + folderPath);
-    List<Resource> files = Files.walk(Paths.get(resource.getURI()))
-        .filter(Files::isRegularFile)
-        .map(path -> resourceLoader.getResource("classpath:" + folderPath + "/" + path.getFileName().toString()))
-        .toList();
-
-    if (files.isEmpty()) {
-      throw new IOException("지정된 폴더에 파일이 없습니다.");
+  public Resource getGpxFile(String folderPath, String fileName) throws IOException {
+    Resource resource = resourceLoader.getResource("classpath:" + folderPath + "/" + fileName);
+    
+    if (!resource.exists()) {
+      throw new IOException("지정된 파일을 찾을 수 없습니다: " + fileName);
     }
-
-    Random random = new Random();
-    return files.get(random.nextInt(files.size()));
+    
+    return resource;
   }
 
   /**
@@ -98,7 +95,7 @@ public class GpsPathService {
    * @param gpxFile GPX 파일 리소스
    * @return 첫 번째와 두번째 `trkpt` 요소
    */
-  public List<Element> getFirstTrkpt(Resource gpxFile) {
+  public List<Element> getFirstGpx(Resource gpxFile) {
     List<Element> trkptList = parseGpxFile(gpxFile);
     List<Element> filteredList = new ArrayList<>();
     filteredList.add(trkptList.isEmpty() ? null : trkptList.get(0));
@@ -107,11 +104,11 @@ public class GpsPathService {
   }
 
   /**
-   * 주어진 GPX 파일에서 마지막 이전과 마지막 `trkpt` 요소를 반환합니다.
+   * 주어진 GPX 파일에서 마��막 이전과 마지막 `trkpt` 요소를 반환합니다.
    * @param gpxFile GPX 파일 리소스
    * @return 마지막 `trkpt` 요소
    */
-  public List<Element> getLastTrkpt(Resource gpxFile) {
+  public List<Element> getLastGpx(Resource gpxFile) {
     List<Element> trkptList = parseGpxFile(gpxFile);
     List<Element> filteredList = new ArrayList<>();
     filteredList.add(trkptList.isEmpty() ? null : trkptList.get(trkptList.size() - 2));
@@ -124,7 +121,7 @@ public class GpsPathService {
    * @param gpxFile GPX 파일 리소스
    * @return 모든 `trkpt` 요소 리스트
    */
-  public List<Element> getAllTrkpts(Resource gpxFile) {
+  public List<Element> getAllGpx(Resource gpxFile) {
     return parseGpxFile(gpxFile);
   }
 }

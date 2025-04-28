@@ -1,43 +1,17 @@
 spring:
   application:
     name: batch
-
-  batch:
-    job:
-      enabled: false
-  jdbc:
-    initialize-schema: always
-
   jpa:
+    open-in-view: false
+    database-platform: org.hibernate.dialect.MySQLDialect
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-        show_sql: true
-        format_sql: true
-    hibernate:
-      ddl-auto: update
+        format_sql: false
+        show_sql: false
+        use_sql_comments: true
+        jdbc:
+          lob:
+            non_contextual_creation: true # LOB 생성 시 컨텍스트를 사용하지 않습니다.
 
-  datasource-meta:
-    jdbc-url: jdbc:mysql://${META_DB_HOST_NAME}/${META_DB_STORAGE_NAME}
-    username: ${META_DB_USERNAME}
-    password: ${META_DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  datasource-main:
-    jdbc-url: jdbc:mysql://${MAIN_DB_HOST_NAME}/${MAIN_DB_STORAGE_NAME}
-    username: ${MAIN_DB_USERNAME}
-    password: ${MAIN_DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  datasource-stat:
-    jdbc-url: jdbc:mysql://${STAT_DB_HOST_NAME}/${STAT_DB_STORAGE_NAME}
-    username: ${STAT_DB_USERNAME}
-    password: ${STAT_DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  logging:
-    level:
-      org.hibernate.SQL: DEBUG
-      org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
-
+  profiles:
+    default: dev

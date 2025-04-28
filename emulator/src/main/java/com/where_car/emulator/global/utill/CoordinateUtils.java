@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-public class StringUtils {
+public class CoordinateUtils {
 
-    private StringUtils() {
+    private CoordinateUtils() {
         throw new IllegalStateException("유틸리티 클래스는 인스턴스화할 수 없습니다");
     }
 
@@ -26,25 +26,25 @@ public class StringUtils {
         return formattedValue.replace(".", "");
     }
 
-    public static String calculateSpeedFromCoordinates(List<Element> firstTrkpt) {
+    public static String calculateSpeedFromCoordinates(List<Element> gpxFile) {
         int speed = (int) Math.round(GpsUtils.calculateSpeed(
             GpsUtils.calculateDistance(
-                Double.parseDouble(firstTrkpt.get(0).getAttribute("lat")),
-                Double.parseDouble(firstTrkpt.get(0).getAttribute("lon")),
-                Double.parseDouble(firstTrkpt.get(1).getAttribute("lat")),
-                Double.parseDouble(firstTrkpt.get(1).getAttribute("lon"))
+                Double.parseDouble(gpxFile.get(0).getAttribute("lat")),
+                Double.parseDouble(gpxFile.get(0).getAttribute("lon")),
+                Double.parseDouble(gpxFile.get(1).getAttribute("lat")),
+                Double.parseDouble(gpxFile.get(1).getAttribute("lon"))
             ),
             1
         ));
         return String.valueOf(speed);
     }
 
-    public static String calculateAngleFromCoordinates(List<Element> firstTrkpt) {
+    public static String calculateAngleFromCoordinates(List<Element> gpxFile) {
         int angle = GpsUtils.calculateBearing(
-            Double.parseDouble(firstTrkpt.get(0).getAttribute("lat")),
-            Double.parseDouble(firstTrkpt.get(0).getAttribute("lon")),
-            Double.parseDouble(firstTrkpt.get(1).getAttribute("lat")),
-            Double.parseDouble(firstTrkpt.get(1).getAttribute("lon"))
+            Double.parseDouble(gpxFile.get(0).getAttribute("lat")),
+            Double.parseDouble(gpxFile.get(0).getAttribute("lon")),
+            Double.parseDouble(gpxFile.get(1).getAttribute("lat")),
+            Double.parseDouble(gpxFile.get(1).getAttribute("lon"))
         );
         return String.valueOf(angle);
     }

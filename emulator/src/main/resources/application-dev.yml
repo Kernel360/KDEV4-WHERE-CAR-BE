@@ -5,11 +5,23 @@ spring:
 
 server:
   port: 8095
+  ssl:
+    key-alias: localhost
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-store-password: ${KEY_STORE_PASSWORD}
+    key-store-provider: SunJSSE
+  http2:
+    enabled: true
+  error:
+    include-message: always
+    include-stacktrace: never
 
 wherecar:
   device:
     mdn: 01234567890
     vrp: 12가3456
+    select-file: gwangju-to-muju_formatted.gpx
   db:
     storage-file-name: device_db.json
   api:
