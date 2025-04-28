@@ -24,7 +24,8 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
 
   jwt:
-    secret: 1o23eoi21joiejoijsdoijoisdjfojafa
+    auth-secret: ${JWT_AUTH_SECRET_KEY}
+    token-secret: ${JWT_TOKEN_SECRET_KEY}
 
 server:
   port: 8080

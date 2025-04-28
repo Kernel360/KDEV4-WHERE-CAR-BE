@@ -15,7 +15,7 @@ public class EmulJWTUtil {
 
     private final SecretKey secretKey;
 
-    public EmulJWTUtil(@Value("${spring.jwt.emul-secret}") String secret) {
+    public EmulJWTUtil(@Value("${spring.jwt.token-secret}") String secret) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 

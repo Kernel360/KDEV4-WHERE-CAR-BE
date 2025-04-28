@@ -3,5 +3,8 @@ spring:
     activate:
       on-profile: prod
 
+  jwt:
+    token-secret: ${JWT_TOKEN_SECRET_KEY}
+
 server:
   port: 8085
