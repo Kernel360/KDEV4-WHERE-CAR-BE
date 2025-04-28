@@ -1,6 +1,6 @@
-package com.wherecar.rest.emulauth.hubtmp.config;
+package com.wherecar.hub.common.config;
 
-import com.wherecar.rest.emulauth.hubtmp.interceptor.TokenAuthInterceptor;
+import com.wherecar.hub.common.interceptor.TokenAuthInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -16,7 +16,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor((HandlerInterceptor) tokenAuthInterceptor)
-                .addPathPatterns("/emulator/**")           // 검증할 API 경로
-                .excludePathPatterns("/emulator/token");    // 토큰 발급은 예외
+                .addPathPatterns("/**");           // 검증할 API 경로
     }
 }

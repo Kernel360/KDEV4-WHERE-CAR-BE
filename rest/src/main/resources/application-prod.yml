@@ -29,7 +29,8 @@ spring:
       password: ${REDIS_PASSWORD}
       port: 6379
   jwt:
-    secret: ${JWT_SECRET_KEY} # JWT 비밀 키
+    auth-secret: ${JWT_AUTH_SECRET_KEY}# JWT 비밀 키
+    token-secret: ${JWT_TOKEN_SECRET_KEY}
 
 server:
   port: 8080

@@ -1,9 +1,9 @@
-package com.wherecar.rest.emulauth.hubtmp.interceptor;
+package com.wherecar.hub.common.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wherecar.rest.emulauth.hubtmp.token.application.dto.EmulTokenResponse;
-import com.wherecar.rest.emulauth.hubtmp.token.application.TokenValidationResult;
-import com.wherecar.rest.emulauth.hubtmp.token.application.TokenValidationService;
+import com.wherecar.hub.token.application.TokenValidationResult;
+import com.wherecar.hub.token.application.TokenValidationService;
+import com.wherecar.hub.token.application.dto.EmulTokenResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,29 +21,27 @@ public class TokenAuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException, IOException {
-        String mdn = request.getParameter("mdn");
         String token = request.getHeader("Token");
 
-        TokenValidationResult result = tokenValidationService.validate(mdn, token);
+        TokenValidationResult result = tokenValidationService.validate(token);
 
         if (!TokenValidationResult.SUCCESS.equals(result)) {
 
             EmulTokenResponse errorResponse = EmulTokenResponse.builder()
                     .rstCd(result.getRstCd())
                     .rstMsg(result.getRstMsg())
-                    .mdn(mdn)
+                    .mdn(null)
                     .build();
 
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
-            // DTO를 JSON으로 직렬화해서 응답
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
             return false;
         }
-
         return true;
+
     }
 }
 

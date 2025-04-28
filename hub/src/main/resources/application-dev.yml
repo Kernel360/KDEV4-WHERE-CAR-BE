@@ -8,5 +8,9 @@ spring:
     username: ${MQ_USERNAME}
     password: ${MQ_PASSWORD}
 
+  jwt:
+    token-secret: ${JWT_TOKEN_SECRET_KEY}
+
+
 server:
   port: 8085

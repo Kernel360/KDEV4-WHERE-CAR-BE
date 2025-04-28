@@ -22,13 +22,4 @@ public class EmulAuthController {
         return ResponseEntity.ok(response);
     }
 
-//    @PostMapping("/test")
-//    public ResponseEntity<String> testEmulatorData(
-//            @RequestParam String mdn,
-//            @RequestBody String body
-//    ) {
-//        return ResponseEntity.ok("토큰 검증 통과, 데이터 수신 완료: " + body);
-//    }
-
-
 }
