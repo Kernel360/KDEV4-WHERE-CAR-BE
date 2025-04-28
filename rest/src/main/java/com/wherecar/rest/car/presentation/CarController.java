@@ -7,6 +7,7 @@ import com.wherecar.rest.car.application.dto.CarResponse;
 import com.wherecar.rest.common.constants.PaginationConstants;
 import com.wherecar.rest.common.response.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +26,14 @@ public class CarController {
 
 
     @PostMapping
-    public ResponseEntity<BaseResponse<CarResponse>> CarCreate(HttpServletRequest request, @RequestBody CarRegisterRequest registerCarRequest) {
+    public ResponseEntity<BaseResponse<CarResponse>> CarCreate(HttpServletRequest request, @RequestBody @Valid CarRegisterRequest registerCarRequest) {
         Long companyId = (Long)request.getAttribute("companyId");
         CarResponse carResponse = carService.createCar(companyId, registerCarRequest);
         return BaseResponse.created(carResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BaseResponse<CarResponse>> CarUpdate(@PathVariable Long id, @RequestBody CarRegisterRequest registerCarRequest) {
+    public ResponseEntity<BaseResponse<CarResponse>> CarUpdate(@PathVariable Long id, @RequestBody @Valid CarRegisterRequest registerCarRequest) {
         CarResponse carResponse = carService.updateCar(id, registerCarRequest);
         return BaseResponse.created(carResponse);
     }

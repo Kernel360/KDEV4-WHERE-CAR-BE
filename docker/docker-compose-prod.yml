@@ -1,17 +1,20 @@
 services:
   rest:
     build:
-      context: ../repository/KDEV4-WHERE-CAR-BE/
-      dockerfile: ../../docker/rest/Dockerfile
+      # dockerfile, volumes 설정은 해당 경로를 기본 경로로 가지고 있음
+      context: ../
+      dockerfile: docker/file/rest/Dockerfile
     container_name: wherecar-rest-api
     restart: unless-stopped
     ports:
+      # 외부포트 : 내부포트
       - "8080:8080"
     volumes:
-      - ./rest/application-prod.yml:/app/config/application-prod.yml:rw
-      - ./logs/rest:/app/logs:rw
+      - ../../config/rest-application-prod.yml:/app/config/application-prod.yml:rw
+      - ../../logs/rest:/app/logs/rest:rw
     deploy:
       resources:
+        # 리소스 제한
         limits:
           memory: 768M
           cpus: '0.5'
@@ -19,8 +22,7 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_CONFIG_LOCATION=file:/app/config/
       - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
-      - LOGGING_FILE_PATH=/app/logs
-      - LOGGING_FILE_NAME=wherecar-rest.log
+      - LOGGING_FILE_PATH=/app/logs/rest  # 로그 경로 환경변수 설정
     logging:
       driver: "json-file"
       options:
@@ -30,18 +32,18 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - wherecar-network
-
+      - elk
   collector:
     build:
-      context: ../repository/KDEV4-WHERE-CAR-BE/
-      dockerfile: ../../docker/collector/Dockerfile
+      context: ../
+      dockerfile: docker/file/collector/Dockerfile
     container_name: wherecar-collector
     restart: unless-stopped
     ports:
       - "8090:8090"
     volumes:
-      - ./collector/application-prod.yml:/app/config/application-prod.yml:rw
-      - ./logs/collector:/app/logs:rw
+      - ../../config/collector-application-prod.yml:/app/config/application-prod.yml:rw
+      - ../../logs/collector:/app/logs/collector:rw
     deploy:
       resources:
         limits:
@@ -51,8 +53,7 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_CONFIG_LOCATION=file:/app/config/
       - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
-      - LOGGING_FILE_PATH=/app/logs
-      - LOGGING_FILE_NAME=wherecar-collector.log
+      - LOGGING_FILE_PATH=/app/logs/collector
     logging:
       driver: "json-file"
       options:
@@ -62,18 +63,18 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - wherecar-network
-
+      - elk
   emulator:
     build:
-      context: ../repository/KDEV4-WHERE-CAR-BE/
-      dockerfile: ../../docker/emulator/Dockerfile
+      context: ../
+      dockerfile: docker/file/emulator/Dockerfile
     container_name: wherecar-emulator
     restart: unless-stopped
     ports:
       - "8095:8095"
     volumes:
-      - ./emulator/application-prod.yml:/app/config/application-prod.yml:rw
-      - ./logs/emulator:/app/logs:rw
+      - ../../config/emulator-application-prod.yml:/app/config/application-prod.yml:rw
+      - ../../logs/emulator:/app/logs/emulator:rw
     deploy:
       resources:
         limits:
@@ -83,8 +84,7 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_CONFIG_LOCATION=file:/app/config/
       - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
-      - LOGGING_FILE_PATH=/app/logs
-      - LOGGING_FILE_NAME=wherecar-emulator.log
+      - LOGGING_FILE_PATH=/app/logs/emulator
     logging:
       driver: "json-file"
       options:
@@ -94,7 +94,72 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - wherecar-network
+      - elk
+  hub:
+    build:
+      context: ../
+      dockerfile: docker/file/hub/Dockerfile
+    container_name: wherecar-hub
+    restart: unless-stopped
+    ports:
+      - "8085:8085"
+    volumes:
+      - ../../config/hub-application-prod.yml:/app/config/application-prod.yml:rw
+      - ../../logs/hub:/app/logs/hub:rw
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+          cpus: '0.3'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs/hub
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+      - elk
+  batch:
+    build:
+      context: ../
+      dockerfile: docker/file/batch/Dockerfile
+    container_name: wherecar-batch
+    restart: unless-stopped
+    ports:
+      - "8087:8087"
+    volumes:
+      - ../../config/batch-application-prod.yml:/app/config/application-prod.yml:rw
+      - ../../logs/batch:/app/logs/batch:rw
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+          cpus: '0.3'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs/batch
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+      - elk
 
 networks:
   wherecar-network:
     driver: bridge
+  elk:
+    external: true

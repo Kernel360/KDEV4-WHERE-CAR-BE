@@ -3,6 +3,7 @@ package com.wherecar.collector.carlog.presentation;
 import com.wherecar.collector.carlog.application.dto.CarLogRequest;
 import com.wherecar.collector.carlog.application.dto.CarLogResponse;
 import com.wherecar.collector.carlog.application.CarLogService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +21,14 @@ public class CarLogController {
     private final CarLogService carLogService;
 
     @PostMapping("/on")
-    public ResponseEntity<CarLogResponse> onLogReceive(@RequestBody CarLogRequest onLogRequest) {
+    public ResponseEntity<CarLogResponse> onLogReceive(@RequestBody @Valid CarLogRequest onLogRequest) {
         carLogService.receiveOnLog(onLogRequest);
 
         return ResponseEntity.ok(CarLogResponse.getCarLogResponse(onLogRequest.getMdn()));
     }
 
     @PostMapping("/off")
-    public ResponseEntity<CarLogResponse> OffLogReceive(@RequestBody CarLogRequest offLogRequest) {
+    public ResponseEntity<CarLogResponse> OffLogReceive(@RequestBody @Valid CarLogRequest offLogRequest) {
         carLogService.receiveOffLog(offLogRequest);
 
         return ResponseEntity.ok(CarLogResponse.getCarLogResponse(offLogRequest.getMdn()));

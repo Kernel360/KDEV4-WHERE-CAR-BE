@@ -146,7 +146,7 @@ public class CarLogSummaryBatch {
                     .offLatitude(carLog.getOffLatitude())
                     .offLongitude(carLog.getOffLongitude())
                     .driveType(carLog.getDriveType())
-                    .distance(carLog.getOffMileage() - carLog.getOnMileage())
+                    .distance((int)(carLog.getOffMileage() - carLog.getOnMileage()))
                     .averageSpeed(avgSpeed)
                     .maxSpeed((int) maxSpeed)
                     .companyId(companyId)

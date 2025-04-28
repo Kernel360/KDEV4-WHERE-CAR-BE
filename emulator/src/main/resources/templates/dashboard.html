@@ -12,8 +12,18 @@
       theme: {
         container: {
           center: true,
-          padding: "2rem",
+          padding: {
+            DEFAULT: "1rem",
+            sm: "1.5rem",
+            lg: "2rem",
+            xl: "2.5rem",
+            "2xl": "3rem"
+          },
           screens: {
+            sm: "640px",
+            md: "768px",
+            lg: "1024px",
+            xl: "1280px",
             "2xl": "1400px",
           },
         },
@@ -116,6 +126,136 @@
     .container {
       flex: 1;
     }
+
+    @keyframes drive {
+      0% {
+        transform: translateX(-100%) rotate(0deg) scale(0.8);
+        opacity: 0;
+        filter: blur(4px);
+      }
+      10% {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateX(-50%) rotate(0deg) scale(1);
+      }
+      45% {
+        transform: translateX(0%) rotate(0deg) scale(1.2);
+      }
+      55% {
+        transform: translateX(0%) rotate(0deg) scale(1.2);
+      }
+      90% {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateX(50%) rotate(0deg) scale(1);
+      }
+      100% {
+        transform: translateX(100%) rotate(0deg) scale(0.8);
+        opacity: 0;
+        filter: blur(4px);
+      }
+    }
+
+    .animate-drive {
+      animation: drive 4s ease-in-out infinite;
+      position: relative;
+    }
+
+    @keyframes trackGlow {
+      0% {
+        background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent);
+        transform: translateX(-100%);
+      }
+      100% {
+        background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent);
+        transform: translateX(100%);
+      }
+    }
+
+    .animate-track-glow {
+      animation: trackGlow 2s linear infinite;
+    }
+
+    #car-status-animation::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.3), transparent);
+      transform: translateY(-50%);
+      animation: trackGlow 2s linear infinite;
+    }
+
+    /* 커스텀 모달 스타일 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .dark .modal-content {
+      background-color: #1f2937;
+      color: white;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .modal-button {
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .modal-button-confirm {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    .modal-button-confirm:hover {
+      background-color: #1d4ed8;
+    }
+
+    .modal-button-cancel {
+      background-color: #f3f4f6;
+      color: #374151;
+    }
+
+    .dark .modal-button-cancel {
+      background-color: #374151;
+      color: #f3f4f6;
+    }
+
+    .modal-button-cancel:hover {
+      background-color: #e5e7eb;
+    }
+
+    .dark .modal-button-cancel:hover {
+      background-color: #4b5563;
+    }
   </style>
 </head>
 <body class="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -126,18 +266,48 @@
       <h1 class="text-4xl font-bold dark:text-white tracking-tight">WHERECAR</h1>
       <span class="text-4xl font-bold text-primary tracking-tight">어디카</span>
     </div>
-    <button id="theme-toggle" class="p-3 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">
-      <svg class="w-7 h-7 hidden dark:block text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-      </svg>
-      <svg class="w-7 h-7 block dark:hidden text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-      </svg>
-    </button>
+    <div class="flex items-center gap-3">
+      <!-- 모드 전환 버튼 -->
+      <div class="relative">
+        <button id="mode-toggle" class="p-3 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">
+          <svg id="simulation-mode-icon" class="w-7 h-7 block text-gray-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>
+            <circle cx="7" cy="17" r="2"/>
+            <path d="M9 17h6"/>
+            <circle cx="17" cy="17" r="2"/>
+          </svg>
+          <svg id="realtime-mode-icon" class="w-7 h-7 hidden text-gray-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v2"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20v2"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.93 4.93l1.41 1.41"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.66 17.66l1.41 1.41"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12h2"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12h2"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.34 17.66l-1.41 1.41"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.07 4.93l-1.41 1.41"></path>
+          </svg>
+        </button>
+      </div>
+      <!-- 테마 전환 버튼 -->
+      <button id="theme-toggle" class="p-3 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">
+        <svg class="w-7 h-7 hidden dark:block text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+        <svg class="w-7 h-7 block dark:hidden text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+        </svg>
+      </button>
+    </div>
   </header>
   <div class="relative mb-12 overflow-hidden rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10">
     <div class="relative p-8 text-center">
-      <h2 class="text-2xl font-semibold text-primary dark:text-primary-foreground mb-2" th:text="${deviceStatus} ? '에뮬레이터 작동 중' : '에뮬레이터 대기 중'"></h2>
+      <div class="flex items-center justify-center mb-2 gap-3">
+        <h2 class="text-2xl font-semibold text-primary dark:text-primary-foreground" th:text="${deviceStatus} ? '에뮬레이터 작동 중' : '에뮬레이터 대기 중'"></h2>
+        <div class="flex items-center gap-2">
+          <span id="mode-badge" class="px-3 py-1 text-sm font-semibold bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 rounded-full border border-blue-200 dark:border-blue-700 shadow-sm">시뮬레이션 모드</span>
+        </div>
+      </div>
       <p class="text-base text-muted-foreground dark:text-gray-400 mb-8" th:text="${deviceStatus} ? '차량이 현재 이동 중입니다.' : '에뮬레이터를 시작하려면 아래 버튼을 클릭하세요.'"></p>
       
       <div id="car-status-animation" class="relative h-48 flex items-center justify-center" th:if="${deviceStatus}">
@@ -206,7 +376,7 @@
       </p>
     </div>
     <div class="p-8">
-      <form th:action="@{/device/toggle}" th:object="${carIdentity}" method="post" class="space-y-6">
+      <form th:action="@{/device/simulation/toggle}" th:object="${carIdentity}" method="post" class="space-y-6">
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-3">
             <label for="carIdentity" class="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-white">차량 번호</label>
@@ -239,84 +409,401 @@
   <p class="text-sm text-gray-600 dark:text-gray-400">&copy; 2025 WHERECAR. All rights reserved.</p>
 </footer>
 
-<style>
-  @keyframes drive {
-    0% {
-      transform: translateX(-100%) rotate(0deg) scale(0.8);
-      opacity: 0;
-      filter: blur(4px);
-    }
-    10% {
-      opacity: 1;
-      filter: blur(0);
-      transform: translateX(-50%) rotate(0deg) scale(1);
-    }
-    45% {
-      transform: translateX(0%) rotate(0deg) scale(1.2);
-    }
-    55% {
-      transform: translateX(0%) rotate(0deg) scale(1.2);
-    }
-    90% {
-      opacity: 1;
-      filter: blur(0);
-      transform: translateX(50%) rotate(0deg) scale(1);
-    }
-    100% {
-      transform: translateX(100%) rotate(0deg) scale(0.8);
-      opacity: 0;
-      filter: blur(4px);
-    }
-  }
-
-  .animate-drive {
-    animation: drive 4s ease-in-out infinite;
-    position: relative;
-  }
-
-  @keyframes trackGlow {
-    0% {
-      background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent);
-      transform: translateX(-100%);
-    }
-    100% {
-      background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent);
-      transform: translateX(100%);
-    }
-  }
-
-  .animate-track-glow {
-    animation: trackGlow 2s linear infinite;
-  }
-
-  #car-status-animation::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.3), transparent);
-    transform: translateY(-50%);
-    animation: trackGlow 2s linear infinite;
-  }
-</style>
-
-<script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
   const themeToggle = document.getElementById('theme-toggle');
+  const modeToggle = document.getElementById('mode-toggle');
+  const simulationModeIcon = document.getElementById('simulation-mode-icon');
+  const realtimeModeIcon = document.getElementById('realtime-mode-icon');
+  const modeBadge = document.getElementById('mode-badge');
   const html = document.documentElement;
+  const deviceStatus = /*[[${deviceStatus}]]*/ false;
+  let locationInterval = null;
+  let retryCount = 0;
+  const MAX_RETRIES = 10;
+  let lastLatitude = null;
+  let lastLongitude = null;
+  let isLocationAvailable = false;
+  let locationHistory = [];
+  const MAX_HISTORY_SIZE = 60;
+  let isTrackingActive = false;
+  let isFirstLocation = true;  // 첫 번째 위치 정보 여부를 추적하는 플래그 추가
+
+  // 위치 정보를 가져오는 함수
+  async function getLocation() {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error('이 브라우저에서는 위치 정보를 지원하지 않습니다.'));
+        return;
+      }
+
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const timestamp = new Date().toISOString();
+            
+            if (isNaN(latitude) || isNaN(longitude)) {
+              throw new Error('유효하지 않은 위치 정보입니다.');
+            }
+
+            // 첫 번째 위치 정보인 경우에만 on 요청을 보냄
+            if (isFirstLocation) {
+              const response = await fetch('/device/realtime/on', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  latitude: latitude,
+                  longitude: longitude,
+                  timeStamp: timestamp
+                })
+              });
+              
+              if (!response.ok) {
+                throw new Error('위치 정보 전송 실패');
+              }
+              isFirstLocation = false;
+            }
+
+            // 위치 정보를 히스토리에 추가
+            locationHistory.push({
+              latitude: latitude,
+              longitude: longitude,
+              timeStamp: timestamp
+            });
+
+            // 60개의 위치 정보가 모이면 cycleInfo 요청을 보냄
+            if (locationHistory.length >= MAX_HISTORY_SIZE) {
+              const response = await fetch('/device/realtime/cycleInfo', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(locationHistory)
+              });
+              
+              if (!response.ok) {
+                throw new Error('위치 정보 전송 실패');
+              }
+              
+              locationHistory = [];
+            }
+            
+            lastLatitude = latitude;
+            lastLongitude = longitude;
+            isLocationAvailable = true;
+            retryCount = 0;
+            resolve({ latitude, longitude, timestamp });
+          } catch (error) {
+            console.error('위치 정보 처리 중 오류 발생:', error);
+            reject(error);
+          }
+        },
+        (error) => {
+          console.error('위치 정보를 가져오는 중 오류 발생:', error);
+          let errorMessage = '위치 정보를 가져오는데 실패했습니다.';
+          
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = '위치 정보 접근이 거부되었습니다. 브라우저 설정에서 위치 정보 접근을 허용해주세요.';
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = '위치 정보를 사용할 수 없습니다. GPS가 켜져있는지 확인해주세요.';
+              break;
+            case error.TIMEOUT:
+              errorMessage = '위치 정보 요청 시간이 초과되었습니다. 다시 시도해주세요.';
+              break;
+          }
+          
+          reject(new Error(errorMessage));
+        },
+        options
+      );
+    });
+  }
+
+  // 위치 추적 시작 함수
+  async function startLocationTracking() {
+    if (locationInterval) {
+      clearInterval(locationInterval);
+    }
+    
+    // 초기화
+    lastLatitude = null;
+    lastLongitude = null;
+    retryCount = 0;
+    isLocationAvailable = false;
+    locationHistory = [];
+    isTrackingActive = true;
+    isFirstLocation = true;  // 첫 번째 위치 정보 플래그 초기화
+    
+    // 버튼 상태 업데이트
+    updateButtonState(true);
+    
+    try {
+      await getLocation();
+      
+      locationInterval = setInterval(async () => {
+        if (isTrackingActive) {
+          try {
+            await getLocation();
+          } catch (error) {
+            console.error('위치 정보 업데이트 중 오류 발생:', error);
+            retryCount++;
+            
+            if (retryCount >= MAX_RETRIES) {
+              clearInterval(locationInterval);
+              locationInterval = null;
+              isTrackingActive = false;
+              updateButtonState(false);
+              createModal(error.message, () => {});
+            }
+          }
+        }
+      }, 1000);
+    } catch (error) {
+      console.error('위치 추적 시작 중 오류 발생:', error);
+      isTrackingActive = false;
+      updateButtonState(false);
+      createModal(error.message, () => {});
+    }
+  }
+
+  // 위치 추적 중지 함수
+  async function stopLocationTracking() {
+    if (locationInterval) {
+      clearInterval(locationInterval);
+      locationInterval = null;
+    }
+
+    isTrackingActive = false;
+    isFirstLocation = true;  // 첫 번째 위치 정보 플래그 초기화
+    
+    // 버튼 상태 업데이트
+    updateButtonState(false);
+
+    // 남은 위치 정보가 있으면 전송
+    if (locationHistory.length > 0) {
+      try {
+        const response = await fetch('/device/realtime/cycleInfo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(locationHistory)
+        });
+        
+        if (!response.ok) {
+          throw new Error('위치 정보 전송 실패');
+        }
+      } catch (error) {
+        console.error('마지막 위치 정보 전송 중 오류 발생:', error);
+      }
+    }
+
+    // 마지막 위치 정보를 off 요청으로 전송
+    if (lastLatitude && lastLongitude) {
+      try {
+        const timestamp = new Date().toISOString();
+
+        const response = await fetch('/device/realtime/off', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            latitude: lastLatitude,
+            longitude: lastLongitude,
+            timeStamp: timestamp
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('마지막 위치 정보 전송 실패');
+        }
+      } catch (error) {
+        console.error('마지막 위치 정보 전송 중 오류 발생:', error);
+      }
+    }
+
+    retryCount = 0;
+    lastLatitude = null;
+    lastLongitude = null;
+    isLocationAvailable = false;
+    locationHistory = [];
+  }
+
+  // 버튼 상태 업데이트 함수
+  function updateButtonState(isActive) {
+    const toggleButton = document.querySelector('button[type="submit"]');
+    if (isActive) {
+      toggleButton.classList.remove('bg-primary', 'hover:bg-primary/90');
+      toggleButton.classList.add('bg-red-500', 'hover:bg-red-600');
+      toggleButton.textContent = '에뮬레이터 중지';
+    } else {
+      toggleButton.classList.remove('bg-red-500', 'hover:bg-red-600');
+      toggleButton.classList.add('bg-primary', 'hover:bg-primary/90');
+      toggleButton.textContent = '에뮬레이터 작동';
+    }
+  }
+
+  // 페이지 언로드 시 위치 추적 중지
+  window.addEventListener('beforeunload', async () => {
+    if (isTrackingActive) {
+      await stopLocationTracking();
+    }
+  });
+
+  // 에뮬레이터 시작/중지 버튼 클릭 이벤트
+  const toggleButton = document.querySelector('button[type="submit"]');
+
+  toggleButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    
+    const currentMode = localStorage.getItem('mode') || 'simulation';
+    
+    if (currentMode === 'simulation') {
+      // 시뮬레이션 모드에서는 기존 API 사용
+      const form = document.querySelector('form');
+      form.submit();
+    } else {
+      // 실시간 모드에서는 위치 추적 시작/중지
+      if (isTrackingActive) {
+        // 실시간 모드 중지
+        await stopLocationTracking();
+        updateModeToggleState(false);
+      } else {
+        // 실시간 모드 시작
+        startLocationTracking();
+        updateModeToggleState(true);
+      }
+    }
+  });
 
   // Check for saved theme preference
-  if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  if (localStorage.getItem('theme') === 'dark') {
     html.classList.add('dark');
   } else {
     html.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
   }
 
+  // Check for saved mode preference
+  let currentMode = localStorage.getItem('mode');
+  
+  // 처음 접속한 클라이언트인 경우 시뮬레이션 모드로 설정
+  if (!currentMode) {
+    currentMode = 'simulation';
+    localStorage.setItem('mode', currentMode);
+  }
+  
+  // 현재 모드로 UI 업데이트
+  updateModeUI(currentMode);
+
+  // 커스텀 모달 생성 함수
+  function createModal(message, onConfirm) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="text-lg font-semibold mb-4">${message}</div>
+        <div class="modal-buttons">
+          <button class="modal-button modal-button-cancel">취소</button>
+          <button class="modal-button modal-button-confirm">확인</button>
+        </div>
+      </div>
+    `;
+
+    const confirmButton = modal.querySelector('.modal-button-confirm');
+    const cancelButton = modal.querySelector('.modal-button-cancel');
+
+    confirmButton.addEventListener('click', () => {
+      document.body.removeChild(modal);
+      onConfirm(true);
+    });
+
+    cancelButton.addEventListener('click', () => {
+      document.body.removeChild(modal);
+      onConfirm(false);
+    });
+
+    document.body.appendChild(modal);
+  }
+
+  // 에뮬레이터 상태에 따라 모드 토글 버튼 비활성화
+  function updateModeToggleState(isDisabled) {
+    if (isDisabled) {
+      modeToggle.disabled = true;
+      modeToggle.classList.add('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
+      modeToggle.setAttribute('aria-disabled', 'true');
+      modeToggle.setAttribute('title', '에뮬레이터가 작동 중일 때는 모드를 변경할 수 없습니다');
+    } else {
+      modeToggle.disabled = false;
+      modeToggle.classList.remove('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
+      modeToggle.removeAttribute('aria-disabled');
+      modeToggle.removeAttribute('title');
+    }
+  }
+
+  // 모드 토글 핸들러 함수
+  function handleModeToggle() {
+    if (deviceStatus) {
+      return;
+    }
+
+    const newMode = simulationModeIcon.classList.contains('block') ? 'realtime' : 'simulation';
+    const message = newMode === 'realtime' 
+      ? '실시간 모드로 전환하시겠습니까?'
+      : '시뮬레이션 모드로 전환하시겠습니까?';
+
+    createModal(message, (confirmed) => {
+      if (confirmed) {
+        updateModeUI(newMode);
+        localStorage.setItem('mode', newMode);
+      }
+    });
+  }
+
+  // 초기 상태 설정
+  updateModeToggleState(deviceStatus);
+
+  // 이벤트 리스너 설정
   themeToggle.addEventListener('click', () => {
     html.classList.toggle('dark');
     localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
   });
+
+  modeToggle.addEventListener('click', handleModeToggle);
+
+  function updateModeUI(mode) {
+    if (mode === 'simulation') {
+      simulationModeIcon.classList.remove('hidden');
+      simulationModeIcon.classList.add('block');
+      realtimeModeIcon.classList.remove('block');
+      realtimeModeIcon.classList.add('hidden');
+      modeBadge.textContent = '시뮬레이션 모드';
+      modeBadge.classList.remove('bg-green-100', 'text-green-800', 'dark:bg-green-800', 'dark:text-green-100', 'border-green-200', 'dark:border-green-700');
+      modeBadge.classList.add('bg-blue-100', 'text-blue-800', 'dark:bg-blue-800', 'dark:text-blue-100', 'border-blue-200', 'dark:border-blue-700');
+    } else {
+      simulationModeIcon.classList.remove('block');
+      simulationModeIcon.classList.add('hidden');
+      realtimeModeIcon.classList.remove('hidden');
+      realtimeModeIcon.classList.add('block');
+      modeBadge.textContent = '실시간 모드';
+      modeBadge.classList.remove('bg-blue-100', 'text-blue-800', 'dark:bg-blue-800', 'dark:text-blue-100', 'border-blue-200', 'dark:border-blue-700');
+      modeBadge.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-800', 'dark:text-green-100', 'border-green-200', 'dark:border-green-700');
+    }
+  }
+  /*]]>*/
 </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -16,10 +17,10 @@ import lombok.Setter;
  * @version 1.0
  * @since 2025-03-27
  */
-
 @Component
 @Getter
 @Setter
+@NoArgsConstructor
 public class CarIdentity {
 
   @Value("${wherecar.device.mdn}")
@@ -27,6 +28,13 @@ public class CarIdentity {
 
   @Value("${wherecar.device.vrp}")
   private String vrp;
-
   private String totalDistance;
+  private Integer gpsIndex;
+
+  public CarIdentity(String mdn, String vrp) {
+    this.mdn = mdn;
+    this.vrp = vrp;
+    this.totalDistance = "0";
+    this.gpsIndex = 0;
+  }
 }

@@ -5,6 +5,7 @@ import com.wherecar.rest.geoinfo.application.GeoInfoService;
 import com.wherecar.rest.geoinfo.application.dto.GeoInfoRequest;
 import com.wherecar.rest.geoinfo.application.dto.GeoInfoResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class GeoInfoController {
 
     // GeoFence 정보 등록
     @PostMapping
-    public ResponseEntity<BaseResponse<GeoInfoResponse>> geoInfoCreate(HttpServletRequest request, @RequestBody GeoInfoRequest geoInfoRequest) {
+    public ResponseEntity<BaseResponse<GeoInfoResponse>> geoInfoCreate(HttpServletRequest request, @RequestBody @Valid GeoInfoRequest geoInfoRequest) {
         Long companyId = (Long)request.getAttribute("companyId");
         GeoInfoResponse geoInfoResponse = geoInfoService.createGeoInfo(companyId, geoInfoRequest);
 
@@ -49,7 +50,7 @@ public class GeoInfoController {
 
     // GeoInfo 수정
     @PutMapping("/{id}")
-    public ResponseEntity<BaseResponse<GeoInfoResponse>> geoInfoUpdate(@PathVariable Long id, @RequestBody GeoInfoRequest geoInfoRequest) {
+    public ResponseEntity<BaseResponse<GeoInfoResponse>> geoInfoUpdate(@PathVariable Long id, @RequestBody @Valid GeoInfoRequest geoInfoRequest) {
 
         GeoInfoResponse geoInfoResponse = geoInfoService.updateGeoInfo(id, geoInfoRequest);
 

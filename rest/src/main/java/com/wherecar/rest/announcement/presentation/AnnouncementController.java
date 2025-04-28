@@ -5,6 +5,7 @@ import com.wherecar.rest.announcement.application.dto.AnnouncementRequest;
 import com.wherecar.rest.announcement.application.dto.AnnouncementResponse;
 import com.wherecar.rest.common.constants.PaginationConstants;
 import com.wherecar.rest.common.response.BaseResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,7 @@ public class AnnouncementController {
 
     // 공지 사항 등록
     @PostMapping
-    public ResponseEntity<BaseResponse<AnnouncementResponse>> announcementCreate(@RequestBody AnnouncementRequest announcementRequest) {
+    public ResponseEntity<BaseResponse<AnnouncementResponse>> announcementCreate(@RequestBody @Valid AnnouncementRequest announcementRequest) {
         AnnouncementResponse announcementResponse = announcementService.createAnnouncement(announcementRequest);
 
         return BaseResponse.created(announcementResponse);
@@ -50,7 +51,7 @@ public class AnnouncementController {
 
     // 공지 사항 수정
     @PutMapping("/{announcementId}")
-    public ResponseEntity<BaseResponse<AnnouncementResponse>> announcementUpdate(@PathVariable Long announcementId, @RequestBody AnnouncementRequest announcementRequest) {
+    public ResponseEntity<BaseResponse<AnnouncementResponse>> announcementUpdate(@PathVariable Long announcementId, @RequestBody @Valid AnnouncementRequest announcementRequest) {
         AnnouncementResponse announcementResponse = announcementService.updateAnnouncement(announcementId, announcementRequest);
 
         return BaseResponse.created(announcementResponse);

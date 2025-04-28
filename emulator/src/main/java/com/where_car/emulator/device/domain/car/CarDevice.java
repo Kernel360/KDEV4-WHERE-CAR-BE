@@ -1,6 +1,6 @@
 package com.where_car.emulator.device.domain.car;
 
-import com.where_car.emulator.global.constants.DomainConstant;
+import com.where_car.emulator.global.constants.DeviceConstant;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -23,14 +23,18 @@ import lombok.Getter;
 public class CarDevice {
 
   @Builder.Default
-  private String tid = DomainConstant.TERMINAL_ID;
+  private String tid = DeviceConstant.TERMINAL_ID;
 
   @Builder.Default
-  private String mid = DomainConstant.MAKE_ID;
+  private String mid = DeviceConstant.MAKE_ID;
 
   @Builder.Default
-  private String pv = DomainConstant.PACKET_ID;
+  private String pv = DeviceConstant.PACKET_ID;
 
   @Builder.Default
-  private String did = DomainConstant.DEVICE_ID;
+  private String did = DeviceConstant.DEVICE_ID;
+
+  public static CarDevice getDefaultDevice() {
+    return builder().build();
+  }
 }

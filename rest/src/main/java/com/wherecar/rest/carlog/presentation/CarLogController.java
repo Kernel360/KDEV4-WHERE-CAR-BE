@@ -7,6 +7,7 @@ import com.wherecar.rest.carlog.application.dto.CarLogsUpdateRequest;
 import com.wherecar.rest.common.constants.PaginationConstants;
 import com.wherecar.rest.common.response.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

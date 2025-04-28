@@ -2,6 +2,11 @@ spring:
   config:
     activate:
       on-profile: prod
+  rabbitmq:
+    host: ${MQ_HOST_NAME}
+    port: 5672
+    username: ${MQ_USERNAME}
+    password: ${MQ_PASSWORD}
 
   jwt:
     token-secret: ${JWT_TOKEN_SECRET_KEY}

@@ -1,8 +1,9 @@
 package com.where_car.emulator.global.constants;
 
-public final class DomainConstant {
+public final class DeviceConstant {
 
-  private DomainConstant() {}
+  private DeviceConstant() {
+  }
 
   public static final String TERMINAL_ID = "A001";
   public static final String MAKE_ID = "6";
