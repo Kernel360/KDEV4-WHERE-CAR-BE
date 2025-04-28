@@ -33,7 +33,7 @@ public class CarController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BaseResponse<CarResponse>> CarUpdate(@PathVariable Long id, @RequestBody CarRegisterRequest registerCarRequest) {
+    public ResponseEntity<BaseResponse<CarResponse>> CarUpdate(@PathVariable Long id, @RequestBody @Valid CarRegisterRequest registerCarRequest) {
         CarResponse carResponse = carService.updateCar(id, registerCarRequest);
         return BaseResponse.created(carResponse);
     }

@@ -50,7 +50,7 @@ public class GeoInfoController {
 
     // GeoInfo 수정
     @PutMapping("/{id}")
-    public ResponseEntity<BaseResponse<GeoInfoResponse>> geoInfoUpdate(@PathVariable Long id, @RequestBody GeoInfoRequest geoInfoRequest) {
+    public ResponseEntity<BaseResponse<GeoInfoResponse>> geoInfoUpdate(@PathVariable Long id, @RequestBody @Valid GeoInfoRequest geoInfoRequest) {
 
         GeoInfoResponse geoInfoResponse = geoInfoService.updateGeoInfo(id, geoInfoRequest);
 

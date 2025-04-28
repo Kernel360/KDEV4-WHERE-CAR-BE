@@ -51,7 +51,7 @@ public class AnnouncementController {
 
     // 공지 사항 수정
     @PutMapping("/{announcementId}")
-    public ResponseEntity<BaseResponse<AnnouncementResponse>> announcementUpdate(@PathVariable Long announcementId, @RequestBody AnnouncementRequest announcementRequest) {
+    public ResponseEntity<BaseResponse<AnnouncementResponse>> announcementUpdate(@PathVariable Long announcementId, @RequestBody @Valid AnnouncementRequest announcementRequest) {
         AnnouncementResponse announcementResponse = announcementService.updateAnnouncement(announcementId, announcementRequest);
 
         return BaseResponse.created(announcementResponse);

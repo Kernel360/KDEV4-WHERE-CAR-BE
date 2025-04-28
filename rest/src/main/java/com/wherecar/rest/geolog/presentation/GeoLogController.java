@@ -4,6 +4,7 @@ import com.wherecar.rest.common.response.BaseResponse;
 import com.wherecar.rest.geolog.application.GeoLogService;
 import com.wherecar.rest.geolog.application.dto.GeoLogRequest;
 import com.wherecar.rest.geolog.application.dto.GeoLogResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class GeoLogController {
     }
 
     @PutMapping("/{geoLogId}")
-    public ResponseEntity<BaseResponse<GeoLogResponse>> geoLogUpdate(@PathVariable Long geoLogId, @RequestBody GeoLogRequest geoLogRequest) {
+    public ResponseEntity<BaseResponse<GeoLogResponse>> geoLogUpdate(@PathVariable Long geoLogId, @RequestBody @Valid GeoLogRequest geoLogRequest) {
         GeoLogResponse geoLogResponse = geoLogService.updateGeoLog(geoLogId, geoLogRequest);
         return BaseResponse.created(geoLogResponse);
     }

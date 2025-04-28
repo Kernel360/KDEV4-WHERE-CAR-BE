@@ -5,6 +5,7 @@ import com.wherecar.rest.gpslog.application.GpsLogService;
 import com.wherecar.rest.gpslog.application.dto.GpsLogRequest;
 import com.wherecar.rest.gpslog.application.dto.GpsLogResponse;
 import com.wherecar.rest.gpslog.application.dto.GpsRouteResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class GpsLogController {
     }
 
     @PostMapping("/route")
-    public ResponseEntity<BaseResponse<GpsRouteResponse>> routeGet(@RequestBody GpsLogRequest request) {
+    public ResponseEntity<BaseResponse<GpsRouteResponse>> routeGet(@RequestBody @Valid GpsLogRequest request) {
         log.info("routeGet request {}", request);
         GpsRouteResponse gpsRouteResponse = gpsLogService.getGpsPointsByMdn(request.getMdn(), request.getStartTime(), request.getEndTime());
         return BaseResponse.created(gpsRouteResponse);
