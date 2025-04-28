@@ -1,8 +1,10 @@
 spring:
   data:
     redis:
-      host: localhost  # 배포 후에는 변경해야함
+      host: ${REDIS_HOST_NAME} # 배포 후에는 변경해야함
       port: 6379
+      username: ${REDIS_USERNAME}
+      password: ${REDIS_PASSWORD}
   config:
     activate:
       on-profile: dev
