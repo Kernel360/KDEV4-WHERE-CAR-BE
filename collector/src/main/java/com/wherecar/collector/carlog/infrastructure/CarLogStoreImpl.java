@@ -6,9 +6,12 @@ import com.wherecar.collector.carlog.domain.CarLog;
 import com.wherecar.collector.car.domain.CarStatus;
 import com.wherecar.collector.common.constant.CarState;
 import com.wherecar.collector.car.infrastructure.CarStatusRepository;
+import com.wherecar.collector.common.constant.GpsConditionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @Component
@@ -22,13 +25,6 @@ public class CarLogStoreImpl implements CarLogStore {
     public void storeFirstOnLog(Car car, CarLog carLog) {
 
         carLogRepository.save(carLog);
-
-//        CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
-//        CarStatus carStatus = carStatusRepository.findByCarIdForUpdate(car.getId())
-//                .orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
-//        carStatus.changeMileage(0.0); // 최초 출고일 땐 mileage가 0.0
-//        carStatus.changeCarState(CarState.RUNNING);
-//        carStatusRepository.save(carStatus);
 
         carStatusRepository.updateMileage(car.getId(), 0.0);
         carStatusRepository.updateCarState(car.getId(), CarState.RUNNING);
@@ -44,29 +40,36 @@ public class CarLogStoreImpl implements CarLogStore {
         } else { // 시동 ON 시 최초 누적 거리 == 직전 시동 OFF일 때의 누적 거리
             carLogRepository.save(carLog);
 
-//            CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
-//            CarStatus carStatus = carStatusRepository.findByCarIdForUpdate(car.getId())
-//                    .orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
-//            carStatus.changeCarState(CarState.RUNNING);
-//            carStatusRepository.save(carStatus);
             carStatusRepository.updateCarState(car.getId(), CarState.RUNNING);
         }
     }
 
     @Override
-    public void storeOffLog(CarLogRequest offLogRequest, Car car, CarLog previousCarLog, CarLog carLog) {
+    public void storeOffLog(CarLogRequest offLogRequest, Car car, CarLog previousCarLog) {
 
-        carLogRepository.save(carLog);
+        Integer onSum = previousCarLog.getOnSum();    // 직전 ON 로그의 sum
+        Integer offSum = Integer.parseInt(offLogRequest.getSum());      // OFF 로그의 sum
 
-        Integer sumToAdd = CarLog.getSumToAdd(previousCarLog.getOnSum(), Integer.parseInt(offLogRequest.getSum()));
+        Integer sumToAdd = CarLog.getSumToAdd(onSum, offSum);
         Double offMileage = CarLog.getOffMileage(previousCarLog.getOnMileage(), sumToAdd);
 
-//        CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
-//        CarStatus carStatus = carStatusRepository.findByCarIdForUpdate(car.getId())
-//                .orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
-//        carStatus.changeMileage(offMileage);
-//        carStatus.changeCarState(CarState.STOPPED);
-//        carStatusRepository.save(carStatus);
+        Double doubleLatitude = CarLog.parseLatLon(offLogRequest.getLat());
+        Double doubleLongitude = CarLog.parseLatLon(offLogRequest.getLon());
+
+        LocalDateTime offTime = CarLog.parseOnOffTime(offLogRequest.getOffTime());
+
+        GpsConditionType offGpsCondition = CarLog.getGpsConditionType(offLogRequest.getGcd());
+
+        previousCarLog.setOffGpsCondition(offGpsCondition);
+        previousCarLog.setOffLatitude(doubleLatitude);
+        previousCarLog.setOffLongitude(doubleLongitude);
+        previousCarLog.setOffAngle(Integer.parseInt(offLogRequest.getAng()));
+        previousCarLog.setOffSpeed(Integer.parseInt(offLogRequest.getSpd()));
+        previousCarLog.setOffSum(Integer.parseInt(offLogRequest.getSum()));
+        previousCarLog.setOffMileage(offMileage);
+        previousCarLog.setOffTime(offTime);
+
+        carLogRepository.save(previousCarLog);
 
         carStatusRepository.updateMileage(car.getId(), offMileage);
         carStatusRepository.updateCarState(car.getId(), CarState.STOPPED);
