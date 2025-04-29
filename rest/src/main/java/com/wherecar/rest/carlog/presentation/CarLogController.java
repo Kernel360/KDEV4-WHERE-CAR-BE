@@ -1,9 +1,9 @@
 package com.wherecar.rest.carlog.presentation;
 
 import com.wherecar.rest.carlog.application.CarLogService;
-import com.wherecar.rest.carlog.application.dto.CarLogFilterRequest;
 import com.wherecar.rest.carlog.application.dto.CarLogResponse;
 import com.wherecar.rest.carlog.application.dto.CarLogsUpdateRequest;
+import com.wherecar.rest.carlog.domain.constant.DriveType;
 import com.wherecar.rest.common.constants.PaginationConstants;
 import com.wherecar.rest.common.response.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 // Todo: 권한 체크 추후 추가 예정
 
@@ -25,23 +27,26 @@ class CarLogController {
     private final CarLogService carLogService;
 
     //운행일지 목록 조회 (filter 추가)
-    @PostMapping
+    @GetMapping
     public ResponseEntity<BaseResponse<Page<CarLogResponse>>> carLogsGetWithFilter(
             HttpServletRequest httpServletRequest,
             @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size,
-            @RequestBody(required = false) CarLogFilterRequest filterRequest) {
+            @RequestParam(value="mdn", required = false) String mdn,
+            @RequestParam(value="from", required = false)LocalDateTime from,
+            @RequestParam(value="to", required = false)LocalDateTime to,
+            @RequestParam(value="driveType", required = false)DriveType driveType
+            ) {
 
         Long companyId = (Long)httpServletRequest.getAttribute("companyId");
-
-        CarLogFilterRequest request = filterRequest != null ? filterRequest : new CarLogFilterRequest();
 
 
         Page<CarLogResponse> carLogs = carLogService.getCarLogsFiltered(
                 companyId,
-                filterRequest.getMdn(),
-                filterRequest.getStartTime(),
-                filterRequest.getEndTime(),
+                mdn,
+                from,
+                to,
+                driveType,
                 page,
                 size
         );

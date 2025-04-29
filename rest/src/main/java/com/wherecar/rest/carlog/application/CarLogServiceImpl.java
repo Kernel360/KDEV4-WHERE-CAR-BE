@@ -5,6 +5,7 @@ import com.wherecar.rest.carlog.domain.CarLog;
 import com.wherecar.rest.carlog.application.dto.CarLogsUpdateRequest;
 import com.wherecar.rest.carlog.application.dto.MonthlyMileage;
 import com.wherecar.rest.carlog.domain.CarLogFactory;
+import com.wherecar.rest.carlog.domain.constant.DriveType;
 import com.wherecar.rest.carlog.infrastructure.CarLogReader;
 import com.wherecar.rest.carlog.infrastructure.CarLogRepository;
 import com.wherecar.rest.car.infrastructure.CarRepository;
@@ -12,6 +13,8 @@ import com.wherecar.rest.carlog.infrastructure.CarLogStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,13 +45,14 @@ public class CarLogServiceImpl implements CarLogService {
             String mdn,
             LocalDateTime startTime,
             LocalDateTime endTime,
+            DriveType driveType,
             int page,
             int size
     ) {
-        log.info("[CarLog][CarLogServiceImpl][getCarLogsFiltered] 시작 | companyId = {}, mdn = {}, startTime = {}, endTime = {}, page = {}, size = {}",
-                companyId, mdn, startTime, endTime, page, size);
-
-        Page<CarLog> carLogs = carLogReader.getCarLogsFiltered(companyId, mdn, startTime, endTime, page, size);
+        log.info("[CarLog][CarLogServiceImpl][getCarLogsFiltered] 시작 | companyId = {}, mdn = {}, startTime = {}, endTime = {}, driveType = {}, page = {}, size = {}",
+                companyId, mdn, startTime, endTime, driveType, page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CarLog> carLogs = carLogReader.getCarLogsFiltered(companyId, mdn, startTime, endTime, driveType, pageable);
         Page<CarLogResponse> carLogResponses = carLogFactory.toCarLogsResponsePage(carLogs);
 
         log.info("[CarLog][CarLogServiceImpl][getCarLogsFiltered] 종료 | carLogResponses = {}", carLogResponses);

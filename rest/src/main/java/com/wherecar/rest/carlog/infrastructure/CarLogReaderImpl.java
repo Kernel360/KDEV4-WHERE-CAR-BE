@@ -1,10 +1,12 @@
 package com.wherecar.rest.carlog.infrastructure;
 
 import com.wherecar.rest.carlog.domain.CarLog;
+import com.wherecar.rest.carlog.domain.constant.DriveType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -22,10 +24,9 @@ public class CarLogReaderImpl implements CarLogReader{
             String mdn,
             LocalDateTime startTime,
             LocalDateTime endTime,
-            int page,
-            int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return carLogRepository.findCarLogsFiltered(companyId, mdn, startTime, endTime, pageRequest);
+            DriveType driveType,
+            Pageable pageable) {
+        return carLogRepository.searchCarLogWithFilter(companyId, mdn, startTime, endTime, driveType, pageable);
     }
 
     @Override
