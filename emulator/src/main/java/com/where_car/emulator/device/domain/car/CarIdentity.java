@@ -23,10 +23,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CarIdentity {
 
-  @Value("${wherecar.device.mdn}")
+  @Value("${emulator.device.mdn}")
   private String mdn;
 
-  @Value("${wherecar.device.vrp}")
+  @Value("${emulator.device.vrp}")
   private String vrp;
   private String totalDistance;
   private Integer gpsIndex;
