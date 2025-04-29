@@ -33,7 +33,7 @@ public class TokenAuthInterceptor implements HandlerInterceptor {
                     .mdn(null)
                     .build();
 
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 

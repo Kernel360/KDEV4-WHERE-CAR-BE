@@ -22,6 +22,7 @@ public class EmulTokenRequest {
 
     @Pattern(regexp = "^([0-9]|[1-9][0-9]{1,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$",
             message = "0부터 65535 사이의 숫자여야 합니다.")
+
     @NotBlank(message = "pv는 필수입니다.")
     private String pv;
 
