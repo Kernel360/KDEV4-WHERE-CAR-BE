@@ -31,13 +31,13 @@ public class JsonDatabase {
   private final ReadWriteLock lock = new ReentrantReadWriteLock();
   private String currentMdn = "";
 
-  @Value("${wherecar.device.mdn}")
+  @Value("${emulator.device.mdn}")
   private String mdn;
 
-  @Value("${wherecar.device.vrp}")
+  @Value("${emulator.device.vrp}")
   private String vrp;
 
-  public JsonDatabase(@Value("${wherecar.db.storage-file-name}") String fileName) {
+  public JsonDatabase(@Value("${emulator.storage.db-file}") String fileName) {
     String jarDir = Paths.get("").toAbsolutePath().toString();
     this.file = new File(jarDir, fileName);
   }

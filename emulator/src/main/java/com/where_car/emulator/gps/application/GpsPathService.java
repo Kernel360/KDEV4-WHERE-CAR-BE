@@ -38,7 +38,7 @@ public class GpsPathService {
    */
   @Getter
   private Resource selectGpxFile;
-  @Value("${wherecar.device.select-file}")
+  @Value("${emulator.device.gpx-file}")
   private String selectGpxFileName;
 
   /**

@@ -29,13 +29,13 @@ public class DeviceEventExecutor {
     private final TokenService tokenService;
     private final ObjectMapper objectMapper;
 
-    @Value("${wherecar.api.hub.event.start-endpoint}")
+    @Value("${emulator.endpoints.hub.on-path}")
     private String startEndpoint;
 
-    @Value("${wherecar.api.hub.event.cycle-endpoint}")
+    @Value("${emulator.endpoints.hub.cycle-info-path}")
     private String cycleEndpoint;
 
-    @Value("${wherecar.api.hub.event.stop-endpoint}")
+    @Value("${emulator.endpoints.hub.off-path}")
     private String stopEndpoint;
 
     private static final int RETRY_DELAY_SECONDS = 60;
@@ -73,11 +73,11 @@ public class DeviceEventExecutor {
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("Authorization", "Bearer " + token);
-            
+            headers.set("Token", token);
+
             HttpEntity<T> entity = new HttpEntity<>(requestDto, headers);
             ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
-            
+
             handleResponse(response, mdn, url, requestDto, action, retryCount);
         } catch (HttpClientErrorException e) {
             handleRequestException(e, url, requestDto, action, retryCount);
@@ -100,17 +100,17 @@ public class DeviceEventExecutor {
         try {
             JsonNode root = objectMapper.readTree(response.getBody());
             String rstCd = root.path("rstCd").asText();
-            
+
             if ("000".equals(rstCd)) {
                 log.info("{} 정보 전송 성공", action);
             } else if (TOKEN_MISSING_CODE.equals(rstCd) || TOKEN_INVALID_CODE.equals(rstCd)) {
                 log.warn("토큰 오류 발생 (코드: {}): {}", rstCd, root.path("rstMsg").asText());
                 // 토큰 무효화 및 재발급
                 String newToken = tokenService.invalidateAndGetNewToken(mdn);
-                
+
                 retryWithNewToken(url, requestDto, action, mdn, newToken, retryCount);
             } else {
-                log.error("{} 정보 전송 실패. 응답 코드: {}, 메시지: {}", 
+                log.error("{} 정보 전송 실패. 응답 코드: {}, 메시지: {}",
                     action, rstCd, root.path("rstMsg").asText());
                 handleRetry(url, requestDto, action, retryCount);
             }
@@ -124,11 +124,11 @@ public class DeviceEventExecutor {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("Authorization", "Bearer " + token);
-            
+            headers.set("Token", token);
+
             HttpEntity<T> entity = new HttpEntity<>(requestDto, headers);
             ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
-            
+
             handleResponse(response, mdn, url, requestDto, action, retryCount);
         } catch (Exception e) {
             log.error("토큰 재발급 후 재시도 중 오류 발생: {}", e.getMessage());

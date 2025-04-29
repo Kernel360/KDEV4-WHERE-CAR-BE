@@ -32,7 +32,7 @@ public class TokenService {
 		this.restTemplate = restTemplate;
 	}
 	
-	@Value("${wherecar.api.rest.token.endpoint}")
+	@Value("${emulator.endpoints.rest.token-path}")
 	private String tokenEndpoint;
 	
 	// 토큰 캐시 (MDN을 키로 사용)

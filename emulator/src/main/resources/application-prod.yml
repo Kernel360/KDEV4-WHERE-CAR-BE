@@ -17,23 +17,23 @@ server:
     include-message: always
     include-stacktrace: never
 
-wherecar:
+emulator:
+  # 디바이스 관련 설정
   device:
-    mdn: 01234567890
-    vrp: 34가5678
-    select-file: gwangju-to-muju_formatted.gpx
-  db:
-    storage-file-name: device_db.json
-  api:
+    mdn: ${DEVICE_MDN:01234567890}
+    vrp: ${DEVICE_VRP:12가3456}
+    gpx-file: ${DEVICE_GPX_FILE:gwangju-to-muju_formatted.gpx}
+  storage:
+    db-file: ${DEVICE_STORAGE_FILE:device_db.json}
+  # API 엔드포인트 설정
+  endpoints:
+    # 인증 서비스
     rest:
-      url: http://localhost:8080
-      token:
-        endpoint: /emulator/token
-    collector:
-      url: http://localhost:8090
+      base-url: http://localhost:8080
+      token-path: /api/emulator/token
+    # 허브 서비스 설정
     hub:
-      url: http://localhost:8090 # TODO: 실제로는 허브로 주기및 시동 정보를 보내야 함!
-      event:
-        start-endpoint: /api/on
-        cycle-endpoint: /api/gps
-        stop-endpoint: /api/off
+      base-url: http://localhost:8085
+      on-path: /api/hub/on
+      cycle-info-path: /api/hub/gps
+      off-path: /api/hub/off
