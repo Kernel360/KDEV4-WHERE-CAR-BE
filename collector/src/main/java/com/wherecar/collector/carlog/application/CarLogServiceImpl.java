@@ -48,8 +48,7 @@ public class CarLogServiceImpl implements CarLogService {
 
         Car car = carReader.getCarByMdn(offLogRequest.getMdn());
         CarLog previousCarLog = carLogReader.getPreviousOnLogByMdn(car.getMdn());
-        CarLog carLog = carLogFactory.toOffLog(offLogRequest, previousCarLog);
-        carLogStore.storeOffLog(offLogRequest, car, previousCarLog, carLog);
+        carLogStore.storeOffLog(offLogRequest, car, previousCarLog);
         log.info("[CARLOG][CarLogServiceImpl][receiveOffLog] 끝");
     }
 

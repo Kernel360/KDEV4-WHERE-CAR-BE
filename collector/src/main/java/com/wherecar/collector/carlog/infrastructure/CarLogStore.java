@@ -10,5 +10,5 @@ public interface CarLogStore {
 
     void storeOnLog(CarLogRequest onLogRequest, Car car, CarLog previousCarLog, CarLog carLog);
 
-    void storeOffLog(CarLogRequest offLogRequest, Car car, CarLog previousCarLog, CarLog carLog);
+    void storeOffLog(CarLogRequest offLogRequest, Car car, CarLog previousCarLog);
 }
