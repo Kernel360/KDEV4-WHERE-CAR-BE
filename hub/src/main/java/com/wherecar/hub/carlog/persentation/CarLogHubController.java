@@ -2,9 +2,11 @@ package com.wherecar.hub.carlog.persentation;
 
 import com.wherecar.hub.carlog.application.CarLogHubService;
 import com.wherecar.hub.carlog.application.dto.CarLogRequest;
+import com.wherecar.hub.carlog.application.dto.CarLogResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,17 +21,18 @@ public class CarLogHubController {
     private final CarLogHubService carLogHubService;
 
     @PostMapping("/on")
-    public void sendOnLogMessage(@RequestBody @Valid CarLogRequest onLogRequest) {
+    public ResponseEntity<CarLogResponse> sendOnLogMessage(@RequestBody @Valid CarLogRequest onLogRequest) {
         carLogHubService.sendCarOnLogMessage(onLogRequest);
 
-        // todo: return 수정예정 -> redis 토큰 검증 결과
+        return ResponseEntity.ok(CarLogResponse.getCarLogResponse(onLogRequest.getMdn()));
+
     }
 
     @PostMapping("/off")
-    public void sendOffLogMessage(@RequestBody @Valid CarLogRequest offLogRequest) {
+    public ResponseEntity<CarLogResponse> sendOffLogMessage(@RequestBody @Valid CarLogRequest offLogRequest) {
         carLogHubService.sendCarOffLogMessage(offLogRequest);
 
-        // todo: reuturn 수정예정 -> redis 토큰 검증 결과
+        return ResponseEntity.ok(CarLogResponse.getCarLogResponse(offLogRequest.getMdn()));
     }
 
 }
