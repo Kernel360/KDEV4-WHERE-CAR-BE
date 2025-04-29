@@ -2,7 +2,6 @@ package com.wherecar.rest.user.domain;
 
 import com.wherecar.rest.common.domain.BaseEntity;
 import com.wherecar.rest.company.domain.Company;
-import com.wherecar.rest.user.application.dto.UserRequest;
 import com.wherecar.rest.user.application.dto.UserUpdateRequest;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +13,7 @@ import java.util.Set;
 @Table(name="users")
 @Entity
 @Getter
-@ToString(exclude = "{company,userPermissions")
+@ToString(exclude = {"company", "userPermissions"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
