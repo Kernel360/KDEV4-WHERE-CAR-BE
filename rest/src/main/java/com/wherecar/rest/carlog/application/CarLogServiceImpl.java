@@ -99,7 +99,7 @@ public class CarLogServiceImpl implements CarLogService {
 
     //Todo: 대시보드 코드 추후 별도로 리팩토링 진행
     @Override
-    public CarLogResponse getAllCarLogsStatics(Long companyId) {
+    public List<MonthlyMileage> getAllCarLogsStatics(Long companyId) {
         log.info("[CarLog][CarLogServiceImpl][getAllCarLogsStatics] 시작 | companyId = {}", companyId);
 
         List<String> mdns = carRepository.findMdnsByCompanyId(companyId);
@@ -153,15 +153,10 @@ public class CarLogServiceImpl implements CarLogService {
                 .map(entry -> new MonthlyMileage(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
-//        CarLogResponse carLogResponse = CarLogResponse.builder()
-//                .totalMileage(totalMileage)
-//                .carLogsCount(String.valueOf(count))
-//                .monthlyMileages(monthlyMileages)
-//                .build();
 
-//        log.info("[CarLog][CarLogServiceImpl][getAllCarLogsStatics] 종료 | carLogResponse = {}", carLogResponse);
+        log.info("[CarLog][CarLogServiceImpl][getAllCarLogsStatics] 종료 | monthlyMileages = {}", monthlyMileages);
 
-        return new CarLogResponse();
+        return monthlyMileages;
     }
 
 

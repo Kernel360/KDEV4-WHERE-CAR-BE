@@ -3,6 +3,7 @@ package com.wherecar.rest.carlog.presentation;
 import com.wherecar.rest.carlog.application.CarLogService;
 import com.wherecar.rest.carlog.application.dto.CarLogResponse;
 import com.wherecar.rest.carlog.application.dto.CarLogsUpdateRequest;
+import com.wherecar.rest.carlog.application.dto.MonthlyMileage;
 import com.wherecar.rest.carlog.domain.constant.DriveType;
 import com.wherecar.rest.common.constants.PaginationConstants;
 import com.wherecar.rest.common.response.BaseResponse;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 // Todo: 권한 체크 추후 추가 예정
 
@@ -84,13 +86,13 @@ class CarLogController {
 
     // 대시보드 운행 통계 달별 km 및 운행건수를 counting
     @GetMapping("/statics")
-    public ResponseEntity<BaseResponse<CarLogResponse>> carLogsStaticsGetAll(HttpServletRequest request) {
+    public ResponseEntity<BaseResponse<List<MonthlyMileage>>> carLogsStaticsGetAll(HttpServletRequest request) {
 
         Long companyId = (Long)request.getAttribute("companyId");
         System.out.println("companyId = " + companyId);
-        CarLogResponse carLogsStaticsResponse = carLogService.getAllCarLogsStatics(companyId);
+        List<MonthlyMileage> monthlyMileages = carLogService.getAllCarLogsStatics(companyId);
 
-        return BaseResponse.ok(carLogsStaticsResponse);
+        return BaseResponse.ok(monthlyMileages);
     }
 
 }

@@ -2,10 +2,12 @@ package com.wherecar.rest.carlog.application;
 
 import com.wherecar.rest.carlog.application.dto.CarLogResponse;
 import com.wherecar.rest.carlog.application.dto.CarLogsUpdateRequest;
+import com.wherecar.rest.carlog.application.dto.MonthlyMileage;
 import com.wherecar.rest.carlog.domain.constant.DriveType;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface CarLogService {
 
@@ -17,6 +19,6 @@ public interface CarLogService {
 
     void deleteCarLogDetails(Long carLogId);
 
-    CarLogResponse getAllCarLogsStatics(Long companyId);
+    List<MonthlyMileage> getAllCarLogsStatics(Long companyId);
 
 }
