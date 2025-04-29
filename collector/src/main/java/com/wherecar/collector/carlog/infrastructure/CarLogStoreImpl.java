@@ -32,15 +32,19 @@ public class CarLogStoreImpl implements CarLogStore {
     @Override
     public void storeOnLog(CarLogRequest onLogRequest, Car car, CarLog previousCarLog, CarLog carLog) {
 
-        // 시동 ON 시 최초 누적 거리 != 직전 시동 OFF일 때의 누적 거리
-        if (!CarLog.isSameOffSum(previousCarLog.getOffSum(), onLogRequest.getSum())) {
-            log.error("(시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)");
+//        // 시동 ON 시 최초 누적 거리 != 직전 시동 OFF일 때의 누적 거리
+//        if (!CarLog.isSameOffSum(previousCarLog.getOffSum(), onLogRequest.getSum())) {
+//            log.error("(시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)");
+//
+//        } else { // 시동 ON 시 최초 누적 거리 == 직전 시동 OFF일 때의 누적 거리
+//            carLogRepository.save(carLog);
+//
+//            carStatusRepository.updateCarState(car.getId(), CarState.RUNNING);
+//        }
 
-        } else { // 시동 ON 시 최초 누적 거리 == 직전 시동 OFF일 때의 누적 거리
-            carLogRepository.save(carLog);
+        carLogRepository.save(carLog);
 
-            carStatusRepository.updateCarState(car.getId(), CarState.RUNNING);
-        }
+        carStatusRepository.updateCarState(car.getId(), CarState.RUNNING);
     }
 
     @Override
