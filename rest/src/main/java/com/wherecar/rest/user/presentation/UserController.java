@@ -80,7 +80,7 @@ public class UserController {
 
 //    @RequiredPermission(PermissionType.ROOT)
     @PutMapping("/{userId}")
-    public ResponseEntity<BaseResponse<UserResponse>> userUpdate(@PathVariable Long userId, @RequestBody @Valid UserRequest userRequest){
+    public ResponseEntity<BaseResponse<UserResponse>> userUpdate(@PathVariable Long userId, @RequestBody @Valid UserUpdateRequest userRequest){
         log.info("Updating user with id: {}", userId);
         UserResponse userResponse = userService.updateUserById(userId, userRequest);
         return BaseResponse.created(userResponse);
@@ -88,7 +88,7 @@ public class UserController {
 
 //    @RequiredPermission(PermissionType.ROOT)
     @PutMapping("/my")
-    public ResponseEntity<BaseResponse<UserResponse>> myUserUpdate(HttpServletRequest request, @RequestBody @Valid UserRequest userRequest){
+    public ResponseEntity<BaseResponse<UserResponse>> myUserUpdate(HttpServletRequest request, @RequestBody @Valid UserUpdateRequest userRequest){
         Long userId = (Long)request.getAttribute("userId");
         log.info("Updating my user: {}", userId);
         UserResponse userResponse = userService.updateUserById(userId, userRequest);

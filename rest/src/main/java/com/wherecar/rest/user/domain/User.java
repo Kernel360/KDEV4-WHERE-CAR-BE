@@ -3,6 +3,7 @@ package com.wherecar.rest.user.domain;
 import com.wherecar.rest.common.domain.BaseEntity;
 import com.wherecar.rest.company.domain.Company;
 import com.wherecar.rest.user.application.dto.UserRequest;
+import com.wherecar.rest.user.application.dto.UserUpdateRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -49,7 +50,7 @@ public class User extends BaseEntity {
     private String jobTitle;
 
 
-    public void updateUser(UserRequest userRequest) {
+    public void updateUser(UserUpdateRequest userRequest) {
         this.name = userRequest.getName();
         this.phone = userRequest.getPhone();
         this.jobTitle = userRequest.getJobTitle();

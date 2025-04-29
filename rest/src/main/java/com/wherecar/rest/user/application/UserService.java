@@ -10,7 +10,7 @@ public interface UserService {
     List<UserResponse> getUsersOfCompany(Long companyId);
     UserResponse getUserById(Long userId);
     void deleteUserById(Long userId);
-    UserResponse updateUserById(Long userId, UserRequest userRequest);
+    UserResponse updateUserById(Long userId, UserUpdateRequest userRequest);
     UserResponse updatePasswordById(Long userId, PasswordRequest passwordRequest);
 
     //permission
