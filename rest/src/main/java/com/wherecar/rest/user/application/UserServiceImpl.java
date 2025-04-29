@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUserById(Long userId, UserRequest userRequest) {
+    public UserResponse updateUserById(Long userId, UserUpdateRequest userRequest) {
         log.info("[USER][UserServiceImpl][updateUserById] 시작 | userId={}, userRequest={}", userId, userRequest);
         User user = userReader.getUserById(userId);
         user.updateUser(userRequest);

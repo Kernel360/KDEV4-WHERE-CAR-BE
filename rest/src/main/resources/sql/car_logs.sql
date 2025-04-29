@@ -1,7 +1,7 @@
 
 
 
-INSERT INTO wherecar.car_logs (
+INSERT INTO car_logs (
     created_at, updated_at, description, drive_type, driver, mdn,
     off_angle, off_gps_condition, off_latitude, off_longitude, off_mileage, off_speed, off_sum, off_time,
     on_angle, on_gps_condition, on_latitude, on_longitude, on_mileage, on_speed, on_sum, on_time
@@ -12,7 +12,7 @@ VALUES (
            327, 'A', 37.500704, 127.030236, 0, 89, 0, '2025-04-10 16:50:00.000000'
        );
 
-INSERT INTO wherecar.car_logs (
+INSERT INTO car_logs (
     created_at, updated_at, description, drive_type, driver, mdn,
     off_angle, off_gps_condition, off_latitude, off_longitude, off_mileage, off_speed, off_sum, off_time,
     on_angle, on_gps_condition, on_latitude, on_longitude, on_mileage, on_speed, on_sum, on_time
@@ -23,7 +23,7 @@ VALUES (
            327, 'A', 35.111262, 126.834343, 0, 89, 0, '2025-04-10 16:50:00.000000'
        );
 
-INSERT INTO wherecar.car_logs (
+INSERT INTO car_logs (
     created_at, updated_at, description, drive_type, driver, mdn,
     off_angle, off_gps_condition, off_latitude, off_longitude, off_mileage, off_speed, off_sum, off_time,
     on_angle, on_gps_condition, on_latitude, on_longitude, on_mileage, on_speed, on_sum, on_time

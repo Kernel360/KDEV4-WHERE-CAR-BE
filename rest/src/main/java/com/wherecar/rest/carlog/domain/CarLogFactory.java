@@ -22,7 +22,11 @@ public class CarLogFactory {
                 .offTime(carLog.getOffTime())
                 .onMileage(carLog.getOnMileage())
                 .offMileage(carLog.getOffMileage())
-                .totalMileage((carLog.getOffMileage() - carLog.getOnMileage()) / METER_TO_KILOMETER)
+                .totalMileage(
+                        carLog.getOffMileage() != null
+                                ? (carLog.getOffMileage() - carLog.getOnMileage())
+                                : 0D
+                )
                 .driver(carLog.getDriver())
                 .driveType(carLog.getDriveType())
                 .description(carLog.getDescription())

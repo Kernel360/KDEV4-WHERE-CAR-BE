@@ -9,7 +9,6 @@ import java.util.Objects;
 @Entity
 @Getter
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserPermission {

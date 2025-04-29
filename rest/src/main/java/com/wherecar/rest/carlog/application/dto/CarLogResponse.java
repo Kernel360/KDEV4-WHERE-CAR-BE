@@ -31,10 +31,4 @@ public class CarLogResponse {
     private DriveType driveType;
     private String driver;
     private String description;
-
-    // 대시보드 운행 통계 운행 건수
-    private String carLogsCount;
-
-    // 대시보드 월별 월간 주행거리
-    private List<MonthlyMileage> monthlyMileages;
 }

@@ -14,6 +14,6 @@ public interface CarService {
     List<CarResponse> getAllCars(Long companyId, int page, int size);
     CarResponse getCarDetails(Long id);
     CarOverviewResponse getCarOverview(Long companyId);
-    List<CarResponse> gatCarsByStatus(Long companyId);
+    List<CarResponse> getCarsByStatus(Long companyId);
 
 }

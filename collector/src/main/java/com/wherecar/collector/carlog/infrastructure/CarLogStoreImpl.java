@@ -3,7 +3,6 @@ package com.wherecar.collector.carlog.infrastructure;
 import com.wherecar.collector.carlog.application.dto.CarLogRequest;
 import com.wherecar.collector.car.domain.Car;
 import com.wherecar.collector.carlog.domain.CarLog;
-import com.wherecar.collector.car.domain.CarStatus;
 import com.wherecar.collector.common.constant.CarState;
 import com.wherecar.collector.car.infrastructure.CarStatusRepository;
 import com.wherecar.collector.common.constant.GpsConditionType;
@@ -35,7 +34,7 @@ public class CarLogStoreImpl implements CarLogStore {
 
         // 시동 ON 시 최초 누적 거리 != 직전 시동 OFF일 때의 누적 거리
         if (!CarLog.isSameOffSum(previousCarLog.getOffSum(), onLogRequest.getSum())) {
-            throw new RuntimeException("(시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)");
+            log.error("(시동 ON 시 최초 누적 거리) != (직전 시동 OFF일 때의 누적 거리)");
 
         } else { // 시동 ON 시 최초 누적 거리 == 직전 시동 OFF일 때의 누적 거리
             carLogRepository.save(carLog);

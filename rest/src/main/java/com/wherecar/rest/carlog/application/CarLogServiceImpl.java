@@ -5,6 +5,7 @@ import com.wherecar.rest.carlog.domain.CarLog;
 import com.wherecar.rest.carlog.application.dto.CarLogsUpdateRequest;
 import com.wherecar.rest.carlog.application.dto.MonthlyMileage;
 import com.wherecar.rest.carlog.domain.CarLogFactory;
+import com.wherecar.rest.carlog.domain.constant.DriveType;
 import com.wherecar.rest.carlog.infrastructure.CarLogReader;
 import com.wherecar.rest.carlog.infrastructure.CarLogRepository;
 import com.wherecar.rest.car.infrastructure.CarRepository;
@@ -12,6 +13,8 @@ import com.wherecar.rest.carlog.infrastructure.CarLogStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,13 +45,14 @@ public class CarLogServiceImpl implements CarLogService {
             String mdn,
             LocalDateTime startTime,
             LocalDateTime endTime,
+            DriveType driveType,
             int page,
             int size
     ) {
-        log.info("[CarLog][CarLogServiceImpl][getCarLogsFiltered] 시작 | companyId = {}, mdn = {}, startTime = {}, endTime = {}, page = {}, size = {}",
-                companyId, mdn, startTime, endTime, page, size);
-
-        Page<CarLog> carLogs = carLogReader.getCarLogsFiltered(companyId, mdn, startTime, endTime, page, size);
+        log.info("[CarLog][CarLogServiceImpl][getCarLogsFiltered] 시작 | companyId = {}, mdn = {}, startTime = {}, endTime = {}, driveType = {}, page = {}, size = {}",
+                companyId, mdn, startTime, endTime, driveType, page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CarLog> carLogs = carLogReader.getCarLogsFiltered(companyId, mdn, startTime, endTime, driveType, pageable);
         Page<CarLogResponse> carLogResponses = carLogFactory.toCarLogsResponsePage(carLogs);
 
         log.info("[CarLog][CarLogServiceImpl][getCarLogsFiltered] 종료 | carLogResponses = {}", carLogResponses);
@@ -95,7 +99,7 @@ public class CarLogServiceImpl implements CarLogService {
 
     //Todo: 대시보드 코드 추후 별도로 리팩토링 진행
     @Override
-    public CarLogResponse getAllCarLogsStatics(Long companyId) {
+    public List<MonthlyMileage> getAllCarLogsStatics(Long companyId) {
         log.info("[CarLog][CarLogServiceImpl][getAllCarLogsStatics] 시작 | companyId = {}", companyId);
 
         List<String> mdns = carRepository.findMdnsByCompanyId(companyId);
@@ -138,7 +142,14 @@ public class CarLogServiceImpl implements CarLogService {
                                 && onTime.getYear() == year
                                 && onTime.getMonthValue() == month;
                     })
-                    .mapToDouble(log -> log.getOffMileage() - log.getOnMileage())
+                    .mapToDouble(log -> {
+                        Double onMileage = log.getOnMileage();
+                        Double offMileage = log.getOffMileage();
+                        if (onMileage == null || offMileage == null) {
+                            return 0D;
+                        }
+                        return offMileage - onMileage;
+                    })
                     .sum();
 
             String key = String.format("%d-%02d", year, month);
@@ -149,15 +160,10 @@ public class CarLogServiceImpl implements CarLogService {
                 .map(entry -> new MonthlyMileage(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
-        CarLogResponse carLogResponse = CarLogResponse.builder()
-                .totalMileage(totalMileage)
-                .carLogsCount(String.valueOf(count))
-                .monthlyMileages(monthlyMileages)
-                .build();
 
-        log.info("[CarLog][CarLogServiceImpl][getAllCarLogsStatics] 종료 | carLogResponse = {}", carLogResponse);
+        log.info("[CarLog][CarLogServiceImpl][getAllCarLogsStatics] 종료 | monthlyMileages = {}", monthlyMileages);
 
-        return carLogResponse;
+        return monthlyMileages;
     }
 
 
