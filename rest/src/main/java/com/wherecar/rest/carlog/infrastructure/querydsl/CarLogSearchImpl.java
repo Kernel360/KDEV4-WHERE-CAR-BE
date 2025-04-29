@@ -50,7 +50,7 @@ public class CarLogSearchImpl extends QuerydslRepositorySupport implements CarLo
         }
 
         if (endTime != null) {
-            builder.and(carLog.offTime.loe(endTime));
+            builder.and(carLog.onTime.loe(endTime));
         }
 
         if (driveType != null) {

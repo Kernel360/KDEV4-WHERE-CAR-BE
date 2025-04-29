@@ -153,15 +153,15 @@ public class CarLogServiceImpl implements CarLogService {
                 .map(entry -> new MonthlyMileage(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
-        CarLogResponse carLogResponse = CarLogResponse.builder()
-                .totalMileage(totalMileage)
-                .carLogsCount(String.valueOf(count))
-                .monthlyMileages(monthlyMileages)
-                .build();
+//        CarLogResponse carLogResponse = CarLogResponse.builder()
+//                .totalMileage(totalMileage)
+//                .carLogsCount(String.valueOf(count))
+//                .monthlyMileages(monthlyMileages)
+//                .build();
 
-        log.info("[CarLog][CarLogServiceImpl][getAllCarLogsStatics] 종료 | carLogResponse = {}", carLogResponse);
+//        log.info("[CarLog][CarLogServiceImpl][getAllCarLogsStatics] 종료 | carLogResponse = {}", carLogResponse);
 
-        return carLogResponse;
+        return new CarLogResponse();
     }
 
 

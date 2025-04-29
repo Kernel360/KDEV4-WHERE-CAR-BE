@@ -11,10 +11,13 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 // Todo: 권한 체크 추후 추가 예정
 
@@ -33,25 +36,28 @@ class CarLogController {
             @RequestParam(value = "page", defaultValue = "" + PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = "" + PaginationConstants.DEFAULT_SIZE) int size,
             @RequestParam(value="mdn", required = false) String mdn,
-            @RequestParam(value="from", required = false)LocalDateTime from,
-            @RequestParam(value="to", required = false)LocalDateTime to,
+            @RequestParam(value="from", required = false) @DateTimeFormat(pattern = "yyyyMMdd") LocalDate from,
+            @RequestParam(value="to", required = false) @DateTimeFormat(pattern = "yyyyMMdd")LocalDate to,
             @RequestParam(value="driveType", required = false)DriveType driveType
             ) {
 
         Long companyId = (Long)httpServletRequest.getAttribute("companyId");
 
+        LocalDateTime fromDateTime = (from != null) ? from.atStartOfDay() : null;
+        LocalDateTime toDateTime = (to != null) ? to.atTime(LocalTime.MAX) : null;
+
 
         Page<CarLogResponse> carLogs = carLogService.getCarLogsFiltered(
                 companyId,
                 mdn,
-                from,
-                to,
+                fromDateTime,
+                toDateTime,
                 driveType,
                 page,
                 size
         );
 
-        return BaseResponse.created(carLogs);
+        return BaseResponse.ok(carLogs);
     }
 
     //운행일지 상세 정보 조회
