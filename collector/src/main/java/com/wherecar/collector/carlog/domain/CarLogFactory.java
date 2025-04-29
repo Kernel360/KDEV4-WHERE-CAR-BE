@@ -54,42 +54,5 @@ public class CarLogFactory {
                 .onTime(onTime)
                 .build();
     }
-    
-    public CarLog toOffLog(CarLogRequest carLogRequest, CarLog previousCarLog) {
-        
-        Integer onSum = previousCarLog.getOnSum();    // 직전 ON 로그의 sum
-        Integer offSum = Integer.parseInt(carLogRequest.getSum());      // OFF 로그의 sum
-
-        Integer sumToAdd = CarLog.getSumToAdd(onSum, offSum);
-        Double offMileage = CarLog.getOffMileage(previousCarLog.getOnMileage(), sumToAdd);
-
-        Double doubleLatitude = CarLog.parseLatLon(carLogRequest.getLat());
-        Double doubleLongitude = CarLog.parseLatLon(carLogRequest.getLon());
-
-        LocalDateTime onTime = CarLog.parseOnOffTime(carLogRequest.getOnTime());
-        LocalDateTime offTime = CarLog.parseOnOffTime(carLogRequest.getOffTime());
-
-        GpsConditionType offGpsCondition = CarLog.getGpsConditionType(carLogRequest.getGcd());
-
-        return CarLog.builder()
-                .mdn(carLogRequest.getMdn())
-                .onGpsCondition(previousCarLog.getOnGpsCondition())
-                .onLatitude(previousCarLog.getOnLatitude())
-                .onLongitude(previousCarLog.getOnLongitude())
-                .onAngle(previousCarLog.getOnAngle())
-                .onSpeed(previousCarLog.getOnSpeed())
-                .onSum(onSum)
-                .onMileage(previousCarLog.getOnMileage())
-                .onTime(onTime)
-                .offGpsCondition(offGpsCondition)
-                .offLatitude(doubleLatitude)
-                .offLongitude(doubleLongitude)
-                .offAngle(Integer.parseInt(carLogRequest.getAng()))
-                .offSpeed(Integer.parseInt(carLogRequest.getSpd()))
-                .offSum(Integer.parseInt(carLogRequest.getSum()))
-                .offMileage(offMileage)
-                .offTime(offTime)
-                .build();
-    }
 
 }

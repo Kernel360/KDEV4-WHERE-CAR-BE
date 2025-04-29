@@ -13,6 +13,7 @@ import java.util.Objects;
 
 @Table(name = "car_logs")
 @Entity
+@Setter
 @Getter
 @Builder
 @ToString

@@ -28,7 +28,7 @@ public class CarLogController {
     }
 
     @PostMapping("/off")
-    public ResponseEntity<CarLogResponse> OffLogReceive(@RequestBody @Valid CarLogRequest offLogRequest) {
+    public ResponseEntity<CarLogResponse> offLogReceive(@RequestBody @Valid CarLogRequest offLogRequest) {
         carLogService.receiveOffLog(offLogRequest);
 
         return ResponseEntity.ok(CarLogResponse.getCarLogResponse(offLogRequest.getMdn()));
