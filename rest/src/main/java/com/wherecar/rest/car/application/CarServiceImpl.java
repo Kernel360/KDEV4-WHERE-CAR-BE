@@ -101,8 +101,8 @@ public class CarServiceImpl implements CarService {
 
     //Todo: 추후 리팩토링 관제 이외의 상태별로 조회할 수 있도록 수정
     @Override
-    public List<CarResponse> gatCarsByStatus(Long companyId) {
-        log.info("[Car][CarServiceImpl][gatCarsByStatus] 시작 | companyId = {}", companyId);
+    public List<CarResponse> getCarsByStatus(Long companyId) {
+        log.info("[Car][CarServiceImpl][getCarsByStatus] 시작 | companyId = {}", companyId);
         List<Car> cars = carRepository.findByCompanyIdWithRegisteredCarStatus(companyId);
 
         List<CarResponse> carResponse = cars.stream()
@@ -112,7 +112,7 @@ public class CarServiceImpl implements CarService {
                         .build()
                 )
                 .collect(Collectors.toList());
-        log.info("[Car][CarServiceImpl][gatCarsByStatus] 종료 | carResponse = {}", carResponse);
+        log.info("[Car][CarServiceImpl][getCarsByStatus] 종료 | carResponse = {}", carResponse);
 
         return carResponse;
     }
