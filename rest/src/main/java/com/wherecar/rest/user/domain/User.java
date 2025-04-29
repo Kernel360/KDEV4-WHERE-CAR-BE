@@ -13,7 +13,7 @@ import java.util.Set;
 @Table(name="users")
 @Entity
 @Getter
-@ToString(exclude = "company")
+@ToString(exclude = "{company,userPermissions")
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
