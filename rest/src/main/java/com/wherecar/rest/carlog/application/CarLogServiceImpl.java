@@ -142,7 +142,14 @@ public class CarLogServiceImpl implements CarLogService {
                                 && onTime.getYear() == year
                                 && onTime.getMonthValue() == month;
                     })
-                    .mapToDouble(log -> log.getOffMileage() - log.getOnMileage())
+                    .mapToDouble(log -> {
+                        Double onMileage = log.getOnMileage();
+                        Double offMileage = log.getOffMileage();
+                        if (onMileage == null || offMileage == null) {
+                            return 0D;
+                        }
+                        return offMileage - onMileage;
+                    })
                     .sum();
 
             String key = String.format("%d-%02d", year, month);

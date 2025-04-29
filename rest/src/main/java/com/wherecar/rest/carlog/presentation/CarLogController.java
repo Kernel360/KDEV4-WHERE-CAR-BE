@@ -44,7 +44,7 @@ class CarLogController {
             ) {
 
         Long companyId = (Long)httpServletRequest.getAttribute("companyId");
-
+        System.out.println("companyId = " + companyId);
         LocalDateTime fromDateTime = (from != null) ? from.atStartOfDay() : null;
         LocalDateTime toDateTime = (to != null) ? to.atTime(LocalTime.MAX) : null;
 
@@ -89,7 +89,6 @@ class CarLogController {
     public ResponseEntity<BaseResponse<List<MonthlyMileage>>> carLogsStaticsGetAll(HttpServletRequest request) {
 
         Long companyId = (Long)request.getAttribute("companyId");
-        System.out.println("companyId = " + companyId);
         List<MonthlyMileage> monthlyMileages = carLogService.getAllCarLogsStatics(companyId);
 
         return BaseResponse.ok(monthlyMileages);
