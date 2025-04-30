@@ -28,12 +28,9 @@ public class GpsLogStoreImpl implements GpsLogStore {
 
             gpsLogRepository.save(gpsLog);
 
-//            CarStatus carStatus = carStatusRepository.findByCarId(car.getId()).orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
-//            CarStatus carStatus = carStatusRepository.findByCarIdForUpdate(car.getId())
-//                    .orElseThrow(() -> new RuntimeException("CarStatus가 없습니다."));
-//            carStatus.changeBatteryVoltage(Integer.parseInt(bat));
-//            carStatusRepository.save(carStatus);
-            carStatusRepository.updateBatteryVoltage(car.getId(), Integer.parseInt(bat));
+            if (i == gpsLogList.size() - 1) {
+                carStatusRepository.updateBatteryVoltage(car.getId(), Integer.parseInt(bat));
+            }
         }
 
     }
