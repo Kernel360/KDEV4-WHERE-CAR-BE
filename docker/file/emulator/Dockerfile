@@ -40,7 +40,7 @@ COPY --from=builder /build/emulator/build/libs/*.jar emulator.jar
 ENV SPRING_PROFILES_ACTIVE=prod
 
 # 포트 노출
-EXPOSE 8085
+EXPOSE 8080
 
 # 실행 명령
 ENTRYPOINT ["java", "-jar", "emulator.jar"]
