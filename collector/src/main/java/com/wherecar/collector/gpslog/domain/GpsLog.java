@@ -25,7 +25,6 @@ public class GpsLog extends BaseEntity {
     @Column(name = "mdn")
     private String mdn;
 
-    // oTime + sec
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
