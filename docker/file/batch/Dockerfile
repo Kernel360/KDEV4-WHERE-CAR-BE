@@ -40,7 +40,7 @@ COPY --from=builder /build/batch/build/libs/*.jar batch.jar
 ENV SPRING_PROFILES_ACTIVE=prod
 
 # 포트 노출
-EXPOSE 8087
+EXPOSE 8095
 
 # 실행 명령
 ENTRYPOINT ["java", "-jar", "batch.jar"]
