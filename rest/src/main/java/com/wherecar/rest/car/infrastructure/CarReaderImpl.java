@@ -31,6 +31,7 @@ public class CarReaderImpl implements CarReader{
         return carRepository.findByCompanyIdWithCarStatus(companyId, pageRequest);
     }
 
+    @Override
     public CarOverviewResponse getCarOverviewByCompanyId(Long companyId) {
         long totalCars = carRepository.countByCompanyId(companyId);
         long totalCorporateCars = carRepository.countByCompanyIdAndOwnerType(companyId, OwnerType.CORPORATE);
@@ -49,6 +50,7 @@ public class CarReaderImpl implements CarReader{
                 .build();
     }
 
+    @Override
     public boolean existsByMdn(String mdn) {
         return carRepository.existsByMdn(mdn);
     }
