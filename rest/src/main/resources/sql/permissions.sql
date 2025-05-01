@@ -1,3 +1,4 @@
+-- 회사 관련 권한
 INSERT INTO permissions (type) VALUES ('PERM_COMPANY_VIEW');
 INSERT INTO permissions (type) VALUES ('PERM_COMPANY_EDIT');
 
@@ -19,12 +20,15 @@ INSERT INTO permissions (type) VALUES ('PERM_VEHICLE_DELETE');
 
 -- 로그 관련 권한
 INSERT INTO permissions (type) VALUES ('PERM_LOGS_VIEW');
-INSERT INTO permissions (type) VALUES ('PERM_LOGS_EXPORT');
+INSERT INTO permissions (type) VALUES ('PERM_LOGS_EDIT');
+INSERT INTO permissions (type) VALUES ('PERM_LOGS_DELETE');
 
 -- 대시보드 관련 권한
 INSERT INTO permissions (type) VALUES ('PERM_DASHBOARD_VIEW');
 INSERT INTO permissions (type) VALUES ('PERM_DASHBOARD_EDIT');
 
+-- 통계 관련 권한
+INSERT INTO permissions (type) VALUES ('PERM_STATS_VIEW');
+
 -- 관리자 권한
 INSERT INTO permissions (type) VALUES ('PERM_ADMIN');
-

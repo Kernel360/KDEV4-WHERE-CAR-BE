@@ -8,6 +8,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -24,7 +25,7 @@ public class PermissionCheckAspect {
     @Around("@annotation(requiredPermission)")
     public Object checkPermissions(ProceedingJoinPoint joinPoint, RequiredPermission requiredPermission) throws Throwable {
         @SuppressWarnings("unchecked")
-        Set<PermissionType> userPermissions = (Set<PermissionType>) request.getAttribute("PermissionTypes");
+        Set<PermissionType> userPermissions = (Set<PermissionType>) request.getAttribute("permissionTypes");
 
         PermissionType[] requiredPermissions = requiredPermission.value();
 
@@ -38,6 +39,6 @@ public class PermissionCheckAspect {
             }
         }
 
-        throw new RuntimeException("No Permission found for required permission: " + requiredPermission);
+        throw new AccessDeniedException("필요한 권한이 없습니다: " + requiredPermission);
     }
 }

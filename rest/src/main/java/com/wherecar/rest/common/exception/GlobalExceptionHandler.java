@@ -3,6 +3,7 @@ package com.wherecar.rest.common.exception;
 import com.wherecar.rest.common.response.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,6 +20,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<BaseResponse<Void>> handleException(Exception e) {
 
         return BaseResponse.badRequest(e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<BaseResponse<Void>> handleException(AccessDeniedException e) {
+        return BaseResponse.forbidden(e.getMessage());
     }
 
     @ExceptionHandler
