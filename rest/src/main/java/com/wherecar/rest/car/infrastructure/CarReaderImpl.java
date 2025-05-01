@@ -49,5 +49,9 @@ public class CarReaderImpl implements CarReader{
                 .build();
     }
 
+    public boolean existsByMdn(String mdn) {
+        return carRepository.existsByMdn(mdn);
+    }
+
 
 }

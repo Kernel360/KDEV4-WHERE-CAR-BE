@@ -12,4 +12,6 @@ public interface CarReader {
 
     CarOverviewResponse getCarOverviewByCompanyId(Long companyId);
 
+    boolean existsByMdn(String mdn);
+
 }

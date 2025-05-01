@@ -29,13 +29,17 @@ public class CarServiceImpl implements CarService {
     private final CarReader carReader;
     private final CompanyReader companyReader;
     private final CarFactory carFactory;
-
     private final CarStore carStore;
 
     @Override
     public CarResponse createCar(Long companyId, CarRegisterRequest carRegisterRequest) {
 
-        log.info("[Car][CarServiceImpl][createCar] 시작 | companyId ={}, carRegisterRequest = {}", companyId, carRegisterRequest);
+        log.info("[Car][CarServiceImpl][createCar] 시작 | companyId = {}, carRegisterRequest = {}", companyId, carRegisterRequest);
+
+        if (carReader.existsByMdn(carRegisterRequest.getMdn())) {
+            throw new RuntimeException("이미 존재하는 mdn입니다.: " + carRegisterRequest.getMdn());
+        }
+
         Company company = companyReader.getCompanyById(companyId);
         Car car = carFactory.toCar(carRegisterRequest, company);
         car = carStore.store(car);
