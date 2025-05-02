@@ -4,6 +4,7 @@ import com.wherecar.rest.car.domain.constant.AcquisitionType;
 import com.wherecar.rest.car.domain.constant.OwnerType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
 
@@ -22,6 +23,7 @@ public class CarRegisterRequest {
     private String model;
 
     // TODO 필수인지 아닌지 여쭤 보기
+    @Pattern(regexp = "^(19\\d{2}|20[0-1]\\d|202[0-6])$", message = "연도는 1900 ~ 2026 사이 값이어야 합니다.")
     private String year;
 
     // TODO 필수인지 아닌지 여쭤 보기
