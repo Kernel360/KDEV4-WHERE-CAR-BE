@@ -1,0 +1,30 @@
+filebeat.inputs:
+  - type: filestream
+    id: rest-logs
+    enabled: true
+    paths:
+      - /logs/rest/{yyyy-MM-dd}/rest-*.log
+    exclude_files: ['\.gz$']
+    fields:
+      app_name: rest
+      environment: development
+
+processors:
+  - add_fields:
+      target: ''
+      fields:
+        env: dev
+
+output.logstash:
+  hosts: ["${LOGSTASH_HOST}"]
+
+monitoring:
+  enabled: true
+  elasticsearch:
+    hosts: ["${ELASTICSEARCH_HOSTS}"]
+    username: "${ELASTICSEARCH_USERNAME}"
+    password: "${ELASTICSEARCH_PASSWORD}"
+
+logging.level: info
+logging.to_stderr: true
+logging.to_files: false

@@ -1,66 +1,93 @@
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.1
+    image: elasticsearch:8.12.1
     container_name: elasticsearch
     environment:
+      - node.name=elasticsearch
+      - cluster.name=wherecar-es-cluster
       - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - xpack.security.enabled=false
-    ports:
-      - "9200:9200"
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
     networks:
       - elk
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:8.12.1
+    image: logstash:8.12.1
     container_name: logstash
-    depends_on:
-      - elasticsearch
     volumes:
-      - ./config/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      - ./config/logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./config/logstash/pipeline:/usr/share/logstash/pipeline
+      - ./config/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ../logs:/logs:ro
+    environment:
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
     ports:
       - "5044:5044"
-      - "5100:5000/tcp"
-      - "5100:5000/udp"
+      - "5001:5000/tcp"
+      - "5001:5000/udp"
       - "9600:9600"
-    environment:
-      LS_JAVA_OPTS: "-Xms256m -Xmx256m"
     networks:
       - elk
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.12.1
-    container_name: kibana
     depends_on:
       - elasticsearch
+
+  kibana:
+    image: kibana:8.12.1
+    container_name: kibana
     ports:
       - "5601:5601"
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    networks:
-      - elk
-
-  filebeat:
-    image: docker.elastic.co/beats/filebeat:8.12.1
-    container_name: filebeat
-    volumes:
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./config/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - ../logs:/logs:ro
-    user: root
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
+      - ELASTICSEARCH_USERNAME=${KIBANA_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
     networks:
       - elk
     depends_on:
-      - logstash
+      - elasticsearch
 
-volumes:
-  elasticsearch-data:
+  filebeat:
+    image: elastic/filebeat:8.12.1
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./config/filebeat/filebeat-${ENVIRONMENT:-prod}.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ../logs:/logs:ro
+      - filebeat-data:/usr/share/filebeat/data
+    environment:
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      - LOGSTASH_HOST=${LOGSTASH_HOST}
+    command: >
+      bash -c "mkdir -p /var/log/filebeat && 
+               chown -R filebeat:filebeat /var/log/filebeat && 
+               chown -R filebeat:filebeat /usr/share/filebeat/data && 
+               filebeat -e"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+      - logstash
 
 networks:
   elk:
     driver: bridge
+
+volumes:
+  elasticsearch-data:
+    driver: local
+  filebeat-data:
+    driver: local
+

@@ -1,0 +1,53 @@
+filebeat.inputs:
+  - type: filestream
+    id: rest-info-logs
+    enabled: true
+    paths:
+      - /logs/rest/*/rest-info*.log  # /logs/rest/{yyyy-MM-dd}/rest-info.log 및 롤링 파일
+    exclude_files: ['\.gz$']
+    fields:
+      log_type: info
+      app_name: rest
+      environment: production
+
+  - type: filestream
+    id: rest-error-logs
+    enabled: true
+    paths:
+      - /logs/rest/*/rest-error*.log
+    exclude_files: ['\.gz$']
+    fields:
+      log_type: error
+      app_name: rest
+      environment: production
+
+  - type: filestream
+    id: rest-sql-logs
+    enabled: true
+    paths:
+      - /logs/rest/*/rest-sql*.log
+    exclude_files: ['\.gz$']
+    fields:
+      log_type: sql
+      app_name: rest
+      environment: production
+
+processors:
+  - add_fields:
+      target: ''
+      fields:
+        env: prod
+
+output.logstash:
+  hosts: ["${LOGSTASH_HOST}"]
+
+monitoring:
+  enabled: true
+  elasticsearch:
+    hosts: ["${ELASTICSEARCH_HOSTS}"]
+    username: "${ELASTICSEARCH_USERNAME}"
+    password: "${ELASTICSEARCH_PASSWORD}"
+
+logging.level: info
+logging.to_stderr: true
+logging.to_files: false
