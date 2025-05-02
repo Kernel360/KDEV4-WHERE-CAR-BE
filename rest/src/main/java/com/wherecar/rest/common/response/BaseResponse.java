@@ -3,13 +3,19 @@ package com.wherecar.rest.common.response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Data
+@Slf4j
 public class BaseResponse<T> {
     private T data;
     private String message;
+    private Map<String, String> errors = new HashMap<>();
     private int statusCode;
 
     private static final ObjectMapper objectMapper = new ObjectMapper();  // ObjectMapper 재사용
@@ -23,6 +29,12 @@ public class BaseResponse<T> {
     public BaseResponse(String message, int statusCode) {
         this.data = null;
         this.message = message;
+        this.statusCode = statusCode;
+    }
+
+    public BaseResponse(Map<String, String> errors, int statusCode) {
+        this.data = null;
+        this.errors = errors;
         this.statusCode = statusCode;
     }
 
@@ -59,6 +71,13 @@ public class BaseResponse<T> {
     }
 
     // ====== 클라이언트 오류 응답 ======
+
+    public static <T> ResponseEntity<BaseResponse<T>> validationErrors(Map<String, String> errors) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new BaseResponse<>(errors, HttpStatus.OK.value()));
+    }
 
     public static <T> ResponseEntity<BaseResponse<T>> badRequest(String message) {
         return ResponseEntity

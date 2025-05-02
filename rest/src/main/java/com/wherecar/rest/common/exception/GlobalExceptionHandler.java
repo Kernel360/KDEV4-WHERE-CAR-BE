@@ -4,10 +4,13 @@ import com.wherecar.rest.common.response.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Slf4j
@@ -29,12 +32,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<BaseResponse<Void>> handleValidationExceptions(MethodArgumentNotValidException e) {
-        e.getBindingResult().getAllErrors().forEach(error -> {
-            String errorMessage = error.getDefaultMessage();
-            log.info("Validation 실패: {}", errorMessage);
-        });
 
-        return BaseResponse.badRequest(e.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        for (FieldError error : e.getBindingResult().getFieldErrors()) {
+            errors.put(error.getField(), error.getDefaultMessage());
+        }
+
+        return BaseResponse.validationErrors(errors);
     }
 
 }
