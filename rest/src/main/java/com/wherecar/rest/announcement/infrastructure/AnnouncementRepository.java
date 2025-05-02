@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface AnnouncementRepository extends JpaRepository<Announcement, Long> {
 
-    @Query("SELECT a FROM Announcement a")
+    @Query("SELECT a FROM Announcement a ORDER BY a.createdAt DESC")
     Page<Announcement> findAnnouncements(Pageable pageable);
 }
