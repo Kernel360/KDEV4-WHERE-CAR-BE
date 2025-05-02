@@ -125,7 +125,7 @@ public class CarLogServiceImpl implements CarLogService {
 
         // 총 주행 거리 계산
         double totalMileage = currentMonthLogs.stream()
-                .mapToDouble(log -> log.getOffMileage() - log.getOnMileage())
+                .mapToDouble(log -> log.getOffMileage() != null ? log.getOffMileage() - log.getOnMileage() : 0.0)
                 .sum();
 
         // 최근 6개월간 총 주행거리 계산
