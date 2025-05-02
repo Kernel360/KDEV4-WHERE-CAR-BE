@@ -4,6 +4,8 @@ import com.wherecar.rest.common.response.BaseResponse;
 import com.wherecar.rest.company.application.CompanyService;
 import com.wherecar.rest.company.application.dto.CompanyRequest;
 import com.wherecar.rest.company.application.dto.CompanyResponse;
+import com.wherecar.rest.security.aspect.RequiredPermission;
+import com.wherecar.rest.user.domain.constant.PermissionType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,7 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
-
+    @RequiredPermission(PermissionType.PERM_COMPANY_VIEW)
     @GetMapping("/my")
     public ResponseEntity<BaseResponse<CompanyResponse>> myCompanyDetailsGet(HttpServletRequest request) {
         Long companyId = (Long)request.getAttribute("companyId");
@@ -29,6 +31,8 @@ public class CompanyController {
         return BaseResponse.ok(companyResponse);
     }
 
+
+    @RequiredPermission(PermissionType.PERM_COMPANY_EDIT)
     @PutMapping("/my")
     public ResponseEntity<BaseResponse<CompanyResponse>> myCompanyUpdate(HttpServletRequest request, @RequestBody @Valid CompanyRequest companyRequest) {
         Long companyId = (Long)request.getAttribute("companyId");
