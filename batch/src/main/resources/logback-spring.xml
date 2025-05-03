@@ -28,7 +28,7 @@
                 <pattern>${LOG_PATTERN}</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-info.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-info.log</fileNamePattern>
                 <maxHistory>30</maxHistory> <!-- 개발 환경은 30일만 유지 -->
             </rollingPolicy>
         </appender>
@@ -43,7 +43,7 @@
                 <pattern>${LOG_PATTERN}</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-error.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-error.log</fileNamePattern>
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
         </appender>
@@ -55,7 +55,7 @@
                 <pattern>${LOG_PATTERN}</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-sql.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-sql.log</fileNamePattern>
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
         </appender>
@@ -106,7 +106,7 @@
                 <pattern>${LOG_PATTERN}</pattern>  <!-- 텍스트 형식 유지 - Logstash가 파싱 -->
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-info.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-info.log</fileNamePattern>
                 <maxHistory>365</maxHistory>
                 <totalSizeCap>20GB</totalSizeCap>
             </rollingPolicy>
@@ -122,7 +122,7 @@
                 <pattern>${LOG_PATTERN}</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-error.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-error.log</fileNamePattern>
                 <maxHistory>365</maxHistory>
                 <totalSizeCap>10GB</totalSizeCap>
             </rollingPolicy>
@@ -138,7 +138,7 @@
                 <pattern>${LOG_PATTERN}</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-sql.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-sql.log</fileNamePattern>
                 <maxHistory>90</maxHistory>
                 <totalSizeCap>10GB</totalSizeCap>
             </rollingPolicy>
