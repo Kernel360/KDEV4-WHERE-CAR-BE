@@ -25,6 +25,7 @@ services:
   logstash:
     image: logstash:8.12.1
     container_name: logstash
+    restart: unless-stopped
     volumes:
       - ./config/logstash/pipeline:/usr/share/logstash/pipeline
       - ./config/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
@@ -62,7 +63,7 @@ services:
     container_name: filebeat
     user: root
     volumes:
-      - ./config/filebeat/filebeat-${ENVIRONMENT:-prod}.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./config/filebeat/filebeat-dev.yml:/usr/share/filebeat/filebeat.yml:ro # 환경에 따라 설정 변경
       - ../logs:/logs:ro
       - filebeat-data:/usr/share/filebeat/data
     environment:
@@ -70,11 +71,6 @@ services:
       - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
       - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
       - LOGSTASH_HOST=${LOGSTASH_HOST}
-    command: >
-      bash -c "mkdir -p /var/log/filebeat && 
-               chown -R filebeat:filebeat /var/log/filebeat && 
-               chown -R filebeat:filebeat /usr/share/filebeat/data && 
-               filebeat -e"
     networks:
       - elk
     depends_on:
@@ -90,4 +86,3 @@ volumes:
     driver: local
   filebeat-data:
     driver: local
-
