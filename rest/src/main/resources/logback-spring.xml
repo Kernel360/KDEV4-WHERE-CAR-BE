@@ -20,9 +20,9 @@
         <property name="LOG_PATH" value="logs" />
         <property name="LOG_LEVEL" value="DEBUG" />
 
-        <!-- 개발 환경: logs/앱이름/날짜/앱이름-info.log -->
+        <!-- 개발 환경: 활성 로그는 logs/앱이름/앱이름-info.log, 롤링 시 logs/앱이름/날짜/앱이름-info.log -->
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOG_PATH}/${LOG_FILE_NAME}/${today}/${LOG_FILE_NAME}-info.log</file>
+            <file>${LOG_PATH}/${LOG_FILE_NAME}/${LOG_FILE_NAME}-info.log</file>
             <encoder>
                 <charset>UTF-8</charset>
                 <pattern>${LOG_PATTERN}</pattern>
@@ -34,7 +34,7 @@
         </appender>
 
         <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOG_PATH}/${LOG_FILE_NAME}/${today}/${LOG_FILE_NAME}-error.log</file>
+            <file>${LOG_PATH}/${LOG_FILE_NAME}/${LOG_FILE_NAME}-error.log</file>
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
                 <level>ERROR</level>
             </filter>
@@ -49,7 +49,7 @@
         </appender>
 
         <appender name="QUERY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOG_PATH}/${LOG_FILE_NAME}/${today}/${LOG_FILE_NAME}-sql.log</file>
+            <file>${LOG_PATH}/${LOG_FILE_NAME}/${LOG_FILE_NAME}-sql.log</file>
             <encoder>
                 <charset>UTF-8</charset>
                 <pattern>${LOG_PATTERN}</pattern>
@@ -98,9 +98,9 @@
         <!-- JSON 형식 로그 패턴 (ELK 분석용) -->
         <property name="LOG_PATTERN_JSON" value="{&quot;timestamp&quot;:&quot;%d{yyyy-MM-dd HH:mm:ss.SSS}&quot;,&quot;level&quot;:&quot;%level&quot;,&quot;thread&quot;:&quot;%thread&quot;,&quot;logger&quot;:&quot;%logger{36}&quot;,&quot;method&quot;:&quot;%method&quot;,&quot;message&quot;:&quot;%message&quot;,&quot;params&quot;:&quot;%X{params}&quot;}%n" />
 
-        <!-- 운영 환경: logs/날짜/앱이름-info.log -->
+        <!-- 운영 환경: 활성 로그는 logs/앱이름-info.log, 롤링 시 logs/날짜/앱이름-info.log -->
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOG_PATH}/${today}/${LOG_FILE_NAME}-info.log</file>
+            <file>${LOG_PATH}/${LOG_FILE_NAME}-info.log</file>
             <encoder>
                 <charset>UTF-8</charset>
                 <pattern>${LOG_PATTERN}</pattern>  <!-- 텍스트 형식 유지 - Logstash가 파싱 -->
@@ -113,7 +113,7 @@
         </appender>
 
         <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOG_PATH}/${today}/${LOG_FILE_NAME}-error.log</file>
+            <file>${LOG_PATH}/${LOG_FILE_NAME}-error.log</file>
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
                 <level>ERROR</level>
             </filter>
@@ -129,7 +129,7 @@
         </appender>
 
         <appender name="QUERY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOG_PATH}/${today}/${LOG_FILE_NAME}-sql.log</file>
+            <file>${LOG_PATH}/${LOG_FILE_NAME}-sql.log</file>
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
                 <level>INFO</level>  <!-- 운영에서는 INFO 레벨 이상의 SQL 로깅만 -->
             </filter>
