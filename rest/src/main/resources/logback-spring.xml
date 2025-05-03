@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- 공통 속성 정의 -->
-    <property name="LOG_FILE_NAME" value="rest" />
+    <springProperty scope="context" name="LOG_FILE_NAME" source="spring.application.name" defaultValue="application"/>
     <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}][%-5level][%logger{36}][%method] %msg | %X{params} %n" />
     <property name="LOG_PATTERN_COLOR" value="%magenta([%d{yyyy-MM-dd HH:mm:ss}]) %highlight([%-5level]) %green([%logger{36}]) %yellow([%method]) %msg | %X{params} %n" />
     <timestamp key="today" datePattern="yyyy-MM-dd" />
@@ -92,28 +92,28 @@
     <!-- 운영 환경 설정 -->
     <springProfile name="prod">
         <!-- 운영 환경 속성 -->
-        <property name="LOG_PATH" value="/logs" />
+        <property name="LOG_PATH" value="logs" />
         <property name="LOG_LEVEL" value="INFO" />
         
         <!-- JSON 형식 로그 패턴 (ELK 분석용) -->
         <property name="LOG_PATTERN_JSON" value="{&quot;timestamp&quot;:&quot;%d{yyyy-MM-dd HH:mm:ss.SSS}&quot;,&quot;level&quot;:&quot;%level&quot;,&quot;thread&quot;:&quot;%thread&quot;,&quot;logger&quot;:&quot;%logger{36}&quot;,&quot;method&quot;:&quot;%method&quot;,&quot;message&quot;:&quot;%message&quot;,&quot;params&quot;:&quot;%X{params}&quot;}%n" />
 
-        <!-- 운영 환경: /logs/앱이름/날짜/앱이름-info.log -->
+        <!-- 운영 환경: logs/날짜/앱이름-info.log -->
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOG_PATH}/${LOG_FILE_NAME}/${today}/${LOG_FILE_NAME}-info.log</file>
+            <file>${LOG_PATH}/${today}/${LOG_FILE_NAME}-info.log</file>
             <encoder>
                 <charset>UTF-8</charset>
                 <pattern>${LOG_PATTERN}</pattern>  <!-- 텍스트 형식 유지 - Logstash가 파싱 -->
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-info.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-info.%d{yyyy-MM-dd}.log</fileNamePattern>
                 <maxHistory>365</maxHistory>
                 <totalSizeCap>20GB</totalSizeCap>
             </rollingPolicy>
         </appender>
 
         <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOG_PATH}/${LOG_FILE_NAME}/${today}/${LOG_FILE_NAME}-error.log</file>
+            <file>${LOG_PATH}/${today}/${LOG_FILE_NAME}-error.log</file>
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
                 <level>ERROR</level>
             </filter>
@@ -122,14 +122,14 @@
                 <pattern>${LOG_PATTERN}</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-error.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-error.%d{yyyy-MM-dd}.log</fileNamePattern>
                 <maxHistory>365</maxHistory>
                 <totalSizeCap>10GB</totalSizeCap>
             </rollingPolicy>
         </appender>
 
         <appender name="QUERY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>${LOG_PATH}/${LOG_FILE_NAME}/${today}/${LOG_FILE_NAME}-sql.log</file>
+            <file>${LOG_PATH}/${today}/${LOG_FILE_NAME}-sql.log</file>
             <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
                 <level>INFO</level>  <!-- 운영에서는 INFO 레벨 이상의 SQL 로깅만 -->
             </filter>
@@ -138,7 +138,7 @@
                 <pattern>${LOG_PATTERN}</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-sql.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-sql.%d{yyyy-MM-dd}.log</fileNamePattern>
                 <maxHistory>90</maxHistory>
                 <totalSizeCap>10GB</totalSizeCap>
             </rollingPolicy>
@@ -161,7 +161,7 @@
         </logger>
 
         <!-- 운영 환경 루트 로거 - 간결한 로깅 -->
-        <root level="WARN">
+        <root level="INFO">
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="FILE" />
         </root>
