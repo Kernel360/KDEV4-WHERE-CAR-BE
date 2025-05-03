@@ -64,37 +64,6 @@ services:
     networks:
       - wherecar-network
       - elk
-  emulator:
-    build:
-      context: ../
-      dockerfile: docker/file/emulator/Dockerfile
-    container_name: wherecar-emulator
-    restart: unless-stopped
-    ports:
-      - "8095:8095"
-    volumes:
-      - ../../config/emulator-application-prod.yml:/app/config/application-prod.yml:rw
-      - ../../logs/emulator:/app/logs/emulator:rw
-    deploy:
-      resources:
-        limits:
-          memory: 384M
-          cpus: '0.3'
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_CONFIG_LOCATION=file:/app/config/
-      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
-      - LOGGING_FILE_PATH=/app/logs/emulator
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-        max-file: "3"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - wherecar-network
-      - elk
   hub:
     build:
       context: ../
@@ -133,7 +102,7 @@ services:
     container_name: wherecar-batch
     restart: unless-stopped
     ports:
-      - "8087:8087"
+      - "8095:8095"
     volumes:
       - ../../config/batch-application-prod.yml:/app/config/application-prod.yml:rw
       - ../../logs/batch:/app/logs/batch:rw

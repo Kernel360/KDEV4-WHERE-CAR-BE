@@ -40,4 +40,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
             "AND (c.carStatus.carState IS NULL OR c.carStatus.carState <> com.wherecar.rest.car.domain.constant.CarState.NOT_REGISTERED)")
     List<Car> findByCompanyIdWithRegisteredCarStatus(@Param("userCompanyId") Long userCompanyId);
 
+    boolean existsByMdn(String mdn);
+
 }

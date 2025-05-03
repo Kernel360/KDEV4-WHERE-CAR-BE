@@ -3,6 +3,8 @@ package com.wherecar.rest.carlogsummary.presentation;
 import com.wherecar.rest.carlogsummary.application.CarLogSummaryService;
 import com.wherecar.rest.carlogsummary.application.dto.CarLogSummaryOverviewResponse;
 import com.wherecar.rest.common.response.BaseResponse;
+import com.wherecar.rest.security.aspect.RequiredPermission;
+import com.wherecar.rest.user.domain.constant.PermissionType;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 public class CarLogSummaryController {
     private final CarLogSummaryService carLogSummaryService;
 
+    @RequiredPermission(PermissionType.PERM_STATS_VIEW)
     @GetMapping("/companies/my")
     public ResponseEntity<BaseResponse<CarLogSummaryOverviewResponse>> carLogSummaryOverviewGetByCompanyId(HttpServletRequest request, @RequestParam String from, @RequestParam String to) {
         Long companyId = (Long)request.getAttribute("companyId");
@@ -39,6 +42,7 @@ public class CarLogSummaryController {
         return BaseResponse.ok(overviewResponse);
     }
 
+    @RequiredPermission(PermissionType.PERM_STATS_VIEW)
     @GetMapping("/mdn")
     public ResponseEntity<BaseResponse<CarLogSummaryOverviewResponse>> carLogSummaryOverviewGetByMdn(@RequestParam String mdn, @RequestParam String from, @RequestParam String to) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");

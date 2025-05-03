@@ -1,0 +1,314 @@
+services:
+  emulator-a:
+    build:
+      context: ../
+      dockerfile: docker/file/emulator/Dockerfile
+    container_name: wherecar-emulator-a
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../../config/application-prod-a.yml:/app/config/application-prod.yml:rw
+      - ../../logs/emulator-a:/app/logs/emulator:rw
+    deploy:
+      resources:
+        limits:
+          memory: 450M
+          cpus: '0.2'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs/emulator
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+      
+  emulator-b:
+    build:
+      context: ../
+      dockerfile: docker/file/emulator/Dockerfile
+    container_name: wherecar-emulator-b
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    volumes:
+      - ../../config/application-prod-b.yml:/app/config/application-prod.yml:rw
+      - ../../logs/emulator-b:/app/logs/emulator:rw
+    deploy:
+      resources:
+        limits:
+          memory: 450M
+          cpus: '0.2'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs/emulator
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+      
+  emulator-c:
+    build:
+      context: ../
+      dockerfile: docker/file/emulator/Dockerfile
+    container_name: wherecar-emulator-c
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+    volumes:
+      - ../../config/application-prod-c.yml:/app/config/application-prod.yml:rw
+      - ../../logs/emulator-c:/app/logs/emulator:rw
+    deploy:
+      resources:
+        limits:
+          memory: 450M
+          cpus: '0.2'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs/emulator
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+      
+  emulator-d:
+    build:
+      context: ../
+      dockerfile: docker/file/emulator/Dockerfile
+    container_name: wherecar-emulator-d
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+    volumes:
+      - ../../config/application-prod-d.yml:/app/config/application-prod.yml:rw
+      - ../../logs/emulator-d:/app/logs/emulator:rw
+    deploy:
+      resources:
+        limits:
+          memory: 450M
+          cpus: '0.2'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs/emulator
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+      
+  emulator-e:
+    build:
+      context: ../
+      dockerfile: docker/file/emulator/Dockerfile
+    container_name: wherecar-emulator-e
+    restart: unless-stopped
+    ports:
+      - "8084:8080"
+    volumes:
+      - ../../config/application-prod-e.yml:/app/config/application-prod.yml:rw
+      - ../../logs/emulator-e:/app/logs/emulator:rw
+    deploy:
+      resources:
+        limits:
+          memory: 450M
+          cpus: '0.2'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs/emulator
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+      
+  emulator-f:
+    build:
+      context: ../
+      dockerfile: docker/file/emulator/Dockerfile
+    container_name: wherecar-emulator-f
+    restart: unless-stopped
+    ports:
+      - "8085:8080"
+    volumes:
+      - ../../config/application-prod-f.yml:/app/config/application-prod.yml:rw
+      - ../../logs/emulator-f:/app/logs/emulator:rw
+    deploy:
+      resources:
+        limits:
+          memory: 450M
+          cpus: '0.2'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs/emulator
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+      
+  emulator-g:
+    build:
+      context: ../
+      dockerfile: docker/file/emulator/Dockerfile
+    container_name: wherecar-emulator-g
+    restart: unless-stopped
+    ports:
+      - "8086:8080"
+    volumes:
+      - ../../config/application-prod-g.yml:/app/config/application-prod.yml:rw
+      - ../../logs/emulator-g:/app/logs/emulator:rw
+    deploy:
+      resources:
+        limits:
+          memory: 450M
+          cpus: '0.2'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs/emulator
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+      
+  emulator-h:
+    build:
+      context: ../
+      dockerfile: docker/file/emulator/Dockerfile
+    container_name: wherecar-emulator-h
+    restart: unless-stopped
+    ports:
+      - "8087:8080"
+    volumes:
+      - ../../config/application-prod-h.yml:/app/config/application-prod.yml:rw
+      - ../../logs/emulator-h:/app/logs/emulator:rw
+    deploy:
+      resources:
+        limits:
+          memory: 450M
+          cpus: '0.2'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs/emulator
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+      
+  emulator-i:
+    build:
+      context: ../
+      dockerfile: docker/file/emulator/Dockerfile
+    container_name: wherecar-emulator-i
+    restart: unless-stopped
+    ports:
+      - "8088:8080"
+    volumes:
+      - ../../config/application-prod-i.yml:/app/config/application-prod.yml:rw
+      - ../../logs/emulator-i:/app/logs/emulator:rw
+    deploy:
+      resources:
+        limits:
+          memory: 450M
+          cpus: '0.2'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs/emulator
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+      
+  emulator-j:
+    build:
+      context: ../
+      dockerfile: docker/file/emulator/Dockerfile
+    container_name: wherecar-emulator-j
+    restart: unless-stopped
+    ports:
+      - "8089:8080"
+    volumes:
+      - ../../config/application-prod-j.yml:/app/config/application-prod.yml:rw
+      - ../../logs/emulator-j:/app/logs/emulator:rw
+    deploy:
+      resources:
+        limits:
+          memory: 450M
+          cpus: '0.2'
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_LOCATION=file:/app/config/
+      - JAVA_OPTS=-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseCompressedOops -XX:+UseStringDeduplication
+      - LOGGING_FILE_PATH=/app/logs/emulator
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - wherecar-network
+
+networks:
+  wherecar-network:
+    driver: bridge

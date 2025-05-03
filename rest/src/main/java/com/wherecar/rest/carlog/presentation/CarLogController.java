@@ -7,6 +7,8 @@ import com.wherecar.rest.carlog.application.dto.MonthlyMileage;
 import com.wherecar.rest.carlog.domain.constant.DriveType;
 import com.wherecar.rest.common.constants.PaginationConstants;
 import com.wherecar.rest.common.response.BaseResponse;
+import com.wherecar.rest.security.aspect.RequiredPermission;
+import com.wherecar.rest.user.domain.constant.PermissionType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ class CarLogController {
     private final CarLogService carLogService;
 
     //운행일지 목록 조회 (filter 추가)
+    @RequiredPermission(PermissionType.PERM_LOGS_VIEW)
     @GetMapping
     public ResponseEntity<BaseResponse<Page<CarLogResponse>>> carLogsGetWithFilter(
             HttpServletRequest httpServletRequest,
@@ -63,6 +66,7 @@ class CarLogController {
     }
 
     //운행일지 상세 정보 조회
+    @RequiredPermission(PermissionType.PERM_LOGS_VIEW)
     @GetMapping("/{logId}")
     public ResponseEntity<BaseResponse<CarLogResponse>> carLogsGetDetails(@PathVariable Long logId) {
         CarLogResponse carLogs = carLogService.getCarLogDetails(logId);
@@ -70,6 +74,7 @@ class CarLogController {
     }
 
     //운행일지 상세 정보 수정
+    @RequiredPermission(PermissionType.PERM_LOGS_EDIT)
     @PutMapping("/{logId}")
     public ResponseEntity<BaseResponse<CarLogResponse>> carLogUpdateDetails(@PathVariable Long logId, @RequestBody CarLogsUpdateRequest carLogsUpdateRequest) {
         CarLogResponse carLogResponse = carLogService.updateCarLogDetails(logId, carLogsUpdateRequest);
@@ -78,6 +83,7 @@ class CarLogController {
 
 
     //운행일지 상세 정보 삭제
+    @RequiredPermission(PermissionType.PERM_LOGS_DELETE)
     @DeleteMapping("/{logId}")
     public ResponseEntity<BaseResponse<Void>> carLogDeleteDetails(@PathVariable Long logId) {
         carLogService.deleteCarLogDetails(logId);

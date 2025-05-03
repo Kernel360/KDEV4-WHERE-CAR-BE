@@ -1,8 +1,10 @@
 package com.wherecar.rest.user.presentation;
 
 import com.wherecar.rest.common.response.BaseResponse;
+import com.wherecar.rest.security.aspect.RequiredPermission;
 import com.wherecar.rest.user.application.UserService;
 import com.wherecar.rest.user.application.dto.*;
+import com.wherecar.rest.user.domain.constant.PermissionType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,7 @@ public class UserController {
         return BaseResponse.created(userResponse);
     }
 
-//    @RequiredPermission(PermissionType.SUB_USER_CREATE)
+    @RequiredPermission(PermissionType.PERM_EMPLOYEE_ADD)
     @PostMapping("/sub")
     public ResponseEntity<BaseResponse<UserResponse>> subCreate(HttpServletRequest request, @RequestBody @Valid SubUserRequest subUserRequest) {
         log.info("Creating sub user: {}", subUserRequest);
@@ -35,7 +37,7 @@ public class UserController {
         UserResponse userResponse = userService.createSub(subUserRequest, companyId);
         return BaseResponse.created(userResponse);
     }
-//    @RequiredPermission(PermissionType.USER_VIEW)
+    @RequiredPermission(PermissionType.PERM_EMPLOYEE_VIEW)
     @GetMapping("/companies/my")
     public ResponseEntity<BaseResponse<List<UserResponse>>> usersGetOfCompany(HttpServletRequest request){
         Long companyId = (Long)request.getAttribute("companyId");
@@ -44,7 +46,7 @@ public class UserController {
         return BaseResponse.ok(userResponses);
     }
 
-//    @RequiredPermission(PermissionType.USER_VIEW)
+    @RequiredPermission(PermissionType.PERM_EMPLOYEE_VIEW)
     @GetMapping("/{userId}")
     public ResponseEntity<BaseResponse<UserResponse>> userGet(@PathVariable Long userId){
         log.info("Retrieving user with id: {}", userId);
@@ -52,7 +54,6 @@ public class UserController {
         return BaseResponse.ok(userResponse);
     }
 
-//    @RequiredPermission(PermissionType.USER_VIEW)
     @GetMapping("/my")
     public ResponseEntity<BaseResponse<UserResponse>> myUserGet(HttpServletRequest request){
         Long userId = (Long)request.getAttribute("userId");
@@ -61,7 +62,7 @@ public class UserController {
         return BaseResponse.ok(userResponse);
     }
 
-//    @RequiredPermission(PermissionType.ROOT)
+    @RequiredPermission(PermissionType.PERM_EMPLOYEE_DELETE)
     @DeleteMapping("/{userId}")
     public ResponseEntity<BaseResponse<Void>> userDelete(@PathVariable Long userId){
         log.info("Deleting user with id: {}", userId);
@@ -69,7 +70,6 @@ public class UserController {
         return BaseResponse.ok();
     }
 
-//    @RequiredPermission(PermissionType.ROOT)
     @DeleteMapping("/my")
     public ResponseEntity<BaseResponse<Void>> myUserDelete(HttpServletRequest request){
         Long userId = (Long)request.getAttribute("userId");
@@ -78,7 +78,7 @@ public class UserController {
         return BaseResponse.ok();
     }
 
-//    @RequiredPermission(PermissionType.ROOT)
+    @RequiredPermission(PermissionType.PERM_EMPLOYEE_EDIT)
     @PutMapping("/{userId}")
     public ResponseEntity<BaseResponse<UserResponse>> userUpdate(@PathVariable Long userId, @RequestBody @Valid UserUpdateRequest userRequest){
         log.info("Updating user with id: {}", userId);
@@ -86,7 +86,6 @@ public class UserController {
         return BaseResponse.created(userResponse);
     }
 
-//    @RequiredPermission(PermissionType.ROOT)
     @PutMapping("/my")
     public ResponseEntity<BaseResponse<UserResponse>> myUserUpdate(HttpServletRequest request, @RequestBody @Valid UserUpdateRequest userRequest){
         Long userId = (Long)request.getAttribute("userId");
@@ -95,19 +94,10 @@ public class UserController {
         return BaseResponse.created(userResponse);
     }
 
-//    @RequiredPermission(PermissionType.ROOT)
-    @PutMapping("/password")
-    public ResponseEntity<BaseResponse<UserResponse>> passwordUpdate(HttpServletRequest request, @RequestBody @Valid PasswordRequest passwordRequest){
-        Long userId = (Long)request.getAttribute("userId");
-        log.info("Updating password");
-        UserResponse userResponse = userService.updatePasswordById(userId, passwordRequest);
-        return BaseResponse.created(userResponse);
-    }
-
     //Permission
 
 
-//    @RequiredPermission(PermissionType.ROOT)
+    @RequiredPermission(PermissionType.PERM_PERMISSION_EDIT)
     @PutMapping("/permissions/{userId}")
     public ResponseEntity<BaseResponse<UserResponse>> permissionUpdate(@PathVariable Long userId, @RequestBody PermissionRequest permissionRequest){
         log.info("Adding permission with id: {}", userId);
@@ -115,15 +105,8 @@ public class UserController {
         return BaseResponse.created(userResponse);
     }
 
-    @PutMapping("/permissions/my")
-    public ResponseEntity<BaseResponse<UserResponse>> myPermissionUpdate(HttpServletRequest request, @RequestBody PermissionRequest permissionRequest){
-        Long userId = (Long)request.getAttribute("userId");
-        log.info("Retrieving my permission with id: {}", userId);
-        UserResponse userResponse = userService.updatePermission(userId, permissionRequest);
-        return BaseResponse.created(userResponse);
-    }
 
-//    @RequiredPermission(PermissionType.ROOT)
+    @RequiredPermission(PermissionType.PERM_PERMISSION_VIEW)
     @GetMapping("/permissions/{userId}")
     public ResponseEntity<BaseResponse<PermissionResponse>> permissionGet(@PathVariable Long userId){
         log.info("Retrieving permission with id: {}", userId);
