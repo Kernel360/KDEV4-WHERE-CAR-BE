@@ -1,0 +1,62 @@
+name: Dockerizing to Amazon ECR
+
+on:
+  push:
+    branches:
+      - dev
+
+env:
+  AWS_REGION: ap-northeast-2
+
+jobs:
+  deploy:
+    name: Deploy All Services to ECR
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Collector
+      - name: Build and Push Collector
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -f ./collector/Dockerfile -t $ECR_REGISTRY/where-car/collector:latest ./collector
+          docker push $ECR_REGISTRY/where-car/collector:latest
+
+      # Rest
+      - name: Build and Push Rest
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -f ./rest/Dockerfile -t $ECR_REGISTRY/where-car/rest:latest ./rest
+          docker push $ECR_REGISTRY/where-car/rest:latest
+
+      # Hub
+      - name: Build and Push Hub
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -f ./hub/Dockerfile -t $ECR_REGISTRY/where-car/hub:latest ./hub
+          docker push $ECR_REGISTRY/where-car/hub:latest
+
+      # Batch
+      - name: Build and Push Batch
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -f ./batch/Dockerfile -t $ECR_REGISTRY/where-car/batch:latest ./batch
+          docker push $ECR_REGISTRY/where-car/batch:latest
