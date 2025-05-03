@@ -1,46 +1,125 @@
 filebeat.inputs:
+  # 운영환경 활성 로그 파일 (루트 디렉토리)
   - type: filestream
-    id: rest-info-logs
+    id: active-logs
     enabled: true
     paths:
-      - /logs/rest/*/rest-info*.log  # /logs/rest/{yyyy-MM-dd}/rest-info.log 및 롤링 파일
+      - /logs/*-info.log
+      - /logs/*-error.log
+      - /logs/*-sql.log
     exclude_files: ['\.gz$']
+    fields_under_root: true
     fields:
-      log_type: info
-      app_name: rest
       environment: production
+    ignore_older: 24h  # 48h에서 24h로 감소
+    scan_frequency: 5s  # 10s에서 5s로 감소
+    close_inactive: 1h  # 2h에서 1h로 감소
+    harvester_buffer_size: 16384
+    max_bytes: 10485760  # 읽을 최대 바이트 (10MB)
+    backoff.init: 1s    # 추가: 초기 백오프 시간
+    backoff.max: 10s    # 추가: 최대 백오프 시간
 
+  # 운영환경 롤링된 로그 파일 (날짜별 폴더)
   - type: filestream
-    id: rest-error-logs
+    id: rolled-logs
     enabled: true
     paths:
-      - /logs/rest/*/rest-error*.log
+      - /logs/*/*-info.log
+      - /logs/*/*-error.log
+      - /logs/*/*-sql.log
     exclude_files: ['\.gz$']
+    fields_under_root: true
     fields:
-      log_type: error
-      app_name: rest
       environment: production
-
-  - type: filestream
-    id: rest-sql-logs
-    enabled: true
-    paths:
-      - /logs/rest/*/rest-sql*.log
-    exclude_files: ['\.gz$']
-    fields:
-      log_type: sql
-      app_name: rest
-      environment: production
+    ignore_older: 24h  # 48h에서 24h로 감소
+    scan_frequency: 5s  # 10s에서 5s로 감소
+    close_inactive: 1h  # 2h에서 1h로 감소
+    harvester_buffer_size: 16384
+    max_bytes: 10485760  # 읽을 최대 바이트 (10MB)
+    backoff.init: 1s    # 추가: 초기 백오프 시간
+    backoff.max: 10s    # 추가: 최대 백오프 시간
 
 processors:
   - add_fields:
       target: ''
       fields:
         env: prod
+        
+  # 애플리케이션 이름과 로그 유형 자동 추출
+  - dissect:
+      tokenizer: "/logs/%{?filename}"
+      field: "log.file.path"
+      target_prefix: ""
+      when:
+        regexp:
+          log.file.path: "^/logs/[^/]+\\.log$"
+          
+  - dissect:
+      tokenizer: "/logs/%{?date_folder}/%{?filename}"
+      field: "log.file.path"
+      target_prefix: ""
+      when:
+        regexp:
+          log.file.path: "^/logs/[^/]+/[^/]+\\.log$"
+          
+  - script:
+      lang: javascript
+      source: >
+        function process(event) {
+          var path = event.Get("log.file.path");
+          var filename = path.split("/").pop();
+          
+          // 앱 이름 추출 (첫 번째 '-' 앞 부분)
+          var appName = filename.split("-")[0];
+          event.Put("app_name", appName);
+          
+          // 로그 타입 추출 (파일명에서 직접 추출)
+          // includes() 대신 indexOf() 사용
+          if (filename.indexOf("-error") >= 0) {
+            event.Put("log_type", "error");
+          } else if (filename.indexOf("-sql") >= 0) {
+            event.Put("log_type", "sql");
+          } else if (filename.indexOf("-info") >= 0) {
+            event.Put("log_type", "info");
+          } else {
+            event.Put("log_type", "unknown");
+          }
+          
+          return event;
+        }
 
+  # 빈 메시지 건너뛰기
+  - drop_event:
+      when:
+        equals:
+          message: ""
+          
+  # 불필요한 필드 제거
+  - drop_fields:
+      fields: ["filename", "date_folder"]
+      ignore_missing: true
+
+# 성능 최적화 설정
+filebeat.registry.flush: 1s  # 5s에서 1s로 감소
+filebeat.shutdown_timeout: 10s
+filebeat.harvester_limit: 300
+filebeat.max_procs: 4
+filebeat.spool_size: 4096
+filebeat.idle_timeout: 5s  # 추가: 읽기 시간 초과 설정
+queue.mem:
+  events: 8192
+  flush.min_events: 256  # 1024에서 256으로 감소
+  flush.timeout: 1s      # 5s에서 1s로 감소
+
+# Logstash로 전송
 output.logstash:
   hosts: ["${LOGSTASH_HOST}"]
+  loadbalance: true
+  worker: 4
+  bulk_max_size: 4096
+  timeout: 30s  # 추가: 타임아웃 설정
 
+# 모니터링 설정
 monitoring:
   enabled: true
   elasticsearch:
@@ -48,6 +127,12 @@ monitoring:
     username: "${ELASTICSEARCH_USERNAME}"
     password: "${ELASTICSEARCH_PASSWORD}"
 
-logging.level: info
+# 로깅 설정
+logging.level: info  # warn에서 info로 변경 (문제 발생 시 더 많은 정보 제공)
 logging.to_stderr: true
-logging.to_files: false
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat-prod
+  keepfiles: 7
+  permissions: 0644

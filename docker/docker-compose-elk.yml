@@ -34,6 +34,7 @@ services:
       - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
       - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
       - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      - "LS_JAVA_OPTS=-Xms1g -Xmx1g"  # 추가: 힙 메모리 설정
     ports:
       - "5044:5044"
       - "5001:5000/tcp"
@@ -66,16 +67,20 @@ services:
       - ./config/filebeat/filebeat-dev.yml:/usr/share/filebeat/filebeat.yml:ro # 환경에 따라 설정 변경
       - ../logs:/logs:ro
       - filebeat-data:/usr/share/filebeat/data
+      - ./filebeat-logs:/var/log/filebeat  # 추가: 로그 디렉토리를 볼륨으로 마운트
+    command: ["filebeat", "-e", "-strict.perms=false"]  # 추가: 권한 문제 해결
     environment:
       - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
       - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
       - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
       - LOGSTASH_HOST=${LOGSTASH_HOST}
+      - ELASTIC_SEARCH_VERIFY_CERTS=false  # 추가: 인증서 검증 비활성화
     networks:
       - elk
     depends_on:
       - elasticsearch
       - logstash
+    restart: unless-stopped  # 추가: 재시작 정책
 
 networks:
   elk:
@@ -86,3 +91,4 @@ volumes:
     driver: local
   filebeat-data:
     driver: local
+
