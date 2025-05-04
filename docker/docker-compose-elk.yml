@@ -67,7 +67,7 @@ services:
       - ./config/filebeat/filebeat-dev.yml:/usr/share/filebeat/filebeat.yml:ro # 환경에 따라 설정 변경
       - ../logs:/logs:ro
       - filebeat-data:/usr/share/filebeat/data
-      - ./filebeat-logs:/var/log/filebeat  # 추가: 로그 디렉토리를 볼륨으로 마운트
+      - ../logs/filebeat-logs:/var/log/filebeat  # 추가: 로그 디렉토리를 볼륨으로 마운트
     command: ["filebeat", "-e", "-strict.perms=false"]  # 추가: 권한 문제 해결
     environment:
       - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
@@ -82,6 +82,30 @@ services:
       - logstash
     restart: unless-stopped  # 추가: 재시작 정책
 
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - loki
+
 networks:
   elk:
     driver: bridge
@@ -90,5 +114,7 @@ volumes:
   elasticsearch-data:
     driver: local
   filebeat-data:
+    driver: local
+  grafana-storage:
     driver: local
 

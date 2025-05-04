@@ -15,8 +15,18 @@ spring:
 
   profiles:
     default: dev
+
+# Prometheus 메트릭 노출을 위한 Actuator 설정
 management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
