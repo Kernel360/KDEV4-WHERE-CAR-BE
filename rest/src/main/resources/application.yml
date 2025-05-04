@@ -16,7 +16,6 @@ spring:
   profiles:
     default: dev
 
-# Prometheus 메트릭 노출을 위한 Actuator 설정
 management:
   endpoints:
     web:
