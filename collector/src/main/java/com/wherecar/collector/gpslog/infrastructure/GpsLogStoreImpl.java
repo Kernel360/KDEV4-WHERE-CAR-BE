@@ -19,7 +19,6 @@ public class GpsLogStoreImpl implements GpsLogStore {
     private final CarStatusRepository carStatusRepository;
 
     @Override
-    @Transactional
     public void store(List<GpsLog> gpsLogList, Car car, List<String> batList) {
 
         for (int i = 0; i < gpsLogList.size(); i++) {
