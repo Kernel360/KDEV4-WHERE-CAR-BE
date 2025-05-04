@@ -1,4 +1,6 @@
 services:
+
+  # ELK Stack =============================
   elasticsearch:
     image: elasticsearch:8.12.1
     container_name: elasticsearch
@@ -20,7 +22,7 @@ services:
       - "9200:9200"
       - "9300:9300"
     networks:
-      - elk
+      - where-car-network
 
   logstash:
     image: logstash:8.12.1
@@ -41,7 +43,7 @@ services:
       - "5001:5000/udp"
       - "9600:9600"
     networks:
-      - elk
+      - where-car-network
     depends_on:
       - elasticsearch
 
@@ -55,7 +57,7 @@ services:
       - ELASTICSEARCH_USERNAME=${KIBANA_USERNAME}
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
     networks:
-      - elk
+      - where-car-network
     depends_on:
       - elasticsearch
 
@@ -76,38 +78,60 @@ services:
       - LOGSTASH_HOST=${LOGSTASH_HOST}
       - ELASTIC_SEARCH_VERIFY_CERTS=false  # 추가: 인증서 검증 비활성화
     networks:
-      - elk
+      - where-car-network
     depends_on:
       - elasticsearch
       - logstash
     restart: unless-stopped  # 추가: 재시작 정책
 
+  # Observability Stack =============================
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:v2.49.0
+    container_name: prometheus
     ports:
       - "9090:9090"
     volumes:
-      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - where-car-network
+    restart: unless-stopped
 
   loki:
-    image: grafana/loki:latest
+    image: grafana/loki:2.9.4
+    container_name: loki
     ports:
       - "3100:3100"
+    volumes:
+      - loki-data:/loki
+      - ./config/loki:/etc/loki
+    networks:
+      - where-car-network
+    restart: unless-stopped
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:10.3.3
+    container_name: grafana
     ports:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
     volumes:
       - grafana-storage:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - where-car-network
+    restart: unless-stopped
     depends_on:
       - prometheus
       - loki
+      - elasticsearch
 
 networks:
-  elk:
+  where-car-network:
     driver: bridge
 
 volumes:
@@ -117,4 +141,7 @@ volumes:
     driver: local
   grafana-storage:
     driver: local
-
+  prometheus-data:
+    driver: local
+  loki-data: # 추가
+    driver: local
