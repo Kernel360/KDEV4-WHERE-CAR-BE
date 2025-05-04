@@ -1,66 +1,94 @@
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.1
+    image: elasticsearch:8.12.1
     container_name: elasticsearch
     environment:
+      - node.name=elasticsearch
+      - cluster.name=wherecar-es-cluster
       - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - xpack.security.enabled=false
-    ports:
-      - "9200:9200"
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
     networks:
       - elk
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:8.12.1
+    image: logstash:8.12.1
     container_name: logstash
-    depends_on:
-      - elasticsearch
+    restart: unless-stopped
     volumes:
-      - ./config/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      - ./config/logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./config/logstash/pipeline:/usr/share/logstash/pipeline
+      - ./config/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ../logs:/logs:ro
+    environment:
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      - "LS_JAVA_OPTS=-Xms1g -Xmx1g"  # 추가: 힙 메모리 설정
     ports:
       - "5044:5044"
-      - "5100:5000/tcp"
-      - "5100:5000/udp"
+      - "5001:5000/tcp"
+      - "5001:5000/udp"
       - "9600:9600"
-    environment:
-      LS_JAVA_OPTS: "-Xms256m -Xmx256m"
     networks:
       - elk
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.12.1
-    container_name: kibana
     depends_on:
       - elasticsearch
+
+  kibana:
+    image: kibana:8.12.1
+    container_name: kibana
     ports:
       - "5601:5601"
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    networks:
-      - elk
-
-  filebeat:
-    image: docker.elastic.co/beats/filebeat:8.12.1
-    container_name: filebeat
-    volumes:
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./config/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - ../logs:/logs:ro
-    user: root
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
+      - ELASTICSEARCH_USERNAME=${KIBANA_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
     networks:
       - elk
     depends_on:
-      - logstash
+      - elasticsearch
 
-volumes:
-  elasticsearch-data:
+  filebeat:
+    image: elastic/filebeat:8.12.1
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./config/filebeat/filebeat-dev.yml:/usr/share/filebeat/filebeat.yml:ro # 환경에 따라 설정 변경
+      - ../logs:/logs:ro
+      - filebeat-data:/usr/share/filebeat/data
+      - ./filebeat-logs:/var/log/filebeat  # 추가: 로그 디렉토리를 볼륨으로 마운트
+    command: ["filebeat", "-e", "-strict.perms=false"]  # 추가: 권한 문제 해결
+    environment:
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      - LOGSTASH_HOST=${LOGSTASH_HOST}
+      - ELASTIC_SEARCH_VERIFY_CERTS=false  # 추가: 인증서 검증 비활성화
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+      - logstash
+    restart: unless-stopped  # 추가: 재시작 정책
 
 networks:
   elk:
     driver: bridge
+
+volumes:
+  elasticsearch-data:
+    driver: local
+  filebeat-data:
+    driver: local
+

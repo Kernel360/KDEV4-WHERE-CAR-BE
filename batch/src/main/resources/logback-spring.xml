@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 공통 속성 정의 -->
+    <springProperty scope="context" name="LOG_FILE_NAME" source="spring.application.name" defaultValue="application"/>
+    <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}][%-5level][%logger{36}][%method] %msg | %X{params} %n" />
+    <property name="LOG_PATTERN_COLOR" value="%magenta([%d{yyyy-MM-dd HH:mm:ss}]) %highlight([%-5level]) %green([%logger{36}]) %yellow([%method]) %msg | %X{params} %n" />
+    <timestamp key="today" datePattern="yyyy-MM-dd" />
+
+    <!-- 콘솔 로그 설정 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN_COLOR}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 개발 환경 설정 -->
+    <springProfile name="dev">
+        <!-- 개발 환경 속성 -->
+        <property name="LOG_PATH" value="logs" />
+        <property name="LOG_LEVEL" value="DEBUG" />
+
+        <!-- 개발 환경: 활성 로그는 logs/앱이름/앱이름-info.log, 롤링 시 logs/앱이름/날짜/앱이름-info.log -->
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE_NAME}/${LOG_FILE_NAME}-info.log</file>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-info.log</fileNamePattern>
+                <maxHistory>30</maxHistory> <!-- 개발 환경은 30일만 유지 -->
+            </rollingPolicy>
+        </appender>
+
+        <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE_NAME}/${LOG_FILE_NAME}-error.log</file>
+            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+                <level>ERROR</level>
+            </filter>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-error.log</fileNamePattern>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+        </appender>
+
+        <appender name="QUERY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE_NAME}/${LOG_FILE_NAME}-sql.log</file>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-sql.log</fileNamePattern>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+        </appender>
+
+        <!-- 개발 환경 로거 설정 - 상세한 디버그 로그 -->
+        <logger name="com.wherecar" level="DEBUG" additivity="false">
+            <appender-ref ref="FILE" />
+            <appender-ref ref="CONSOLE" />
+        </logger>
+
+        <logger name="com.wherecar.error" level="ERROR" additivity="false">
+            <appender-ref ref="ERROR_FILE" />
+            <appender-ref ref="CONSOLE" />
+        </logger>
+
+        <!-- 개발 환경 SQL 로깅 - 모든 SQL 쿼리 기록 -->
+        <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+            <appender-ref ref="QUERY_FILE" />
+            <appender-ref ref="CONSOLE" />
+        </logger>
+
+        <logger name="org.hibernate.type.descriptor.sql" level="TRACE" additivity="false">
+            <appender-ref ref="QUERY_FILE" />
+            <appender-ref ref="CONSOLE" />
+        </logger>
+
+        <!-- 개발 환경 루트 로거 - 상세 로깅 -->
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="FILE" />
+        </root>
+    </springProfile>
+
+    <!-- 운영 환경 설정 -->
+    <springProfile name="prod">
+        <!-- 운영 환경 속성 -->
+        <property name="LOG_PATH" value="logs" />
+        <property name="LOG_LEVEL" value="INFO" />
+        
+        <!-- JSON 형식 로그 패턴 (ELK 분석용) -->
+        <property name="LOG_PATTERN_JSON" value="{&quot;timestamp&quot;:&quot;%d{yyyy-MM-dd HH:mm:ss.SSS}&quot;,&quot;level&quot;:&quot;%level&quot;,&quot;thread&quot;:&quot;%thread&quot;,&quot;logger&quot;:&quot;%logger{36}&quot;,&quot;method&quot;:&quot;%method&quot;,&quot;message&quot;:&quot;%message&quot;,&quot;params&quot;:&quot;%X{params}&quot;}%n" />
+
+        <!-- 운영 환경: 활성 로그는 logs/앱이름-info.log, 롤링 시 logs/날짜/앱이름-info.log -->
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE_NAME}-info.log</file>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>${LOG_PATTERN}</pattern>  <!-- 텍스트 형식 유지 - Logstash가 파싱 -->
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-info.log</fileNamePattern>
+                <maxHistory>365</maxHistory>
+                <totalSizeCap>20GB</totalSizeCap>
+            </rollingPolicy>
+        </appender>
+
+        <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE_NAME}-error.log</file>
+            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+                <level>ERROR</level>
+            </filter>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-error.log</fileNamePattern>
+                <maxHistory>365</maxHistory>
+                <totalSizeCap>10GB</totalSizeCap>
+            </rollingPolicy>
+        </appender>
+
+        <appender name="QUERY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE_NAME}-sql.log</file>
+            <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+                <level>INFO</level>  <!-- 운영에서는 INFO 레벨 이상의 SQL 로깅만 -->
+            </filter>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-sql.log</fileNamePattern>
+                <maxHistory>90</maxHistory>
+                <totalSizeCap>10GB</totalSizeCap>
+            </rollingPolicy>
+        </appender>
+
+        <!-- 운영 환경 로거 설정 - 중요 정보만 기록 -->
+        <logger name="com.wherecar" level="INFO" additivity="false">
+            <appender-ref ref="FILE" />
+            <appender-ref ref="CONSOLE" />
+        </logger>
+
+        <logger name="com.wherecar.error" level="ERROR" additivity="false">
+            <appender-ref ref="ERROR_FILE" />
+            <appender-ref ref="CONSOLE" />
+        </logger>
+
+        <!-- 운영 환경 SQL 로깅 - 필수 SQL 쿼리만 기록 -->
+        <logger name="org.hibernate.SQL" level="INFO">
+            <appender-ref ref="QUERY_FILE" />
+        </logger>
+
+        <!-- 운영 환경 루트 로거 - 간결한 로깅 -->
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="FILE" />
+        </root>
+    </springProfile>
+</configuration>
