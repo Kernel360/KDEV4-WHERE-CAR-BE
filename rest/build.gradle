@@ -55,6 +55,10 @@ dependencies {
 
 	//actuator
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	// Loki 로그 전송을 위한 appender / 매트릭 수집을 위한 Prometheus
+	implementation 'com.github.loki4j:loki-logback-appender:1.4.2'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 tasks.named('test') {
