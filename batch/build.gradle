@@ -36,6 +36,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.batch:spring-batch-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// observability
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'com.github.loki4j:loki-logback-appender:1.4.2'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 tasks.named('test') {

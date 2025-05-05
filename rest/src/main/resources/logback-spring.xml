@@ -2,6 +2,7 @@
 <configuration>
     <!-- 공통 속성 정의 -->
     <springProperty scope="context" name="LOG_FILE_NAME" source="spring.application.name" defaultValue="application"/>
+    <springProperty scope="context" name="ACTIVE_PROFILE" source="spring.profiles.active" defaultValue="dev"/>
     <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}][%-5level][%logger{36}][%method] %msg | %X{params} %n" />
     <property name="LOG_PATTERN_COLOR" value="%magenta([%d{yyyy-MM-dd HH:mm:ss}]) %highlight([%-5level]) %green([%logger{36}]) %yellow([%method]) %msg | %X{params} %n" />
     <timestamp key="today" datePattern="yyyy-MM-dd" />
@@ -60,15 +61,33 @@
             </rollingPolicy>
         </appender>
 
+        <!-- Loki Appender 설정 수정 (개발 환경) -->
+        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+            <http>
+                <url>http://localhost:3100/loki/api/v1/push</url>
+            </http>
+            <format>
+                <label>
+                    <pattern>app=${LOG_FILE_NAME},env=${ACTIVE_PROFILE},host=${HOSTNAME},level=%level</pattern>
+                </label>
+                <message>
+                    <pattern>${LOG_PATTERN}</pattern>
+                </message>
+                <sortByTime>true</sortByTime>
+            </format>
+        </appender>
+
         <!-- 개발 환경 로거 설정 - 상세한 디버그 로그 -->
         <logger name="com.wherecar" level="DEBUG" additivity="false">
             <appender-ref ref="FILE" />
             <appender-ref ref="CONSOLE" />
+            <appender-ref ref="LOKI" />
         </logger>
 
         <logger name="com.wherecar.error" level="ERROR" additivity="false">
             <appender-ref ref="ERROR_FILE" />
             <appender-ref ref="CONSOLE" />
+            <appender-ref ref="LOKI" />
         </logger>
 
         <!-- 개발 환경 SQL 로깅 - 모든 SQL 쿼리 기록 -->
@@ -86,6 +105,7 @@
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="FILE" />
+            <appender-ref ref="LOKI" />
         </root>
     </springProfile>
 
@@ -144,15 +164,33 @@
             </rollingPolicy>
         </appender>
 
+        <!-- Loki Appender 설정 수정 (배포 환경) 주소 변경해야 함! -->
+        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+            <http>
+                <url>http://localhost:3100/loki/api/v1/push</url>
+            </http>
+            <format>
+                <label>
+                    <pattern>app=${LOG_FILE_NAME},env=${ACTIVE_PROFILE},host=${HOSTNAME},level=%level</pattern>
+                </label>
+                <message>
+                    <pattern>${LOG_PATTERN}</pattern>
+                </message>
+                <sortByTime>true</sortByTime>
+            </format>
+        </appender>
+
         <!-- 운영 환경 로거 설정 - 중요 정보만 기록 -->
         <logger name="com.wherecar" level="INFO" additivity="false">
             <appender-ref ref="FILE" />
             <appender-ref ref="CONSOLE" />
+            <appender-ref ref="LOKI" />
         </logger>
 
         <logger name="com.wherecar.error" level="ERROR" additivity="false">
             <appender-ref ref="ERROR_FILE" />
             <appender-ref ref="CONSOLE" />
+            <appender-ref ref="LOKI" />
         </logger>
 
         <!-- 운영 환경 SQL 로깅 - 필수 SQL 쿼리만 기록 -->
@@ -164,6 +202,7 @@
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="FILE" />
+            <appender-ref ref="LOKI" />
         </root>
     </springProfile>
 </configuration>
