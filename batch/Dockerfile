@@ -5,6 +5,7 @@ WORKDIR /app
 
 # 현재 디렉토리 기준 (batch 내부 기준)
 COPY gradlew .
+RUN chmod +x gradlew
 COPY gradle ./gradle
 COPY build.gradle settings.gradle ./
 
