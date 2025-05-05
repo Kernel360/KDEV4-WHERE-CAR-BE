@@ -12,7 +12,7 @@ common:
       rules_directory: /loki/rules
   replication_factor: 1
   ring:
-    instance_addr: 127.0.0.1
+    instance_addr: 0.0.0.0
     kvstore:
       store: inmemory
 
@@ -27,7 +27,7 @@ schema_config:
         period: 24h
 
 ruler:
-  alertmanager_url: http://localhost:9093
+  alertmanager_url: http://alertmanager:9093
 
 limits_config:
   retention_period: 7d
