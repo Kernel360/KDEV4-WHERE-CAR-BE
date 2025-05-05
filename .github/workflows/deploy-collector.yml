@@ -3,7 +3,7 @@ name: Dockerizing collector
 on:
   push:
     branches:
-      - dev
+      - feat/tps-trouble-shooting
 
 env:
   AWS_REGION: ap-northeast-2
