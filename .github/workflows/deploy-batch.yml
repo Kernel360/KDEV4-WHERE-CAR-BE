@@ -33,5 +33,5 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build --no-cache -f ./batch/Dockerfile -t $ECR_REGISTRY/where-car/batch:latest ./batch
+          docker build -f ./batch/Dockerfile -t $ECR_REGISTRY/where-car/batch:latest ./batch
           docker push $ECR_REGISTRY/where-car/batch:latest
