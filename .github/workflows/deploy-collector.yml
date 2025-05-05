@@ -34,5 +34,5 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build -f ./collector/Dockerfile -t $ECR_REGISTRY/where-car/collector:ts ./collector
-          docker push $ECR_REGISTRY/where-car/collector:ts
+          docker build -f ./collector/Dockerfile -t $ECR_REGISTRY/where-car/collector-ts:latest ./collector
+          docker push $ECR_REGISTRY/where-car/collector-ts:latest
