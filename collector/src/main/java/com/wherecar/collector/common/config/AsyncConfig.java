@@ -28,7 +28,7 @@ public class AsyncConfig implements AsyncConfigurer {
         executor.setWaitForTasksToCompleteOnShutdown(false);
         executor.setAwaitTerminationSeconds(0);
         executor.setRejectedExecutionHandler(new java.util.concurrent.ThreadPoolExecutor.AbortPolicy());
-        executor.setThreadNamePrefix("task-");
+        executor.setThreadNamePrefix("test");
 
         executor.initialize();
         return executor;
