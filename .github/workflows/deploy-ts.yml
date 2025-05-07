@@ -1,4 +1,4 @@
-name: Dockerizing trouble shooting
+name: Dockerizing trouble shooting.
 
 on:
   push:
