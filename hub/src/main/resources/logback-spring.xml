@@ -3,6 +3,7 @@
     <!-- 공통 속성 정의 -->
     <springProperty scope="context" name="LOG_FILE_NAME" source="spring.application.name" defaultValue="application"/>
     <springProperty scope="context" name="ACTIVE_PROFILE" source="spring.profiles.active" defaultValue="dev"/>
+    <springProperty scope="context" name="LOKI_URL" source="monitoring.loki.url" defaultValue="http://loki:3100/loki/api/v1/push"/>
     <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}][%-5level][%logger{36}][%method] %msg | %X{params} %n" />
     <property name="LOG_PATTERN_COLOR" value="%magenta([%d{yyyy-MM-dd HH:mm:ss}]) %highlight([%-5level]) %green([%logger{36}]) %yellow([%method]) %msg | %X{params} %n" />
     <timestamp key="today" datePattern="yyyy-MM-dd" />
@@ -114,7 +115,7 @@
         <!-- 운영 환경 속성 -->
         <property name="LOG_PATH" value="logs" />
         <property name="LOG_LEVEL" value="INFO" />
-        
+
         <!-- JSON 형식 로그 패턴 (ELK 분석용) -->
         <property name="LOG_PATTERN_JSON" value="{&quot;timestamp&quot;:&quot;%d{yyyy-MM-dd HH:mm:ss.SSS}&quot;,&quot;level&quot;:&quot;%level&quot;,&quot;thread&quot;:&quot;%thread&quot;,&quot;logger&quot;:&quot;%logger{36}&quot;,&quot;method&quot;:&quot;%method&quot;,&quot;message&quot;:&quot;%message&quot;,&quot;params&quot;:&quot;%X{params}&quot;}%n" />
 
@@ -167,7 +168,7 @@
         <!-- Loki Appender 설정 수정 (배포 환경) 주소 변경해야 함! -->
         <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
             <http>
-                <url>http://localhost:3100/loki/api/v1/push</url>
+                <url>${LOKI_URL}</url>
             </http>
             <format>
                 <label>

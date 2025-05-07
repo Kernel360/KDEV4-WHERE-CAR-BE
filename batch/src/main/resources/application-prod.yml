@@ -34,3 +34,7 @@ spring:
 
 server:
   port: 8095
+
+monitoring:
+  loki:
+    url: http://loki:3100/loki/api/v1/push
