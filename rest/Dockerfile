@@ -5,6 +5,7 @@ WORKDIR /app
 
 # Gradle wrapper 및 설정 복사
 COPY gradlew .
+RUN chmod +x gradlew
 COPY gradle ./gradle
 COPY build.gradle settings.gradle ./
 
