@@ -20,9 +20,9 @@ services:
       resources:
         limits:
           cpus: '0.7'
-          memory: 2G
+          memory: 2500M
         reservations:
-          memory: 1G
+          memory: 1500M
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     ports:
@@ -117,9 +117,9 @@ services:
       resources:
         limits:
           cpus: '0.3'
-          memory: 1G
+          memory: 1500M
         reservations:
-          memory: 512M
+          memory: 750M
     volumes:
       - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
@@ -154,9 +154,9 @@ services:
       resources:
         limits:
           cpus: '0.3'
-          memory: 256M
+          memory: 800M
         reservations:
-          memory: 128M
+          memory: 400M
     ports:
       - "3000:3000"
     environment:
