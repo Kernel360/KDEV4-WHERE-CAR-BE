@@ -3,10 +3,9 @@
     <!-- 공통 속성 정의 -->
     <springProperty scope="context" name="LOG_FILE_NAME" source="spring.application.name" defaultValue="application"/>
     <springProperty scope="context" name="ACTIVE_PROFILE" source="spring.profiles.active" defaultValue="dev"/>
-    <springProperty scope="context" name="LOKI_URL" source="monitoring.loki.url" defaultValue="http://loki:3100/loki/api/v1/push"/>
+    <springProperty scope="context" name="LOKI_URL" source="monitoring.loki.url" defaultValue="http://localhost:3100/loki/api/v1/push"/>
     <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}][%-5level][%logger{36}][%method] %msg | %X{params} %n" />
     <property name="LOG_PATTERN_COLOR" value="%magenta([%d{yyyy-MM-dd HH:mm:ss}]) %highlight([%-5level]) %green([%logger{36}]) %yellow([%method]) %msg | %X{params} %n" />
-    <timestamp key="today" datePattern="yyyy-MM-dd" />
 
     <!-- 콘솔 로그 설정 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -22,6 +21,34 @@
         <property name="LOG_PATH" value="logs" />
         <property name="LOG_LEVEL" value="DEBUG" />
 
+        <!-- Loki Appender 설정 (개발 환경) -->
+        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+            <http>
+                <url>${LOKI_URL}</url>
+                <connectionTimeoutMs>5000</connectionTimeoutMs>
+                <requestTimeoutMs>10000</requestTimeoutMs>
+            </http>
+            <format>
+                <label>
+                    <pattern>app=${LOG_FILE_NAME},host=${HOSTNAME},level=%level,env=${ACTIVE_PROFILE},service=where-car</pattern>
+                </label>
+                <message>
+                    <pattern>${LOG_PATTERN}</pattern>
+                </message>
+                <sortByTime>true</sortByTime>
+            </format>
+            <primarySwitch>
+                <disableOnError>true</disableOnError>
+                <silentFallback>true</silentFallback>
+            </primarySwitch>
+            <verbose>false</verbose>
+            <metricsEnabled>true</metricsEnabled>
+            <batchSize>100</batchSize>
+            <batchTimeoutMs>10000</batchTimeoutMs>
+            <retryCount>2</retryCount>
+            <waitBetweenRetries>1000</waitBetweenRetries>
+        </appender>
+
         <!-- 개발 환경: 활성 로그는 logs/앱이름/앱이름-info.log, 롤링 시 logs/앱이름/날짜/앱이름-info.log -->
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>${LOG_PATH}/${LOG_FILE_NAME}/${LOG_FILE_NAME}-info.log</file>
@@ -30,6 +57,7 @@
                 <pattern>${LOG_PATTERN}</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <!-- 수정: 롤링된 파일 경로가 일관되도록 변경 -->
                 <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-info.log</fileNamePattern>
                 <maxHistory>30</maxHistory> <!-- 개발 환경은 30일만 유지 -->
             </rollingPolicy>
@@ -45,6 +73,7 @@
                 <pattern>${LOG_PATTERN}</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <!-- 수정: 롤링된 파일 경로가 일관되도록 변경 -->
                 <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-error.log</fileNamePattern>
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
@@ -60,37 +89,6 @@
                 <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}/%d{yyyy-MM-dd}/${LOG_FILE_NAME}-sql.log</fileNamePattern>
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
-        </appender>
-
-        <!-- Loki Appender 설정 (prod) -->
-        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
-            <http>
-                <url>${LOKI_URL}</url>
-                <!-- 적절한 타임아웃 설정 - 너무 짧으면 연결 실패 가능성 증가 -->
-                <connectionTimeoutMs>2000</connectionTimeoutMs>
-                <requestTimeoutMs>5000</requestTimeoutMs>
-            </http>
-            <format>
-                <label>
-                    <pattern>app=${LOG_FILE_NAME},env=${ACTIVE_PROFILE},host=${HOSTNAME},level=%level</pattern>
-                </label>
-                <message>
-                    <pattern>${LOG_PATTERN}</pattern>
-                </message>
-                <sortByTime>true</sortByTime>
-            </format>
-            <!-- 중요 설정: 연결 실패해도 애플리케이션은 계속 작동 -->
-            <primarySwitch>
-                <disableOnError>true</disableOnError>
-                <silentFallback>false</silentFallback> <!-- 오류 표시 활성화 -->
-            </primarySwitch>
-            <verbose>true</verbose> <!-- 오류 정보 상세 표시 -->
-            <metricsEnabled>true</metricsEnabled>
-            <!-- 재시도 설정 강화 -->
-            <retryCount>3</retryCount>
-            <waitBetweenRetries>2000</waitBetweenRetries>
-            <batchSize>100</batchSize> <!-- 배치 크기 최적화 -->
-            <batchTimeoutMs>10000</batchTimeoutMs>
         </appender>
 
         <!-- 개발 환경 로거 설정 - 상세한 디버그 로그 -->
@@ -133,6 +131,35 @@
         
         <!-- JSON 형식 로그 패턴 (ELK 분석용) -->
         <property name="LOG_PATTERN_JSON" value="{&quot;timestamp&quot;:&quot;%d{yyyy-MM-dd HH:mm:ss.SSS}&quot;,&quot;level&quot;:&quot;%level&quot;,&quot;thread&quot;:&quot;%thread&quot;,&quot;logger&quot;:&quot;%logger{36}&quot;,&quot;method&quot;:&quot;%method&quot;,&quot;message&quot;:&quot;%message&quot;,&quot;params&quot;:&quot;%X{params}&quot;}%n" />
+
+        <!-- Loki Appender 설정 (운영 환경) -->
+        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+            <http>
+                <url>${LOKI_URL}</url>
+                <connectionTimeoutMs>5000</connectionTimeoutMs>
+                <requestTimeoutMs>10000</requestTimeoutMs>
+            </http>
+            <format>
+                <label>
+                    <pattern>app=${LOG_FILE_NAME},level=%level,env=${ACTIVE_PROFILE},service=where-car</pattern>
+                </label>
+                <message>
+                    <pattern>${LOG_PATTERN}</pattern>
+                </message>
+                <sortByTime>true</sortByTime>
+            </format>
+            <primarySwitch>
+                <disableOnError>true</disableOnError>
+                <silentFallback>true</silentFallback>
+            </primarySwitch>
+            <verbose>true</verbose>
+            <metricsEnabled>true</metricsEnabled>
+            <batchSize>1000</batchSize>
+            <batchTimeoutMs>10000</batchTimeoutMs>
+            <drainOnStop>true</drainOnStop>
+            <retryCount>3</retryCount>
+            <waitBetweenRetries>2000</waitBetweenRetries>
+        </appender>
 
         <!-- 운영 환경: 활성 로그는 logs/앱이름-info.log, 롤링 시 logs/날짜/앱이름-info.log -->
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -180,37 +207,6 @@
             </rollingPolicy>
         </appender>
 
-        <!-- Loki Appender 설정 (dev) -->
-        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
-            <http>
-                <url>${LOKI_URL}</url>
-                <!-- 적절한 타임아웃 설정 - 너무 짧으면 연결 실패 가능성 증가 -->
-                <connectionTimeoutMs>2000</connectionTimeoutMs>
-                <requestTimeoutMs>5000</requestTimeoutMs>
-            </http>
-            <format>
-                <label>
-                    <pattern>app=${LOG_FILE_NAME},env=${ACTIVE_PROFILE},host=${HOSTNAME},level=%level</pattern>
-                </label>
-                <message>
-                    <pattern>${LOG_PATTERN}</pattern>
-                </message>
-                <sortByTime>true</sortByTime>
-            </format>
-            <!-- 중요 설정: 연결 실패해도 애플리케이션은 계속 작동 -->
-            <primarySwitch>
-                <disableOnError>true</disableOnError>
-                <silentFallback>false</silentFallback> <!-- 오류 표시 활성화 -->
-            </primarySwitch>
-            <verbose>true</verbose> <!-- 오류 정보 상세 표시 -->
-            <metricsEnabled>true</metricsEnabled>
-            <!-- 재시도 설정 강화 -->
-            <retryCount>3</retryCount>
-            <waitBetweenRetries>2000</waitBetweenRetries>
-            <batchSize>100</batchSize> <!-- 배치 크기 최적화 -->
-            <batchTimeoutMs>10000</batchTimeoutMs>
-        </appender>
-
         <!-- 운영 환경 로거 설정 - 중요 정보만 기록 -->
         <logger name="com.wherecar" level="INFO" additivity="false">
             <appender-ref ref="FILE" />
@@ -221,6 +217,7 @@
         <logger name="com.wherecar.error" level="ERROR" additivity="false">
             <appender-ref ref="ERROR_FILE" />
             <appender-ref ref="CONSOLE" />
+            <appender-ref ref="LOKI" />
         </logger>
 
         <!-- 운영 환경 SQL 로깅 - 필수 SQL 쿼리만 기록 -->
@@ -232,6 +229,7 @@
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="FILE" />
+            <appender-ref ref="LOKI" />
         </root>
     </springProfile>
 
