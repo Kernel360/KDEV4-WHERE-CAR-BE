@@ -17,6 +17,10 @@ server:
     include-message: always
     include-stacktrace: never
 
+monitoring:
+  loki:
+    url: ${LOKI_URL}
+
 emulator:
   # 디바이스 관련 설정
   device:

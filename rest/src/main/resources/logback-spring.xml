@@ -3,6 +3,7 @@
     <!-- 공통 속성 정의 -->
     <springProperty scope="context" name="LOG_FILE_NAME" source="spring.application.name" defaultValue="application"/>
     <springProperty scope="context" name="ACTIVE_PROFILE" source="spring.profiles.active" defaultValue="dev"/>
+    <springProperty scope="context" name="LOKI_URL" source="monitoring.loki.url" defaultValue="http://loki:3100/loki/api/v1/push"/>
     <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}][%-5level][%logger{36}][%method] %msg | %X{params} %n" />
     <property name="LOG_PATTERN_COLOR" value="%magenta([%d{yyyy-MM-dd HH:mm:ss}]) %highlight([%-5level]) %green([%logger{36}]) %yellow([%method]) %msg | %X{params} %n" />
     <timestamp key="today" datePattern="yyyy-MM-dd" />
@@ -61,10 +62,13 @@
             </rollingPolicy>
         </appender>
 
-        <!-- Loki Appender 설정 수정 (개발 환경) -->
+        <!-- Loki Appender 설정 (prod) -->
         <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
             <http>
-                <url>http://localhost:3100/loki/api/v1/push</url>
+                <url>${LOKI_URL}</url>
+                <!-- 적절한 타임아웃 설정 - 너무 짧으면 연결 실패 가능성 증가 -->
+                <connectionTimeoutMs>2000</connectionTimeoutMs>
+                <requestTimeoutMs>5000</requestTimeoutMs>
             </http>
             <format>
                 <label>
@@ -75,6 +79,18 @@
                 </message>
                 <sortByTime>true</sortByTime>
             </format>
+            <!-- 중요 설정: 연결 실패해도 애플리케이션은 계속 작동 -->
+            <primarySwitch>
+                <disableOnError>true</disableOnError>
+                <silentFallback>false</silentFallback> <!-- 오류 표시 활성화 -->
+            </primarySwitch>
+            <verbose>true</verbose> <!-- 오류 정보 상세 표시 -->
+            <metricsEnabled>true</metricsEnabled>
+            <!-- 재시도 설정 강화 -->
+            <retryCount>3</retryCount>
+            <waitBetweenRetries>2000</waitBetweenRetries>
+            <batchSize>100</batchSize> <!-- 배치 크기 최적화 -->
+            <batchTimeoutMs>10000</batchTimeoutMs>
         </appender>
 
         <!-- 개발 환경 로거 설정 - 상세한 디버그 로그 -->
@@ -164,10 +180,13 @@
             </rollingPolicy>
         </appender>
 
-        <!-- Loki Appender 설정 수정 (배포 환경) 주소 변경해야 함! -->
+        <!-- Loki Appender 설정 (dev) -->
         <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
             <http>
-                <url>http://localhost:3100/loki/api/v1/push</url>
+                <url>${LOKI_URL}</url>
+                <!-- 적절한 타임아웃 설정 - 너무 짧으면 연결 실패 가능성 증가 -->
+                <connectionTimeoutMs>2000</connectionTimeoutMs>
+                <requestTimeoutMs>5000</requestTimeoutMs>
             </http>
             <format>
                 <label>
@@ -178,6 +197,18 @@
                 </message>
                 <sortByTime>true</sortByTime>
             </format>
+            <!-- 중요 설정: 연결 실패해도 애플리케이션은 계속 작동 -->
+            <primarySwitch>
+                <disableOnError>true</disableOnError>
+                <silentFallback>false</silentFallback> <!-- 오류 표시 활성화 -->
+            </primarySwitch>
+            <verbose>true</verbose> <!-- 오류 정보 상세 표시 -->
+            <metricsEnabled>true</metricsEnabled>
+            <!-- 재시도 설정 강화 -->
+            <retryCount>3</retryCount>
+            <waitBetweenRetries>2000</waitBetweenRetries>
+            <batchSize>100</batchSize> <!-- 배치 크기 최적화 -->
+            <batchTimeoutMs>10000</batchTimeoutMs>
         </appender>
 
         <!-- 운영 환경 로거 설정 - 중요 정보만 기록 -->
@@ -190,7 +221,6 @@
         <logger name="com.wherecar.error" level="ERROR" additivity="false">
             <appender-ref ref="ERROR_FILE" />
             <appender-ref ref="CONSOLE" />
-            <appender-ref ref="LOKI" />
         </logger>
 
         <!-- 운영 환경 SQL 로깅 - 필수 SQL 쿼리만 기록 -->
@@ -202,7 +232,7 @@
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="FILE" />
-            <appender-ref ref="LOKI" />
         </root>
     </springProfile>
+
 </configuration>

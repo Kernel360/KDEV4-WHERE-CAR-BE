@@ -13,13 +13,13 @@ filebeat.inputs:
     fields_under_root: true
     fields:
       environment: development
-    ignore_older: 24h  # 72h에서 24h로 감소
-    scan_frequency: 5s  # 10s에서 5s로 감소
-    close_inactive: 1h  # 2h에서 1h로 감소
+    ignore_older: 24h
+    scan_frequency: 5s
+    close_inactive: 1h
     harvester_buffer_size: 16384
-    max_bytes: 10485760  # 읽을 최대 바이트 (10MB)
-    backoff.init: 1s    # 추가: 초기 백오프 시간
-    backoff.max: 10s    # 추가: 최대 백오프 시간
+    max_bytes: 10485760
+    backoff.init: 1s
+    backoff.max: 10s
 
   - type: filestream
     id: rolled-logs
@@ -38,7 +38,7 @@ filebeat.inputs:
     scan_frequency: 10s
     close_inactive: 2h
     harvester_buffer_size: 16384
-    max_bytes: 10485760  # 읽을 최대 바이트 (10MB)
+    max_bytes: 10485760
 
 processors:
   - add_fields:
@@ -75,13 +75,18 @@ processors:
           event.Put("app_name", appName);
           
           // 로그 타입 추출 (파일명에 error, sql 등이 있으면 해당 타입으로)
-          // includes() 대신 indexOf() 사용
           if (filename.indexOf("-error") >= 0) {
             event.Put("log_type", "error");
           } else if (filename.indexOf("-sql") >= 0) {
             event.Put("log_type", "sql");
           } else {
             event.Put("log_type", "info");
+          }
+          
+          // ECS 컨테이너 환경 정보 추가
+          var meta = process.env.ECS_CONTAINER_METADATA_URI_V4;
+          if (meta) {
+            event.Put("ecs_metadata_uri", meta);
           }
           
           return event;
@@ -99,16 +104,16 @@ processors:
       ignore_missing: true
 
 # 성능 최적화 설정
-filebeat.registry.flush: 1s  # 5s에서 1s로 감소
+filebeat.registry.flush: 1s
 filebeat.shutdown_timeout: 10s
 filebeat.harvester_limit: 300
 filebeat.max_procs: 2
 filebeat.spool_size: 2048
-filebeat.idle_timeout: 5s  # 추가: 읽기 시간 초과 설정
+filebeat.idle_timeout: 5s
 queue.mem:
   events: 4096
-  flush.min_events: 256  # 512에서 256으로 감소
-  flush.timeout: 1s      # 5s에서 1s로 감소
+  flush.min_events: 256
+  flush.timeout: 1s
 
 # Logstash로 전송
 output.logstash:
@@ -126,7 +131,7 @@ monitoring:
     password: "${ELASTICSEARCH_PASSWORD}"
 
 # 로깅 설정
-logging.level: debug  # info에서 debug로 변경
+logging.level: debug
 logging.to_stderr: true
 logging.to_files: true
 logging.files:
@@ -134,4 +139,3 @@ logging.files:
   name: filebeat-dev
   keepfiles: 7
   permissions: 0644
-

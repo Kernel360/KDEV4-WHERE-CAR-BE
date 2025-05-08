@@ -47,3 +47,7 @@ server:
 #  error:
 #    include-message: always
 #    include-stacktrace: never
+
+monitoring:
+  loki:
+    url: ${LOKI_URL}

@@ -1,6 +1,6 @@
 services:
 
-  # ELK Stack =============================
+  # ELK Stack
   elasticsearch:
     image: elasticsearch:8.12.1
     container_name: elasticsearch
@@ -16,6 +16,13 @@ services:
       memlock:
         soft: -1
         hard: -1
+    deploy:
+      resources:
+        limits:
+          cpus: '0.7'
+          memory: 2500M
+        reservations:
+          memory: 1500M
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     ports:
@@ -25,7 +32,8 @@ services:
       - where-car-network
 
   logstash:
-    image: logstash:8.12.1
+    image: docker.elastic.co/logstash/logstash:8.12.1
+    platform: linux/arm64
     container_name: logstash
     restart: unless-stopped
     volumes:
@@ -36,7 +44,14 @@ services:
       - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
       - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
       - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
-      - "LS_JAVA_OPTS=-Xms1g -Xmx1g"  # 추가: 힙 메모리 설정
+      - "LS_JAVA_OPTS=-Xms512m -Xmx512m"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 800M
+        reservations:
+          memory: 600M
     ports:
       - "5044:5044"
       - "5001:5000/tcp"
@@ -56,40 +71,31 @@ services:
       - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
       - ELASTICSEARCH_USERNAME=${KIBANA_USERNAME}
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 768M
+        reservations:
+          memory: 384M
     networks:
       - where-car-network
     depends_on:
       - elasticsearch
 
-  filebeat:
-    image: elastic/filebeat:8.12.1
-    container_name: filebeat
-    user: root
-    volumes:
-      - ./config/filebeat/filebeat-dev.yml:/usr/share/filebeat/filebeat.yml:ro # 환경에 따라 설정 변경
-      - ../logs:/logs:ro
-      - filebeat-data:/usr/share/filebeat/data
-      - ../logs/filebeat-logs:/var/log/filebeat  # 추가: 로그 디렉토리를 볼륨으로 마운트
-    command: ["filebeat", "-e", "-strict.perms=false"]  # 추가: 권한 문제 해결
-    environment:
-      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
-      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
-      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
-      - LOGSTASH_HOST=${LOGSTASH_HOST}
-      - ELASTIC_SEARCH_VERIFY_CERTS=false  # 추가: 인증서 검증 비활성화
-    networks:
-      - where-car-network
-    depends_on:
-      - elasticsearch
-      - logstash
-    restart: unless-stopped  # 추가: 재시작 정책
-
-  # Observability Stack =============================
+  # Grafana Loki stack
   prometheus:
     image: prom/prometheus:v2.49.0
     container_name: prometheus
     ports:
       - "9090:9090"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 1500M
+        reservations:
+          memory: 750M
     volumes:
       - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
@@ -100,8 +106,16 @@ services:
   loki:
     image: grafana/loki:2.9.4
     container_name: loki
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 512M
+        reservations:
+          memory: 256M
     ports:
       - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yml
     volumes:
       - loki-data:/loki
       - ./config/loki:/etc/loki
@@ -112,6 +126,13 @@ services:
   grafana:
     image: grafana/grafana:10.3.3
     container_name: grafana
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 800M
+        reservations:
+          memory: 400M
     ports:
       - "3000:3000"
     environment:
@@ -130,6 +151,30 @@ services:
       - loki
       - elasticsearch
 
+  # [filebeat] 개발 환경에서만 사용함 배포 환경의 경우는 다른 기술을 사용할 예정임
+  #  filebeat:
+  #    image: elastic/filebeat:8.12.1
+  #    container_name: filebeat
+  #    user: root
+  #    volumes:
+  #      - ./config/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+  #      - ../logs:/logs:ro
+  #      - filebeat-data:/usr/share/filebeat/data
+  #      - ../logs/filebeat-logs:/var/log/filebeat
+  #    command: ["filebeat", "-e", "-strict.perms=false"]
+  #    environment:
+  #      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
+  #      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+  #      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+  #      - LOGSTASH_HOST=${LOGSTASH_HOST}
+  #      - ELASTIC_SEARCH_VERIFY_CERTS=false
+  #    networks:
+  #      - where-car-network
+  #    depends_on:
+  #      - elasticsearch
+  #      - logstash
+  #    restart: unless-stopped
+
 networks:
   where-car-network:
     driver: bridge
@@ -137,11 +182,11 @@ networks:
 volumes:
   elasticsearch-data:
     driver: local
-  filebeat-data:
-    driver: local
   grafana-storage:
     driver: local
   prometheus-data:
     driver: local
-  loki-data: # 추가
+  loki-data:
     driver: local
+#  filebeat-data:
+#    driver: local
