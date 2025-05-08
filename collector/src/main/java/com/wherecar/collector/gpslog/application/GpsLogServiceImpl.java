@@ -38,7 +38,7 @@ public class GpsLogServiceImpl implements GpsLogService {
             gpsLogStore.store(gpsLogList, car, batList);
             log.info("[GPSLOG][GpsLogServiceImpl][receiveGpsLogs] 끝");
         } catch (Exception e) {
-            log.error("GPS 로그 저장 비동기 처리 예외 발생", e);
+            log.error("collector GPS 로그 저장 비동기 처리 예외 발생", e);
             log.info("[GPSLOG][GpsLogServiceImpl][receiveGpsLogs] 끝");
         }
     }

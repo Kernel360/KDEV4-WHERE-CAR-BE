@@ -1,4 +1,4 @@
-package com.wherecar.collector.common.config;
+package com.wherecar.hub.common.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
@@ -16,7 +16,7 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class AsyncConfig implements AsyncConfigurer {
 
-    @Bean(name = "taskExecutorCollector")
+    @Bean(name = "taskExecutorHub")
     public Executor asyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 
@@ -28,7 +28,7 @@ public class AsyncConfig implements AsyncConfigurer {
         executor.setWaitForTasksToCompleteOnShutdown(false);
         executor.setAwaitTerminationSeconds(0);
         executor.setRejectedExecutionHandler(new java.util.concurrent.ThreadPoolExecutor.AbortPolicy());
-        executor.setThreadNamePrefix("test collector");
+        executor.setThreadNamePrefix("test hub");
 
         executor.initialize();
         return executor;
@@ -40,7 +40,7 @@ public class AsyncConfig implements AsyncConfigurer {
 
             @Override
             public void handleUncaughtException(Throwable ex, Method method, Object... params) {
-                log.error("collector 비동기 메서드에서 예외 발생: method={}, message={}", method.getName(), ex.getMessage(), ex);
+                log.error("hub 비동기 메서드에서 예외 발생: method={}, message={}", method.getName(), ex.getMessage(), ex);
             }
         };
     }
