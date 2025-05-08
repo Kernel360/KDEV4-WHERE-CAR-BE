@@ -83,30 +83,6 @@ services:
     depends_on:
       - elasticsearch
 
-# filebeat disabled: 각 스프링 애플리케이션에 별도로 배포
-#  filebeat:
-#    image: elastic/filebeat:8.12.1
-#    container_name: filebeat
-#    user: root
-#    volumes:
-#      - ./config/filebeat/filebeat-dev.yml:/usr/share/filebeat/filebeat.yml:ro
-#      - ../logs:/logs:ro
-#      - filebeat-data:/usr/share/filebeat/data
-#      - ../logs/filebeat-logs:/var/log/filebeat
-#    command: ["filebeat", "-e", "-strict.perms=false"]
-#    environment:
-#      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
-#      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
-#      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
-#      - LOGSTASH_HOST=${LOGSTASH_HOST}
-#      - ELASTIC_SEARCH_VERIFY_CERTS=false
-#    networks:
-#      - where-car-network
-#    depends_on:
-#      - elasticsearch
-#      - logstash
-#    restart: unless-stopped
-
   # Grafana Loki stack
   prometheus:
     image: prom/prometheus:v2.49.0
@@ -181,8 +157,6 @@ networks:
 
 volumes:
   elasticsearch-data:
-    driver: local
-  filebeat-data:
     driver: local
   grafana-storage:
     driver: local
