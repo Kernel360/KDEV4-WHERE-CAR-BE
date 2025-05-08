@@ -151,6 +151,30 @@ services:
       - loki
       - elasticsearch
 
+  # [filebeat] 개발 환경에서만 사용함 배포 환경의 경우는 다른 기술을 사용할 예정임
+  #  filebeat:
+  #    image: elastic/filebeat:8.12.1
+  #    container_name: filebeat
+  #    user: root
+  #    volumes:
+  #      - ./config/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+  #      - ../logs:/logs:ro
+  #      - filebeat-data:/usr/share/filebeat/data
+  #      - ../logs/filebeat-logs:/var/log/filebeat
+  #    command: ["filebeat", "-e", "-strict.perms=false"]
+  #    environment:
+  #      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
+  #      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+  #      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+  #      - LOGSTASH_HOST=${LOGSTASH_HOST}
+  #      - ELASTIC_SEARCH_VERIFY_CERTS=false
+  #    networks:
+  #      - where-car-network
+  #    depends_on:
+  #      - elasticsearch
+  #      - logstash
+  #    restart: unless-stopped
+
 networks:
   where-car-network:
     driver: bridge
@@ -162,5 +186,7 @@ volumes:
     driver: local
   prometheus-data:
     driver: local
-  loki-data: # 추가
+  loki-data:
     driver: local
+#  filebeat-data:
+#    driver: local
