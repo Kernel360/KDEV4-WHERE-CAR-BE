@@ -50,4 +50,4 @@ server:
 
 monitoring:
   loki:
-    url: http://loki:3100/loki/api/v1/push
+    url: ${LOKI_URL}

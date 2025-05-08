@@ -19,7 +19,7 @@ server:
 
 monitoring:
   loki:
-    url: http://loki:3100/loki/api/v1/push
+    url: ${LOKI_URL}
 
 emulator:
   # 디바이스 관련 설정
