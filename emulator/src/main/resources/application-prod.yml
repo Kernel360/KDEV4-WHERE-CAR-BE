@@ -17,9 +17,19 @@ server:
     include-message: always
     include-stacktrace: never
 
-monitoring:
-  loki:
-    url: ${LOKI_URL}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 
 emulator:
   # 디바이스 관련 설정
@@ -41,3 +51,7 @@ emulator:
       on-path: /api/hub/on
       cycle-info-path: /api/hub/gps
       off-path: /api/hub/off
+
+monitoring:
+  loki:
+    url: ${LOKI_URL}
