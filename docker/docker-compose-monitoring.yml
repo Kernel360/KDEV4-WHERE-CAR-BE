@@ -9,7 +9,7 @@ services:
       - cluster.name=wherecar-es-cluster
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - "ES_JAVA_OPTS=-Xms2g -Xmx3g"
       - xpack.security.enabled=true
       - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
     ulimits:
@@ -20,9 +20,9 @@ services:
       resources:
         limits:
           cpus: '0.7'
-          memory: 2500M
+          memory: 3G
         reservations:
-          memory: 1500M
+          memory: 2G
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     ports:
