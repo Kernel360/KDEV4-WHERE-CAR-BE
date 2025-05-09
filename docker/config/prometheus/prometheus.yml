@@ -4,28 +4,33 @@ global:
 scrape_configs:
   - job_name: 'wherecar-rest'
     metrics_path: '/actuator/prometheus'
+    scheme: 'https'
     static_configs:
-      - targets: [ 'localhost:8080' ]
+      - targets: [ '${REST_SERVER_API}' ]
         labels:
           instance: 'rest-api'
+          env: 'prod'
 
   - job_name: 'wherecar-hub'
     metrics_path: '/actuator/prometheus'
+    scheme: 'https'
     static_configs:
-      - targets: [ 'localhost:8085' ]
+      - targets: [ '${HUB_SERVER_API}' ]
         labels:
           instance: 'hub-server'
 
   - job_name: 'wherecar-batch'
     metrics_path: '/actuator/prometheus'
+    scheme: 'http'
     static_configs:
-      - targets: [ 'localhost:8095' ]
+      - targets: [ '${BATCH_SERVER_API}' ]
         labels:
           instance: 'batch-server'
 
   - job_name: 'wherecar-collector'
     metrics_path: '/actuator/prometheus'
+    scheme: 'http'
     static_configs:
-      - targets: [ 'localhost:8090' ]
+      - targets: [ '${COLLECTOR_SERVER_API}' ]
         labels:
           instance: 'collector-server'
