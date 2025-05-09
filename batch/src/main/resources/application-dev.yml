@@ -41,10 +41,6 @@ management:
     tags:
       application: ${spring.application.name}
       environment: ${spring.profiles.active}
-  prometheus:
-    metrics:
-      export:
-        enabled: true
 
 server:
   port: 8095

@@ -26,10 +26,6 @@ management:
     tags:
       application: ${spring.application.name}
       environment: ${spring.profiles.active}
-  prometheus:
-    metrics:
-      export:
-        enabled: true
 
 emulator:
   # 디바이스 관련 설정
