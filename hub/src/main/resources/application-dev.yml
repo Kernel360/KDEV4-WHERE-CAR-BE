@@ -11,6 +11,19 @@ spring:
   jwt:
     token-secret: ${JWT_TOKEN_SECRET_KEY}
 
-
 server:
   port: 8085
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active}
+  prometheus:
+    metrics:
+      export:
+        enabled: true

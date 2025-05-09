@@ -48,6 +48,20 @@ server:
 #    include-message: always
 #    include-stacktrace: never
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
 monitoring:
   loki:
     url: ${LOKI_URL}
