@@ -112,11 +112,6 @@ services:
     container_name: prometheus
     ports:
       - "9090:9090"
-    environment:
-      - REST_SERVER_API=${REST_SERVER_API}
-      - HUB_SERVER_API=${HUB_SERVER_API}
-      - BATCH_SERVER_API=${BATCH_SERVER_API}
-      - COLLECTOR_SERVER_API=${COLLECTOR_SERVER_API}
     deploy:
       resources:
         limits:
