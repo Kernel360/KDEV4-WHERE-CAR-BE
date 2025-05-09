@@ -23,10 +23,6 @@ management:
     tags:
       application: ${spring.application.name}
       environment: ${spring.profiles.active}
-  prometheus:
-    metrics:
-      export:
-        enabled: true
 
 monitoring:
   loki:
