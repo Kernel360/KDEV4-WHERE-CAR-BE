@@ -22,7 +22,7 @@ public class AsyncConfig implements AsyncConfigurer {
 
         executor.setCorePoolSize(50);
         executor.setMaxPoolSize(200);
-        executor.setQueueCapacity(1000);
+        executor.setQueueCapacity(10000);
         executor.setKeepAliveSeconds(60);
         executor.setAllowCoreThreadTimeOut(false);
         executor.setWaitForTasksToCompleteOnShutdown(false);
