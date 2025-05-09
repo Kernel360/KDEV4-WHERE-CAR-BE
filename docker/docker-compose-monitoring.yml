@@ -2,7 +2,7 @@ services:
 
   # ELK Stack
   elasticsearch:
-    image: elasticsearch:8.12.1
+    image: elasticsearch:8.18.0
     container_name: elasticsearch
     environment:
       - node.name=elasticsearch
@@ -32,7 +32,7 @@ services:
       - where-car-network
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:8.12.1
+    image: logstash:8.18.0
     platform: linux/arm64
     container_name: logstash
     restart: unless-stopped
@@ -63,7 +63,7 @@ services:
       - elasticsearch
 
   kibana:
-    image: kibana:8.12.1
+    image: kibana:8.18.0
     container_name: kibana
     ports:
       - "5601:5601"
@@ -83,9 +83,32 @@ services:
     depends_on:
       - elasticsearch
 
+#  filebeat: develop your own
+#    image: elastic/filebeat:9.0.1
+#    container_name: filebeat
+#    user: root
+#    volumes:
+#      - ./config/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+#      - ../logs:/logs:ro
+#      - filebeat-data:/usr/share/filebeat/data
+#      - ../logs/filebeat-logs:/var/log/filebeat
+#    command: ["filebeat", "-e", "-strict.perms=false"]
+#    environment:
+#      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
+#      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+#      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+#      - LOGSTASH_HOST=${LOGSTASH_HOST}
+#      - ELASTIC_SEARCH_VERIFY_CERTS=false
+#    networks:
+#      - where-car-network
+#    depends_on:
+#      - elasticsearch
+#      - logstash
+#    restart: unless-stopped
+
   # Grafana Loki stack
   prometheus:
-    image: prom/prometheus:v2.49.0
+    image: prom/prometheus:v3.3.1
     container_name: prometheus
     ports:
       - "9090:9090"
@@ -103,28 +126,8 @@ services:
       - where-car-network
     restart: unless-stopped
 
-  loki:
-    image: grafana/loki:2.9.4
-    container_name: loki
-    deploy:
-      resources:
-        limits:
-          cpus: '0.2'
-          memory: 512M
-        reservations:
-          memory: 256M
-    ports:
-      - "3100:3100"
-    command: -config.file=/etc/loki/local-config.yml
-    volumes:
-      - loki-data:/loki
-      - ./config/loki:/etc/loki
-    networks:
-      - where-car-network
-    restart: unless-stopped
-
   grafana:
-    image: grafana/grafana:10.3.3
+    image: grafana/grafana:12.0.0
     container_name: grafana
     deploy:
       resources:
@@ -151,29 +154,25 @@ services:
       - loki
       - elasticsearch
 
-  # [filebeat] 개발 환경에서만 사용함 배포 환경의 경우는 다른 기술을 사용할 예정임
-  #  filebeat:
-  #    image: elastic/filebeat:8.12.1
-  #    container_name: filebeat
-  #    user: root
-  #    volumes:
-  #      - ./config/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-  #      - ../logs:/logs:ro
-  #      - filebeat-data:/usr/share/filebeat/data
-  #      - ../logs/filebeat-logs:/var/log/filebeat
-  #    command: ["filebeat", "-e", "-strict.perms=false"]
-  #    environment:
-  #      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
-  #      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
-  #      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
-  #      - LOGSTASH_HOST=${LOGSTASH_HOST}
-  #      - ELASTIC_SEARCH_VERIFY_CERTS=false
-  #    networks:
-  #      - where-car-network
-  #    depends_on:
-  #      - elasticsearch
-  #      - logstash
-  #    restart: unless-stopped
+  loki:
+    image: grafana/loki:3.5
+    container_name: loki
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 512M
+        reservations:
+          memory: 256M
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yml -config.expand-env=true
+    volumes:
+      - loki-data:/loki
+      - ./config/loki:/etc/loki
+    networks:
+      - where-car-network
+    restart: unless-stopped
 
 networks:
   where-car-network:
@@ -188,5 +187,5 @@ volumes:
     driver: local
   loki-data:
     driver: local
-#  filebeat-data:
+#  filebeat-data: develop your own
 #    driver: local
