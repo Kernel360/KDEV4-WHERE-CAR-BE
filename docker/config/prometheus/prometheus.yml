@@ -6,7 +6,7 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     scheme: 'https'
     static_configs:
-      - targets: [ '${REST_SERVER_API}' ]
+      - targets: [ 'localhost:8080' ]
         labels:
           instance: 'rest-api'
           env: 'prod'
@@ -15,7 +15,7 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     scheme: 'https'
     static_configs:
-      - targets: [ '${HUB_SERVER_API}' ]
+      - targets: [ 'localhost:8085' ]
         labels:
           instance: 'hub-server'
 
@@ -23,7 +23,7 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     scheme: 'http'
     static_configs:
-      - targets: [ '${BATCH_SERVER_API}' ]
+      - targets: [ 'localhost:8090' ]
         labels:
           instance: 'batch-server'
 
@@ -31,6 +31,6 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     scheme: 'http'
     static_configs:
-      - targets: [ '${COLLECTOR_SERVER_API}' ]
+      - targets: [ 'localhost:8095' ]
         labels:
           instance: 'collector-server'
