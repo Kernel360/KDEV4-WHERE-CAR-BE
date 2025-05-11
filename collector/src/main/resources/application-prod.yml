@@ -17,7 +17,7 @@ spring:
     virtual-host: /
 
 server:
-  port: 8090
+  port: 8080
 
 management:
   endpoints:
