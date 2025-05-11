@@ -9,8 +9,6 @@ spring:
     url: jdbc:mysql://${DB_HOST_NAME}/${DB_STORAGE_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-    hikari:
-      max-lifetime: 240000
   rabbitmq:
     host: ${MQ_HOST_NAME}
     port: 5672
