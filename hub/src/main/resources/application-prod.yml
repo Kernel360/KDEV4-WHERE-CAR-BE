@@ -12,4 +12,4 @@ spring:
     token-secret: ${JWT_TOKEN_SECRET_KEY}
 
 server:
-  port: 8085
+  port: 8080
