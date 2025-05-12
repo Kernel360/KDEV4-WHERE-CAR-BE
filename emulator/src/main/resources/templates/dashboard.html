@@ -309,7 +309,7 @@
         </div>
       </div>
       <p class="text-base text-muted-foreground dark:text-gray-400 mb-8" th:text="${deviceStatus} ? '차량이 현재 이동 중입니다.' : '에뮬레이터를 시작하려면 아래 버튼을 클릭하세요.'"></p>
-      
+
       <div id="car-status-animation" class="relative h-48 flex items-center justify-center" th:if="${deviceStatus}">
         <div class="absolute inset-0 flex items-center justify-center">
           <div class="w-full max-w-4xl h-1 bg-primary/20 rounded-full"></div>
@@ -325,24 +325,24 @@
       </div>
     </div>
   </div>
-  <div class="rounded-xl border bg-card text-card-foreground shadow-lg mb-8 dark:bg-gray-800 dark:border-gray-700 transition-all duration-300">
+  <div class="rounded-xl border bg-white text-card-foreground shadow-lg mb-8 dark:bg-gray-800 dark:border-gray-700 transition-all duration-300">
     <div class="flex flex-col space-y-2 p-8">
       <div class="flex items-center gap-3">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-route text-primary"><path d="M3 19V5c0-1.1.9-2 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M7 9h10"/><path d="M7 15h10"/></svg>
-        <h3 class="text-2xl font-semibold leading-none tracking-tight dark:text-white">경로 정보</h3>
+        <h3 class="text-2xl font-semibold leading-none tracking-tight dark:text-white">시뮬레이션 경로 정보</h3>
       </div>
       <p class="text-base text-muted-foreground dark:text-gray-400 ml-9">
         현재 차량의 경로 정보를 확인하세요.
       </p>
     </div>
     <div class="p-8">
-      <div class="bg-white dark:bg-gray-700 rounded-lg border border-input p-4 shadow-sm">
+      <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600 p-4 shadow-sm transition-all duration-200 hover:border-primary/50 dark:hover:border-primary/50">
         <div class="flex items-center justify-between gap-4">
           <div class="flex items-center gap-4">
             <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plane-takeoff"><path d="M2 22h20"/><path d="M6.36 17.4 4 17l-2-4 1.1-.55a2 2 0 0 1 1.8 0l17 8.5a2 2 0 0 0 1.8 0L22 18l-4-6-5.5 1.5"/><path d="M18.4 3.6a2 2 0 0 1 2.8 2.8L15 10l-4-2-1.4 3.6L6 13l-2-2 2-4 3 1.4Z"/></svg>
             </div>
-            <div class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0 p-4">
               <div class="text-sm text-gray-500 dark:text-gray-400">출발지</div>
               <div class="text-lg font-medium dark:text-white truncate" th:text="${departure != null ? departure : '출발지 정보 없음'}">출발지</div>
             </div>
@@ -356,7 +356,7 @@
             <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plane-landing"><path d="M2 22h20"/><path d="M3.77 10.77 2 9l2-4.5 1.1.55c.55.28.89.84.98 1.45C6.27 7.12 6.72 7.58 7 8l5 3-5 3c-.28.42-.73.88-1.92 1.95-.5.5-1.2.58-1.79.24L3.77 10.77Z"/><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2Z"/><path d="M13.5 7.5 19 10l-5.5 2.5L8 12l5.5-4.5Z"/></svg>
             </div>
-            <div class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0 p-4">
               <div class="text-sm text-gray-500 dark:text-gray-400">도착지</div>
               <div class="text-lg font-medium dark:text-white truncate" th:text="${destination != null ? destination : '도착지 정보 없음'}">도착지</div>
             </div>
@@ -365,14 +365,14 @@
       </div>
     </div>
   </div>
-  <div class="rounded-xl border bg-card text-card-foreground shadow-lg mb-8 dark:bg-gray-800 dark:border-gray-700 transition-all duration-300">
+  <div class="rounded-xl border bg-white text-card-foreground shadow-lg mb-8 dark:bg-gray-800 dark:border-gray-700 transition-all duration-300">
     <div class="flex flex-col space-y-2 p-8">
       <div class="flex items-center gap-3">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings text-primary"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-        <h3 class="text-2xl font-semibold leading-none tracking-tight dark:text-white">차량 에뮬레이터 컨트롤</h3>
+        <h3 class="text-2xl font-semibold leading-none tracking-tight dark:text-white">에뮬레이터 제어</h3>
       </div>
       <p class="text-base text-muted-foreground dark:text-gray-400 ml-9">
-        환영합니다, 관리자님 차량 관제 시스템 입니다.
+        에뮬레이터의 시뮬레이션 모드를 컨트롤할 수 있습니다.
       </p>
     </div>
     <div class="p-8">
@@ -380,16 +380,20 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-3">
             <label for="carIdentity" class="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-white">차량 번호</label>
-            <div class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car text-primary"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
-              <input id="carIdentity" name="carIdentity" class="flex h-12 w-full rounded-lg border border-input bg-background px-4 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" th:value="${carIdentity.mdn}" readonly/>
+            <div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition-all duration-200 hover:border-primary/50 dark:hover:border-primary/50">
+              <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-car"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+              </div>
+              <input id="carIdentity" name="carIdentity" class="flex-1 bg-transparent border-none focus:ring-0 text-base font-medium dark:text-white" th:value="${carIdentity.vrp}" readonly/>
             </div>
           </div>
           <div class="space-y-3">
             <label for="deviceId" class="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-white">식별키</label>
-            <div class="flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key text-primary"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-              <input id="deviceId" name="deviceId" class="flex h-12 w-full rounded-lg border border-input bg-background px-4 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" th:value="${carIdentity.vrp}" readonly/>
+            <div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition-all duration-200 hover:border-primary/50 dark:hover:border-primary/50">
+              <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+              </div>
+              <input id="deviceId" name="deviceId" class="flex-1 bg-transparent border-none focus:ring-0 text-base font-medium dark:text-white" th:value="${carIdentity.mdn}" readonly/>
             </div>
           </div>
         </div>
@@ -444,89 +448,89 @@
       };
 
       navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          try {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            const timestamp = new Date().toISOString();
-            
-            if (isNaN(latitude) || isNaN(longitude)) {
-              throw new Error('유효하지 않은 위치 정보입니다.');
-            }
+              async (position) => {
+                try {
+                  const latitude = position.coords.latitude;
+                  const longitude = position.coords.longitude;
+                  const timestamp = new Date().toISOString();
 
-            // 첫 번째 위치 정보인 경우에만 on 요청을 보냄
-            if (isFirstLocation) {
-              const response = await fetch('/device/realtime/on', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  latitude: latitude,
-                  longitude: longitude,
-                  timeStamp: timestamp
-                })
-              });
-              
-              if (!response.ok) {
-                throw new Error('위치 정보 전송 실패');
-              }
-              isFirstLocation = false;
-            }
+                  if (isNaN(latitude) || isNaN(longitude)) {
+                    throw new Error('유효하지 않은 위치 정보입니다.');
+                  }
 
-            // 위치 정보를 히스토리에 추가
-            locationHistory.push({
-              latitude: latitude,
-              longitude: longitude,
-              timeStamp: timestamp
-            });
+                  // 첫 번째 위치 정보인 경우에만 on 요청을 보냄
+                  if (isFirstLocation) {
+                    const response = await fetch('/device/realtime/on', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        latitude: latitude,
+                        longitude: longitude,
+                        timeStamp: timestamp
+                      })
+                    });
 
-            // 60개의 위치 정보가 모이면 cycleInfo 요청을 보냄
-            if (locationHistory.length >= MAX_HISTORY_SIZE) {
-              const response = await fetch('/device/realtime/cycleInfo', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(locationHistory)
-              });
-              
-              if (!response.ok) {
-                throw new Error('위치 정보 전송 실패');
-              }
-              
-              locationHistory = [];
-            }
-            
-            lastLatitude = latitude;
-            lastLongitude = longitude;
-            isLocationAvailable = true;
-            retryCount = 0;
-            resolve({ latitude, longitude, timestamp });
-          } catch (error) {
-            console.error('위치 정보 처리 중 오류 발생:', error);
-            reject(error);
-          }
-        },
-        (error) => {
-          console.error('위치 정보를 가져오는 중 오류 발생:', error);
-          let errorMessage = '위치 정보를 가져오는데 실패했습니다.';
-          
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              errorMessage = '위치 정보 접근이 거부되었습니다. 브라우저 설정에서 위치 정보 접근을 허용해주세요.';
-              break;
-            case error.POSITION_UNAVAILABLE:
-              errorMessage = '위치 정보를 사용할 수 없습니다. GPS가 켜져있는지 확인해주세요.';
-              break;
-            case error.TIMEOUT:
-              errorMessage = '위치 정보 요청 시간이 초과되었습니다. 다시 시도해주세요.';
-              break;
-          }
-          
-          reject(new Error(errorMessage));
-        },
-        options
+                    if (!response.ok) {
+                      throw new Error('위치 정보 전송 실패');
+                    }
+                    isFirstLocation = false;
+                  }
+
+                  // 위치 정보를 히스토리에 추가
+                  locationHistory.push({
+                    latitude: latitude,
+                    longitude: longitude,
+                    timeStamp: timestamp
+                  });
+
+                  // 60개의 위치 정보가 모이면 cycleInfo 요청을 보냄
+                  if (locationHistory.length >= MAX_HISTORY_SIZE) {
+                    const response = await fetch('/device/realtime/cycleInfo', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(locationHistory)
+                    });
+
+                    if (!response.ok) {
+                      throw new Error('위치 정보 전송 실패');
+                    }
+
+                    locationHistory = [];
+                  }
+
+                  lastLatitude = latitude;
+                  lastLongitude = longitude;
+                  isLocationAvailable = true;
+                  retryCount = 0;
+                  resolve({ latitude, longitude, timestamp });
+                } catch (error) {
+                  console.error('위치 정보 처리 중 오류 발생:', error);
+                  reject(error);
+                }
+              },
+              (error) => {
+                console.error('위치 정보를 가져오는 중 오류 발생:', error);
+                let errorMessage = '위치 정보를 가져오는데 실패했습니다.';
+
+                switch (error.code) {
+                  case error.PERMISSION_DENIED:
+                    errorMessage = '위치 정보 접근이 거부되었습니다. 브라우저 설정에서 위치 정보 접근을 허용해주세요.';
+                    break;
+                  case error.POSITION_UNAVAILABLE:
+                    errorMessage = '위치 정보를 사용할 수 없습니다. GPS가 켜져있는지 확인해주세요.';
+                    break;
+                  case error.TIMEOUT:
+                    errorMessage = '위치 정보 요청 시간이 초과되었습니다. 다시 시도해주세요.';
+                    break;
+                }
+
+                reject(new Error(errorMessage));
+              },
+              options
       );
     });
   }
@@ -536,7 +540,7 @@
     if (locationInterval) {
       clearInterval(locationInterval);
     }
-    
+
     // 초기화
     lastLatitude = null;
     lastLongitude = null;
@@ -545,13 +549,13 @@
     locationHistory = [];
     isTrackingActive = true;
     isFirstLocation = true;  // 첫 번째 위치 정보 플래그 초기화
-    
+
     // 버튼 상태 업데이트
     updateButtonState(true);
-    
+
     try {
       await getLocation();
-      
+
       locationInterval = setInterval(async () => {
         if (isTrackingActive) {
           try {
@@ -559,7 +563,7 @@
           } catch (error) {
             console.error('위치 정보 업데이트 중 오류 발생:', error);
             retryCount++;
-            
+
             if (retryCount >= MAX_RETRIES) {
               clearInterval(locationInterval);
               locationInterval = null;
@@ -587,7 +591,7 @@
 
     isTrackingActive = false;
     isFirstLocation = true;  // 첫 번째 위치 정보 플래그 초기화
-    
+
     // 버튼 상태 업데이트
     updateButtonState(false);
 
@@ -601,7 +605,7 @@
           },
           body: JSON.stringify(locationHistory)
         });
-        
+
         if (!response.ok) {
           throw new Error('위치 정보 전송 실패');
         }
@@ -626,7 +630,7 @@
             timeStamp: timestamp
           })
         });
-        
+
         if (!response.ok) {
           throw new Error('마지막 위치 정보 전송 실패');
         }
@@ -668,9 +672,9 @@
 
   toggleButton.addEventListener('click', async (e) => {
     e.preventDefault();
-    
+
     const currentMode = localStorage.getItem('mode') || 'simulation';
-    
+
     if (currentMode === 'simulation') {
       // 시뮬레이션 모드에서는 기존 API 사용
       const form = document.querySelector('form');
@@ -699,13 +703,13 @@
 
   // Check for saved mode preference
   let currentMode = localStorage.getItem('mode');
-  
+
   // 처음 접속한 클라이언트인 경우 시뮬레이션 모드로 설정
   if (!currentMode) {
     currentMode = 'simulation';
     localStorage.setItem('mode', currentMode);
   }
-  
+
   // 현재 모드로 UI 업데이트
   updateModeUI(currentMode);
 
@@ -761,14 +765,18 @@
     }
 
     const newMode = simulationModeIcon.classList.contains('block') ? 'realtime' : 'simulation';
-    const message = newMode === 'realtime' 
-      ? '실시간 모드로 전환하시겠습니까?'
-      : '시뮬레이션 모드로 전환하시겠습니까?';
+    const message = newMode === 'realtime'
+            ? '실시간 모드로 전환하시겠습니까?'
+            : '시뮬레이션 모드로 전환하시겠습니까?';
 
     createModal(message, (confirmed) => {
       if (confirmed) {
-        updateModeUI(newMode);
-        localStorage.setItem('mode', newMode);
+        if (newMode === 'realtime') {
+          window.location.href = 'https://track.where-car.com/';
+        } else {
+          updateModeUI(newMode);
+          localStorage.setItem('mode', newMode);
+        }
       }
     });
   }
