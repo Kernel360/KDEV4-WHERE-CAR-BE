@@ -33,7 +33,7 @@ spring:
       initialize-schema: always
 
 server:
-  port: 8095
+  port: 8080
 
 management:
   endpoints:
