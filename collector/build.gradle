@@ -24,9 +24,16 @@ repositories {
 }
 
 dependencies {
+	// 기존의 톰캣 제거
+	implementation('org.springframework.boot:spring-boot-starter-web') {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+	}
+
+	// Undertow 추가
+	implementation 'org.springframework.boot:spring-boot-starter-undertow'
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
 
 	// RabbitMQ
