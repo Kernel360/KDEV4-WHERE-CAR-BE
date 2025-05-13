@@ -35,4 +35,9 @@ management:
 
 monitoring:
   loki:
-    url: ${LOKI_URL}
+    host: ${LOKI_HOST}
+    post: ${LOKI_PORT}
+    endpoint: ${LOKI_ENDPOINT}
+  logstash:
+    host: ${LOGSTASH_HOST}
+    port: ${LOGSTASH_PORT}

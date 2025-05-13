@@ -3,7 +3,11 @@
     <!-- 공통 속성 정의 -->
     <springProperty scope="context" name="LOG_FILE_NAME" source="spring.application.name" defaultValue="application"/>
     <springProperty scope="context" name="ACTIVE_PROFILE" source="spring.profiles.active" defaultValue="dev"/>
-    <springProperty scope="context" name="LOKI_URL" source="monitoring.loki.url" defaultValue="http://localhost:3100/loki/api/v1/push"/>
+    <springProperty scope="context" name="LOKI_HOST" source="monitoring.loki.host" defaultValue="http://localhost"/>
+    <springProperty scope="context" name="LOKI_PORT" source="monitoring.loki.port" defaultValue="3100"/>
+    <springProperty scope="context" name="LOKI_ENDPOINT" source="monitoring.loki.endpoint" defaultValue="/loki/api/v1/push"/>
+    <springProperty scope="context" name="LOGSTASH_HOST" source="monitoring.logstash.host" defaultValue="localhost"/>
+    <springProperty scope="context" name="LOGSTASH_PORT" source="monitoring.logstash.port" defaultValue="5044"/>
     <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}][%-5level][%logger{36}][%method] %msg | %X{params} %n" />
     <property name="LOG_PATTERN_COLOR" value="%magenta([%d{yyyy-MM-dd HH:mm:ss}]) %highlight([%-5level]) %green([%logger{36}]) %yellow([%method]) %msg | %X{params} %n" />
 
@@ -15,39 +19,63 @@
         </encoder>
     </appender>
 
+    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+        <http>
+            <url>${LOKI_HOST}:${LOKI_PORT}${LOKI_ENDPOINT}</url>
+            <connectionTimeoutMs>5000</connectionTimeoutMs>
+            <requestTimeoutMs>10000</requestTimeoutMs>
+        </http>
+        <format>
+            <label>
+                <pattern>app=${LOG_FILE_NAME},level=%level,env=${ACTIVE_PROFILE},service=where-car</pattern>
+            </label>
+            <message>
+                <pattern>${LOG_PATTERN}</pattern>
+            </message>
+            <sortByTime>true</sortByTime>
+        </format>
+        <primarySwitch>
+            <disableOnError>true</disableOnError>
+            <silentFallback>true</silentFallback>
+        </primarySwitch>
+        <verbose>false</verbose> // Debugging mode
+        <metricsEnabled>true</metricsEnabled>
+        <batchSize>1000</batchSize>
+        <batchTimeoutMs>10000</batchTimeoutMs>
+        <drainOnStop>true</drainOnStop>
+        <retryCount>3</retryCount>
+        <waitBetweenRetries>2000</waitBetweenRetries>
+    </appender>
+
+    <!-- Logstash Appender (공식 권장 설정) -->
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>${LOGSTASH_HOST}:${LOGSTASH_PORT}</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"app":"${LOG_FILE_NAME}","env":"${ACTIVE_PROFILE}","service":"where-car"}</customFields>
+            <includeMdc>true</includeMdc>
+            <includeContext>true</includeContext>
+            <shortenedLoggerNameLength>36</shortenedLoggerNameLength>
+            <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                <maxDepthPerThrowable>30</maxDepthPerThrowable>
+                <maxLength>4096</maxLength>
+                <shortenedClassNameLength>36</shortenedClassNameLength>
+                <rootCauseFirst>true</rootCauseFirst>
+            </throwableConverter>
+        </encoder>
+        <reconnectionDelay>1 second</reconnectionDelay>
+        <keepAliveDuration>5 minutes</keepAliveDuration>
+        <connectionStrategy>
+            <roundRobin>
+                <connectionTTL>5 minutes</connectionTTL>
+            </roundRobin>
+        </connectionStrategy>
+    </appender>
+
     <!-- 개발 환경 설정 -->
     <springProfile name="dev">
         <!-- 개발 환경 속성 -->
         <property name="LOG_PATH" value="logs" />
         <property name="LOG_LEVEL" value="DEBUG" />
-
-        <!-- Loki Appender 설정 (개발 환경) -->
-        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
-            <http>
-                <url>${LOKI_URL}</url>
-                <connectionTimeoutMs>5000</connectionTimeoutMs>
-                <requestTimeoutMs>10000</requestTimeoutMs>
-            </http>
-            <format>
-                <label>
-                    <pattern>app=${LOG_FILE_NAME},host=${HOSTNAME},level=%level,env=${ACTIVE_PROFILE},service=where-car</pattern>
-                </label>
-                <message>
-                    <pattern>${LOG_PATTERN}</pattern>
-                </message>
-                <sortByTime>true</sortByTime>
-            </format>
-            <primarySwitch>
-                <disableOnError>true</disableOnError>
-                <silentFallback>true</silentFallback>
-            </primarySwitch>
-            <verbose>false</verbose>
-            <metricsEnabled>true</metricsEnabled>
-            <batchSize>100</batchSize>
-            <batchTimeoutMs>10000</batchTimeoutMs>
-            <retryCount>2</retryCount>
-            <waitBetweenRetries>1000</waitBetweenRetries>
-        </appender>
 
         <!-- 개발 환경: 활성 로그는 logs/앱이름/앱이름-info.log, 롤링 시 logs/앱이름/날짜/앱이름-info.log -->
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -96,23 +124,27 @@
             <appender-ref ref="FILE" />
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="LOKI" />
+            <appender-ref ref="LOGSTASH" />
         </logger>
 
         <logger name="com.wherecar.error" level="ERROR" additivity="false">
             <appender-ref ref="ERROR_FILE" />
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="LOKI" />
+            <appender-ref ref="LOGSTASH" />
         </logger>
 
         <!-- 개발 환경 SQL 로깅 - 모든 SQL 쿼리 기록 -->
         <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
             <appender-ref ref="QUERY_FILE" />
             <appender-ref ref="CONSOLE" />
+            <appender-ref ref="LOGSTASH" />
         </logger>
 
         <logger name="org.hibernate.type.descriptor.sql" level="TRACE" additivity="false">
             <appender-ref ref="QUERY_FILE" />
             <appender-ref ref="CONSOLE" />
+            <appender-ref ref="LOGSTASH" />
         </logger>
 
         <!-- 개발 환경 루트 로거 - 상세 로깅 -->
@@ -120,6 +152,7 @@
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="FILE" />
             <appender-ref ref="LOKI" />
+            <appender-ref ref="LOGSTASH" />
         </root>
     </springProfile>
 
@@ -131,35 +164,6 @@
         
         <!-- JSON 형식 로그 패턴 (ELK 분석용) -->
         <property name="LOG_PATTERN_JSON" value="{&quot;timestamp&quot;:&quot;%d{yyyy-MM-dd HH:mm:ss.SSS}&quot;,&quot;level&quot;:&quot;%level&quot;,&quot;thread&quot;:&quot;%thread&quot;,&quot;logger&quot;:&quot;%logger{36}&quot;,&quot;method&quot;:&quot;%method&quot;,&quot;message&quot;:&quot;%message&quot;,&quot;params&quot;:&quot;%X{params}&quot;}%n" />
-
-        <!-- Loki Appender 설정 (운영 환경) -->
-        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
-            <http>
-                <url>${LOKI_URL}</url>
-                <connectionTimeoutMs>5000</connectionTimeoutMs>
-                <requestTimeoutMs>10000</requestTimeoutMs>
-            </http>
-            <format>
-                <label>
-                    <pattern>app=${LOG_FILE_NAME},level=%level,env=${ACTIVE_PROFILE},service=where-car</pattern>
-                </label>
-                <message>
-                    <pattern>${LOG_PATTERN}</pattern>
-                </message>
-                <sortByTime>true</sortByTime>
-            </format>
-            <primarySwitch>
-                <disableOnError>true</disableOnError>
-                <silentFallback>true</silentFallback>
-            </primarySwitch>
-            <verbose>true</verbose>
-            <metricsEnabled>true</metricsEnabled>
-            <batchSize>1000</batchSize>
-            <batchTimeoutMs>10000</batchTimeoutMs>
-            <drainOnStop>true</drainOnStop>
-            <retryCount>3</retryCount>
-            <waitBetweenRetries>2000</waitBetweenRetries>
-        </appender>
 
         <!-- 운영 환경: 활성 로그는 logs/앱이름-info.log, 롤링 시 logs/날짜/앱이름-info.log -->
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -212,17 +216,20 @@
             <appender-ref ref="FILE" />
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="LOKI" />
+            <appender-ref ref="LOGSTASH" />
         </logger>
 
         <logger name="com.wherecar.error" level="ERROR" additivity="false">
             <appender-ref ref="ERROR_FILE" />
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="LOKI" />
+            <appender-ref ref="LOGSTASH" />
         </logger>
 
         <!-- 운영 환경 SQL 로깅 - 필수 SQL 쿼리만 기록 -->
         <logger name="org.hibernate.SQL" level="INFO">
             <appender-ref ref="QUERY_FILE" />
+            <appender-ref ref="LOGSTASH" />
         </logger>
 
         <!-- 운영 환경 루트 로거 - 간결한 로깅 -->
@@ -230,6 +237,7 @@
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="FILE" />
             <appender-ref ref="LOKI" />
+            <appender-ref ref="LOGSTASH" />
         </root>
     </springProfile>
 
