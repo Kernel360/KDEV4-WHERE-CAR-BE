@@ -49,13 +49,12 @@ services:
       resources:
         limits:
           cpus: '0.3'
-          memory: 800M
+          memory: 1024M
         reservations:
           memory: 600M
     ports:
       - "5044:5044"
-      - "5001:5000/tcp"
-      - "5001:5000/udp"
+      - "5100:5000"
       - "9600:9600"
     networks:
       - where-car-network
@@ -75,9 +74,9 @@ services:
       resources:
         limits:
           cpus: '0.3'
-          memory: 768M
+          memory: 1024M
         reservations:
-          memory: 384M
+          memory: 512M
     networks:
       - where-car-network
     depends_on:
