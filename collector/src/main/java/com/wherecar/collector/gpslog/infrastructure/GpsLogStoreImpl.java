@@ -15,14 +15,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GpsLogStoreImpl implements GpsLogStore {
 
-    private final GpsLogRepository gpsLogRepository;
+    private final GpsLogBatchBuffer gpsLogBatchBuffer;
     private final CarStatusRepository carStatusRepository;
 
     @Override
-//    @Transactional
+    @Transactional
     public void store(List<GpsLog> gpsLogList, Car car, List<String> batList) {
-        gpsLogRepository.saveAll(gpsLogList);
-
+        for (GpsLog log : gpsLogList) {
+            gpsLogBatchBuffer.add(log);
+        }
         String lastBattery = batList.get(batList.size() - 1);
         carStatusRepository.updateBatteryVoltage(car.getId(), Integer.parseInt(lastBattery));
     }
