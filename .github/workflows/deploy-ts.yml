@@ -10,7 +10,7 @@ env:
 
 jobs:
   deploy:
-    name: Deploy All Services to ECR
+    name: Deploy TS Services to ECR
     runs-on: ubuntu-latest
     environment: production
 

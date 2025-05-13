@@ -2,26 +2,36 @@ package com.wherecar.collector.gpslog.infrastructure;
 
 import com.wherecar.collector.gpslog.domain.GpsLog;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class GpsLogBatchBuffer {
 
     private final GpsLogJdbcRepository gpsLogJdbcRepository;
 
-    private final List<GpsLog> buffer = new ArrayList<>();
-    private static final int BATCH_SIZE = 10000;
-    private static final long FLUSH_INTERVAL_MILLIS = 60_000;
+    private final List<GpsLog> buffer = Collections.synchronizedList(new ArrayList<>());
+
+    // ✅ 배치 사이즈 & flush 주기 최적값
+    private static final int BATCH_SIZE = 1000;
+    private static final long FLUSH_INTERVAL_MILLIS = 5000L;
 
     private long lastFlushTime = System.currentTimeMillis();
 
-    public synchronized void add(GpsLog log) {
+    public void add(GpsLog log) {
         buffer.add(log);
+        maybeFlush();
+    }
+
+    private synchronized void maybeFlush() {
         boolean batchReady = buffer.size() >= BATCH_SIZE;
         boolean timeExceeded = System.currentTimeMillis() - lastFlushTime >= FLUSH_INTERVAL_MILLIS;
 
@@ -30,23 +40,32 @@ public class GpsLogBatchBuffer {
         }
     }
 
-    @Scheduled(fixedRate = 60_000)
-    public synchronized void flushByScheduler() {
-        if (!buffer.isEmpty()) {
-            flush();
+    @Scheduled(fixedRate = FLUSH_INTERVAL_MILLIS)
+    public void flushByScheduler() {
+        synchronized (this) {
+            if (!buffer.isEmpty()) {
+                flush();
+            }
         }
     }
 
     private void flush() {
-        try {
-            List<GpsLog> toFlush = new ArrayList<>(buffer);
+        List<GpsLog> toFlush;
+        synchronized (this) {
+            if (buffer.isEmpty()) return;
+            toFlush = new ArrayList<>(buffer);
             buffer.clear();
-            lastFlushTime = System.currentTimeMillis();
+        }
 
+        try {
             gpsLogJdbcRepository.batchInsert(toFlush);
-            System.out.println("[GpsLogBatchBuffer] Flushed " + toFlush.size() + " logs.");
+            lastFlushTime = System.currentTimeMillis();
+            log.info("[GpsLogBatchBuffer] ✅ Flushed {} logs", toFlush.size());
         } catch (Exception e) {
-            System.err.println("[GpsLogBatchBuffer] flush 실패: " + e.getMessage());
+            log.error("[GpsLogBatchBuffer] ❌ Flush failed, restoring {} logs to buffer", toFlush.size(), e);
+            synchronized (this) {
+                buffer.addAll(0, toFlush); // 앞에 복구
+            }
         }
     }
 }
