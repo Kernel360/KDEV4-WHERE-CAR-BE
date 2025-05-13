@@ -19,9 +19,8 @@ public class GpsLogStoreImpl implements GpsLogStore {
     private final CarStatusRepository carStatusRepository;
 
     @Override
-    @Transactional
+//    @Transactional
     public void store(List<GpsLog> gpsLogList, Car car, List<String> batList) {
-
         gpsLogRepository.saveAll(gpsLogList);
 
         String lastBattery = batList.get(batList.size() - 1);
