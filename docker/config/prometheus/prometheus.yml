@@ -4,28 +4,38 @@ global:
 scrape_configs:
   - job_name: 'wherecar-rest'
     metrics_path: '/actuator/prometheus'
+    scheme: 'https'
     static_configs:
-      - targets: [ 'localhost:8080' ]
+      - targets: [ 'api.where-car.com:8080' ]
         labels:
           instance: 'rest-api'
+          env: 'prod'
 
   - job_name: 'wherecar-hub'
     metrics_path: '/actuator/prometheus'
+    scheme: 'https'
     static_configs:
-      - targets: [ 'localhost:8085' ]
+      - targets: [ 'hub.where-car.com:8080' ]
         labels:
           instance: 'hub-server'
 
   - job_name: 'wherecar-batch'
     metrics_path: '/actuator/prometheus'
+    scheme: 'http'
     static_configs:
-      - targets: [ 'localhost:8095' ]
+      - targets: [ 'batch.where-car.com:8080' ]
         labels:
           instance: 'batch-server'
 
   - job_name: 'wherecar-collector'
     metrics_path: '/actuator/prometheus'
+    scheme: 'http'
     static_configs:
-      - targets: [ 'localhost:8090' ]
+      - targets: [ 'collector.where-car.com:8080' ]
         labels:
           instance: 'collector-server'
+
+  - job_name: 'rabbitmq'
+    scheme: 'http'
+    static_configs:
+      - targets: ['mq.where-car.com:15692']
