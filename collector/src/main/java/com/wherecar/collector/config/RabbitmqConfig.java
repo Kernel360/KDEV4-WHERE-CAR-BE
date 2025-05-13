@@ -74,8 +74,8 @@ public class RabbitmqConfig {
 
         // 여기서 prefetch count 및 concurrency 설정
         factory.setPrefetchCount(50); // 한 컨슈머가 최대 50개까지 미리 가져올 수 있음
-        factory.setConcurrentConsumers(100); // 동시에 실행될 컨슈머 수 (스레드 수)
-        factory.setMaxConcurrentConsumers(100); // 필요시 확장 가능한 최대 컨슈머 수
+        factory.setConcurrentConsumers(50); // 동시에 실행될 컨슈머 수 (스레드 수)
+        factory.setMaxConcurrentConsumers(50); // 필요시 확장 가능한 최대 컨슈머 수
         factory.setAcknowledgeMode(AcknowledgeMode.AUTO); // 또는 MANUAL
 
         return factory;
