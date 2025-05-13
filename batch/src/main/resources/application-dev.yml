@@ -32,6 +32,9 @@ spring:
     jdbc:
       initialize-schema: always
 
+server:
+  port: 8095
+
 management:
   endpoints:
     web:
@@ -42,5 +45,11 @@ management:
       application: ${spring.application.name}
       environment: ${spring.profiles.active}
 
-server:
-  port: 8095
+monitoring:
+  loki:
+    host: http://localhost
+    port: 3100
+    endpoint: /loki/api/v1/push
+  logstash:
+    host: localhost
+    port: 5100
