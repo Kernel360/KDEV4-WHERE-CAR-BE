@@ -6,6 +6,9 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     properties:
       hibernate:
+        jdbc.batch_size: 60
+        order_inserts: true
+        hibernate.order_updates: true
         format_sql: false
         show_sql: false
         use_sql_comments: true

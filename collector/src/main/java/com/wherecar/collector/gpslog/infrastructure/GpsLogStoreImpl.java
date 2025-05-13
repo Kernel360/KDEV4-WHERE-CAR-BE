@@ -22,17 +22,10 @@ public class GpsLogStoreImpl implements GpsLogStore {
     @Transactional
     public void store(List<GpsLog> gpsLogList, Car car, List<String> batList) {
 
-        for (int i = 0; i < gpsLogList.size(); i++) {
-            GpsLog gpsLog = gpsLogList.get(i);
-            String bat = batList.get(i);
+        gpsLogRepository.saveAll(gpsLogList);
 
-            gpsLogRepository.save(gpsLog);
-
-            if (i == gpsLogList.size() - 1) {
-                carStatusRepository.updateBatteryVoltage(car.getId(), Integer.parseInt(bat));
-            }
-        }
-
+        String lastBattery = batList.get(batList.size() - 1);
+        carStatusRepository.updateBatteryVoltage(car.getId(), Integer.parseInt(lastBattery));
     }
 
 }
