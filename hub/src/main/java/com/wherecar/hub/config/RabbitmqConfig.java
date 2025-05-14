@@ -1,9 +1,6 @@
 package com.wherecar.hub.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -33,66 +30,68 @@ public class RabbitmqConfig {
 
     private static final int GPS_QUEUE_COUNT = 5;
 
-    // 1. Exchange
+    // 1. Exchange 선언
     @Bean
-    DirectExchange carOnExchange() {
-        return new DirectExchange("car.on.exchange");
-    }
-
-    @Bean
-    DirectExchange carOffExchange() {
-        return new DirectExchange("car.off.exchange");
-    }
-
-    @Bean
-    DirectExchange gpsExchange() {
+    public DirectExchange gpsExchange() {
         return new DirectExchange("gps.exchange");
     }
 
     @Bean
+    public DirectExchange carOnExchange() {
+        return new DirectExchange("car.on.exchange");
+    }
+
+    @Bean
+    public DirectExchange carOffExchange() {
+        return new DirectExchange("car.off.exchange");
+    }
+
+    // 2. Queue 선언
+    @Bean
     public List<Queue> gpsQueues() {
         List<Queue> queues = new ArrayList<>();
         for (int i = 1; i <= GPS_QUEUE_COUNT; i++) {
-            queues.add(new Queue("gps.queue." + i, true));
+            queues.add(QueueBuilder.durable("gps.queue." + i).build());
         }
         return queues;
     }
 
     @Bean
-    public List<Binding> gpsBindings(DirectExchange gpsExchange, List<Queue> gpsQueues) {
+    public Queue carOnQueue() {
+        return QueueBuilder.durable("car.on.queue").build();
+    }
+
+    @Bean
+    public Queue carOffQueue() {
+        return QueueBuilder.durable("car.off.queue").build();
+    }
+
+    // 3. Binding 선언
+    @Bean
+    public List<Binding> gpsBindings(DirectExchange gpsExchange) {
         List<Binding> bindings = new ArrayList<>();
-        for (int i = 0; i < gpsQueues.size(); i++) {
-            Queue queue = gpsQueues.get(i);
-            String routingKey = "gps.key." + (i + 1);
-            bindings.add(BindingBuilder.bind(queue).to(gpsExchange).with(routingKey));
+        for (int i = 1; i <= GPS_QUEUE_COUNT; i++) {
+            bindings.add(BindingBuilder
+                    .bind(new Queue("gps.queue." + i, true))
+                    .to(gpsExchange)
+                    .with("gps.key." + i));
         }
         return bindings;
     }
 
-    // 기존 car.on/off queue/binding 유지
     @Bean
-    Queue carOnQueue() {
-        return new Queue("car.on.queue", true);
-    }
-
-    @Bean
-    Queue carOffQueue() {
-        return new Queue("car.off.queue", true);
-    }
-
-    @Bean
-    Binding carOnBinding(DirectExchange carOnExchange, Queue carOnQueue) {
+    public Binding carOnBinding(DirectExchange carOnExchange, Queue carOnQueue) {
         return BindingBuilder.bind(carOnQueue).to(carOnExchange).with("car.on.key");
     }
 
     @Bean
-    Binding carOffBinding(DirectExchange carOffExchange, Queue carOffQueue) {
+    public Binding carOffBinding(DirectExchange carOffExchange, Queue carOffQueue) {
         return BindingBuilder.bind(carOffQueue).to(carOffExchange).with("car.off.key");
     }
 
     // 4. RabbitMQ 연결
     @Bean
-    ConnectionFactory connectionFactory() {
+    public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
         connectionFactory.setHost(host);
         connectionFactory.setPort(port);
@@ -103,16 +102,15 @@ public class RabbitmqConfig {
 
     // 5. 메시지 변환기 (JSON)
     @Bean
-    MessageConverter messageConverter() {
+    public MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
     // 6. RabbitTemplate 설정
     @Bean
-    RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(messageConverter);
         return rabbitTemplate;
     }
 }
-
