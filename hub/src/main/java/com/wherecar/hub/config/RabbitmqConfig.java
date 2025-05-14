@@ -47,8 +47,6 @@ public class RabbitmqConfig {
     @Bean public Queue gpsQueue1() { return QueueBuilder.durable("gps.queue.1").build(); }
     @Bean public Queue gpsQueue2() { return QueueBuilder.durable("gps.queue.2").build(); }
     @Bean public Queue gpsQueue3() { return QueueBuilder.durable("gps.queue.3").build(); }
-    @Bean public Queue gpsQueue4() { return QueueBuilder.durable("gps.queue.4").build(); }
-    @Bean public Queue gpsQueue5() { return QueueBuilder.durable("gps.queue.5").build(); }
 
     // 3. GPS 바인딩 5개 개별 선언
     @Bean public Binding gpsBinding1(DirectExchange gpsExchange, Queue gpsQueue1) {
@@ -63,13 +61,6 @@ public class RabbitmqConfig {
         return BindingBuilder.bind(gpsQueue3).to(gpsExchange).with("gps.key.3");
     }
 
-    @Bean public Binding gpsBinding4(DirectExchange gpsExchange, Queue gpsQueue4) {
-        return BindingBuilder.bind(gpsQueue4).to(gpsExchange).with("gps.key.4");
-    }
-
-    @Bean public Binding gpsBinding5(DirectExchange gpsExchange, Queue gpsQueue5) {
-        return BindingBuilder.bind(gpsQueue5).to(gpsExchange).with("gps.key.5");
-    }
 
     // 4. 기타 Queue
     @Bean public Queue carOnQueue() {
