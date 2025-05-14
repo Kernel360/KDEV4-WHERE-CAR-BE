@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableRabbit
 public class RabbitmqConfig {
 
+    // Exchange만 참조용으로 선언
     @Bean
     public DirectExchange gpsExchange() {
         return new DirectExchange("gps.exchange");
@@ -29,11 +30,13 @@ public class RabbitmqConfig {
         return new DirectExchange("car.off.exchange");
     }
 
+    // JSON 메시지 변환기
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
+    // 리스너 컨테이너 설정
     @Bean
     public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
             ConnectionFactory connectionFactory,
@@ -42,8 +45,9 @@ public class RabbitmqConfig {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(jsonMessageConverter);
-        factory.setPrefetchCount(50);
-        factory.setAcknowledgeMode(AcknowledgeMode.AUTO);
+        factory.setPrefetchCount(50); // 병렬 처리 성능 튜닝
+        factory.setAcknowledgeMode(AcknowledgeMode.AUTO); // 메시지 자동 ack
         return factory;
     }
 }
+
