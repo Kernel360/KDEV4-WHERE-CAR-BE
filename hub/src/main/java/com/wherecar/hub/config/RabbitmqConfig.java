@@ -1,5 +1,6 @@
 package com.wherecar.hub.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
+@Slf4j
 public class RabbitmqConfig {
 
     @Value("${spring.rabbitmq.host}")
@@ -68,16 +70,19 @@ public class RabbitmqConfig {
 
     // 3. Binding 선언
     @Bean
-    public List<Binding> gpsBindings(DirectExchange gpsExchange) {
+    public List<Binding> gpsBindings(DirectExchange gpsExchange, List<Queue> gpsQueues) {
         List<Binding> bindings = new ArrayList<>();
-        for (int i = 1; i <= GPS_QUEUE_COUNT; i++) {
+        for (int i = 0; i < gpsQueues.size(); i++) {
+            log.info(String.valueOf(gpsQueues.get(i)));
+            Queue queue = gpsQueues.get(i); // ✅ 실제 Bean을 참조
             bindings.add(BindingBuilder
-                    .bind(new Queue("gps.queue." + i, true))
+                    .bind(queue)
                     .to(gpsExchange)
-                    .with("gps.key." + i));
+                    .with("gps.key." + (i + 1)));
         }
         return bindings;
     }
+
 
     @Bean
     public Binding carOnBinding(DirectExchange carOnExchange, Queue carOnQueue) {
