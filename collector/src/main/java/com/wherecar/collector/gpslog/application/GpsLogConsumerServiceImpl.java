@@ -29,7 +29,7 @@ public class GpsLogConsumerServiceImpl implements GpsLogConsumerService {
                     "gps.queue.4",
                     "gps.queue.5"
             },
-            concurrency = "50",
+            concurrency = "10",
             containerFactory = "rabbitListenerContainerFactory"
     )
     public void receiveGpsLog(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {

@@ -45,7 +45,7 @@ public class RabbitmqConfig {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(jsonMessageConverter);
-        factory.setPrefetchCount(10); // 병렬 처리 성능 튜닝
+        factory.setPrefetchCount(50); // 병렬 처리 성능 튜닝
         factory.setAcknowledgeMode(AcknowledgeMode.AUTO); // 메시지 자동 ack
         return factory;
     }
