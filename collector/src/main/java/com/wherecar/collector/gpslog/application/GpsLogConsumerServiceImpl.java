@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +19,6 @@ public class GpsLogConsumerServiceImpl implements GpsLogConsumerService {
 
     private final GpsLogService gpsLogService;
     private final ObjectMapper objectMapper;
-
-    @Value("${gps.queue-name}")
-    private String queueName;
 
     @Override
     @RabbitListener(
