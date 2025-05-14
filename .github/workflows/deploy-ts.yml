@@ -37,10 +37,10 @@ jobs:
           docker build -f ./collector/Dockerfile -t $ECR_REGISTRY/where-car/collector-ts:latest ./collector
           docker push $ECR_REGISTRY/where-car/collector-ts:latest
 
-      # Hub
-      - name: Build and Push Hub
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: |
-          docker build -f ./hub/Dockerfile -t $ECR_REGISTRY/where-car/hub-ts:latest ./hub
-          docker push $ECR_REGISTRY/where-car/hub-ts:latest
+#      # Hub
+#      - name: Build and Push Hub
+#        env:
+#          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#        run: |
+#          docker build -f ./hub/Dockerfile -t $ECR_REGISTRY/where-car/hub-ts:latest ./hub
+#          docker push $ECR_REGISTRY/where-car/hub-ts:latest
