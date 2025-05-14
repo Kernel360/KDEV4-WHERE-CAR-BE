@@ -24,8 +24,8 @@ public class GpsLogStoreImpl implements GpsLogStore {
         for (GpsLog log : gpsLogList) {
             gpsLogBatchBuffer.add(log);
         }
-        String lastBattery = batList.get(batList.size() - 1);
-        carStatusRepository.updateBatteryVoltage(car.getId(), Integer.parseInt(lastBattery));
+//        String lastBattery = batList.get(batList.size() - 1);
+//        carStatusRepository.updateBatteryVoltage(car.getId(), Integer.parseInt(lastBattery));
     }
 
 }
