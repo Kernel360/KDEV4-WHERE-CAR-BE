@@ -26,7 +26,7 @@ public class GpsLogConsumerServiceImpl implements GpsLogConsumerService {
 
     @Override
     @RabbitListener(
-            queues = "#{queueName}",
+            queues = "#{queueNameProvider.queueName}",
             concurrency = "10",
             containerFactory = "rabbitListenerContainerFactory"
     )
