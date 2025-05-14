@@ -23,7 +23,8 @@ public class GpsLogHubServiceImpl implements GpsLogHubService {
     @Async
     public void sendGpsLogMessage(GpsLogRequest gpsLogRequest) {
         try {
-            int shard = (int)(Math.random() * 3) + 1;
+//            int shard = (int)(Math.random() * 3) + 1;
+            int shard = 1;
             String routingKey = "gps.key." + shard;
 
             String objectToJSON = objectMapper.writeValueAsString(gpsLogRequest);

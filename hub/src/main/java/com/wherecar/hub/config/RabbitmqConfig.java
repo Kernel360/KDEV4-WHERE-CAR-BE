@@ -45,21 +45,21 @@ public class RabbitmqConfig {
 
     // 2. GPS Queue 5개 개별 선언
     @Bean public Queue gpsQueue1() { return QueueBuilder.durable("gps.queue.1").build(); }
-    @Bean public Queue gpsQueue2() { return QueueBuilder.durable("gps.queue.2").build(); }
-    @Bean public Queue gpsQueue3() { return QueueBuilder.durable("gps.queue.3").build(); }
+//    @Bean public Queue gpsQueue2() { return QueueBuilder.durable("gps.queue.2").build(); }
+//    @Bean public Queue gpsQueue3() { return QueueBuilder.durable("gps.queue.3").build(); }
 
     // 3. GPS 바인딩 5개 개별 선언
     @Bean public Binding gpsBinding1(DirectExchange gpsExchange, Queue gpsQueue1) {
         return BindingBuilder.bind(gpsQueue1).to(gpsExchange).with("gps.key.1");
     }
 
-    @Bean public Binding gpsBinding2(DirectExchange gpsExchange, Queue gpsQueue2) {
-        return BindingBuilder.bind(gpsQueue2).to(gpsExchange).with("gps.key.2");
-    }
-
-    @Bean public Binding gpsBinding3(DirectExchange gpsExchange, Queue gpsQueue3) {
-        return BindingBuilder.bind(gpsQueue3).to(gpsExchange).with("gps.key.3");
-    }
+//    @Bean public Binding gpsBinding2(DirectExchange gpsExchange, Queue gpsQueue2) {
+//        return BindingBuilder.bind(gpsQueue2).to(gpsExchange).with("gps.key.2");
+//    }
+//
+//    @Bean public Binding gpsBinding3(DirectExchange gpsExchange, Queue gpsQueue3) {
+//        return BindingBuilder.bind(gpsQueue3).to(gpsExchange).with("gps.key.3");
+//    }
 
 
     // 4. 기타 Queue
