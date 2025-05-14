@@ -23,7 +23,7 @@ public class GpsLogBatchBuffer {
     private final List<GpsLog> buffer = Collections.synchronizedList(new ArrayList<>());
 
     // ✅ 설정
-    private static final int BATCH_SIZE = 20000;
+    private static final int BATCH_SIZE = 7500;
     private static final long FLUSH_INTERVAL_MILLIS = 60000L;
 
     public void add(GpsLog log) {
