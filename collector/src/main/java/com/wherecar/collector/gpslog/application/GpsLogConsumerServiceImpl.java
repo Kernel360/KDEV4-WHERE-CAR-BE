@@ -21,7 +21,17 @@ public class GpsLogConsumerServiceImpl implements GpsLogConsumerService {
     private final ObjectMapper objectMapper;
 
     @Override
-    @RabbitListener(queues = "gps.queue", concurrency = "50", containerFactory = "rabbitListenerContainerFactory")
+    @RabbitListener(
+            queues = {
+                    "gps.queue.1",
+                    "gps.queue.2",
+                    "gps.queue.3",
+                    "gps.queue.4",
+                    "gps.queue.5"
+            },
+            concurrency = "50",
+            containerFactory = "rabbitListenerContainerFactory"
+    )
     public void receiveGpsLog(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
         GpsLogRequest gpsLogRequest = objectMapper.readValue(message, GpsLogRequest.class);
         log.info("[GPSLOG][GpsLogConsumerServiceImpl][receiveGpsLog] 시작 | gpsLogRequest = {}", gpsLogRequest);

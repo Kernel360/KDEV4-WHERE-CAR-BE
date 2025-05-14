@@ -45,7 +45,10 @@ public class GpsLogBatchBuffer {
     private void flush() {
         List<GpsLog> toFlush;
         synchronized (this) {
-            if (buffer.isEmpty()) return;
+            if (buffer.isEmpty()) {
+                log.info("Batch Empty");
+                return;
+            }
             toFlush = new ArrayList<>(buffer);
             buffer.clear();
         }

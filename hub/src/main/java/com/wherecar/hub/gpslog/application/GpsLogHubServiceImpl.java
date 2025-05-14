@@ -2,9 +2,8 @@ package com.wherecar.hub.gpslog.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wherecar.hub.gpslog.application.dto.GpsLogRequest;
-import com.wherecar.hub.common.application.dto.MessageResponse;
 import com.wherecar.hub.common.MessageFactory;
+import com.wherecar.hub.gpslog.application.dto.GpsLogRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -24,17 +23,21 @@ public class GpsLogHubServiceImpl implements GpsLogHubService {
     @Async
     public void sendGpsLogMessage(GpsLogRequest gpsLogRequest) {
         try {
-            // 객체를 JSON으로 변환 후에 큐에 전송합니다.
+            // mdn을 기준으로 큐 shard 결정
+            String mdn = gpsLogRequest.getMdn();
+            int shard = Math.abs(mdn.hashCode() % 5) + 1; // 1~5
+            String routingKey = "gps.key." + shard;
+
             String objectToJSON = objectMapper.writeValueAsString(gpsLogRequest);
 
-            log.info("message :: {}", gpsLogRequest.toString());
-            log.info("objectToJSON :: {}", objectToJSON);
+            log.info("[sendGpsLogMessage] mdn={}, shard={}, routingKey={}", mdn, shard, routingKey);
+            log.info("[sendGpsLogMessage] objectToJSON={}", objectToJSON);
 
-            rabbitTemplate.convertAndSend("gps.exchange", "gps.key", objectToJSON);
+            rabbitTemplate.convertAndSend("gps.exchange", routingKey, objectToJSON);
         } catch (JsonProcessingException jpe) {
-            log.error("파싱 오류 발생", jpe);
+            log.error("❌ JSON 파싱 오류 발생", jpe);
         } catch (Exception e) {
-            log.error("hub / GPS 로그 비동기 처리 예외 발생", e);
+            log.error("❌ hub / GPS 로그 비동기 처리 예외 발생", e);
         }
     }
 }

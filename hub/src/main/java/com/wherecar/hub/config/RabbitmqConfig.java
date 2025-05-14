@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Configuration
 public class RabbitmqConfig {
 
@@ -28,12 +31,9 @@ public class RabbitmqConfig {
     @Value("${spring.rabbitmq.port}")
     private int port;
 
-    /**
-    * 1. Exchange 구성
-    * "{xxxx}.exchange" 라는 이름으로 Driect Exchange를 생성.
-    *
-    * @return DirectExchange
-    */
+    private static final int GPS_QUEUE_COUNT = 5;
+
+    // 1. Exchange
     @Bean
     DirectExchange carOnExchange() {
         return new DirectExchange("car.on.exchange");
@@ -49,12 +49,28 @@ public class RabbitmqConfig {
         return new DirectExchange("gps.exchange");
     }
 
-    /**
-    * 2. 큐를 구성
-    * "{xxxx}.queue"의 이름으로 큐를 구성
-    *
-    * @return Queue
-    */
+    // 2. Queue - 여러 개의 gps.queue.N
+    @Bean
+    public List<Queue> gpsQueues() {
+        List<Queue> queues = new ArrayList<>();
+        for (int i = 1; i <= GPS_QUEUE_COUNT; i++) {
+            queues.add(new Queue("gps.queue." + i, true));
+        }
+        return queues;
+    }
+
+    // 3. Binding - gps.key.1 ~ gps.key.N에 바인딩
+    @Bean
+    public List<Binding> gpsBindings(DirectExchange gpsExchange) {
+        List<Binding> bindings = new ArrayList<>();
+        for (int i = 1; i <= GPS_QUEUE_COUNT; i++) {
+            Queue queue = new Queue("gps.queue." + i, true);
+            bindings.add(BindingBuilder.bind(queue).to(gpsExchange).with("gps.key." + i));
+        }
+        return bindings;
+    }
+
+    // 기존 car.on/off queue/binding 유지
     @Bean
     Queue carOnQueue() {
         return new Queue("car.on.queue", true);
@@ -66,20 +82,6 @@ public class RabbitmqConfig {
     }
 
     @Bean
-    Queue gpsQueue() {
-        return new Queue("gps.queue", true);
-    }
-
-    /**
-    * 3. 큐와 DirectExchange를 바인딩
-    * "hello.key"의 이름으로 바인딩 구성
-    *
-    * @param {***}Exchange
-    * @param {***}queue
-    * @return Binding
-    */
-
-    @Bean
     Binding carOnBinding(DirectExchange carOnExchange, Queue carOnQueue) {
         return BindingBuilder.bind(carOnQueue).to(carOnExchange).with("car.on.key");
     }
@@ -89,17 +91,7 @@ public class RabbitmqConfig {
         return BindingBuilder.bind(carOffQueue).to(carOffExchange).with("car.off.key");
     }
 
-    @Bean
-    Binding gpsBinding(DirectExchange gpsExchange, Queue gpsQueue) {
-        return BindingBuilder.bind(gpsQueue).to(gpsExchange).with("gps.key");
-    }
-
-    /**
-    * 4. RabbitMQ와의 연결을 위한 connetionFactory를 구성
-    * Application.properties의 RabbitMQ의 사용자 정보를 가져와서 RabbitMQ와의 연결에 필요한 ConnetionFactory 구성
-    *
-    * @return ConnectionFactory
-    */
+    // 4. RabbitMQ 연결
     @Bean
     ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
@@ -110,31 +102,18 @@ public class RabbitmqConfig {
         return connectionFactory;
     }
 
-
-    /**
-     * 5. 메시지를 전송하고 수신하기 위한 JSON 타입으로 메시지를 변경합니다.
-     * Jackson2JsonMessageConverter를 사용하여 메시지 변환을 수행합니다. JSON 형식으로 메시지를 전송하고 수신할 수 있습니다
-     *
-     * @return
-     */
+    // 5. 메시지 변환기 (JSON)
     @Bean
     MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
-
-    /**
-     * 6. 구성한 ConnectionFactory, MessageConverter를 통해 템플릿을 구성합니다.
-     *
-     * @param connectionFactory
-     * @param messageConverter
-     * @return
-     */
+    // 6. RabbitTemplate 설정
     @Bean
     RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(messageConverter);
         return rabbitTemplate;
     }
-
 }
+

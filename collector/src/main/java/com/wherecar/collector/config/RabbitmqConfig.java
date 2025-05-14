@@ -9,23 +9,44 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Configuration
 @EnableRabbit
 public class RabbitmqConfig {
 
-    @Bean
-    public DirectExchange carOnExchange() {
-        return new DirectExchange("car.on.exchange");
-    }
-
-    @Bean
-    public DirectExchange carOffExchange() {
-        return new DirectExchange("car.off.exchange");
-    }
+    private static final int GPS_QUEUE_COUNT = 5; // 원하는 shard 수
 
     @Bean
     public DirectExchange gpsExchange() {
         return new DirectExchange("gps.exchange");
+    }
+
+    @Bean
+    public List<Queue> gpsLogQueues() {
+        List<Queue> queues = new ArrayList<>();
+        for (int i = 1; i <= GPS_QUEUE_COUNT; i++) {
+            queues.add(new Queue("gps.queue." + i, true));
+        }
+        return queues;
+    }
+
+    @Bean
+    public List<Binding> gpsLogBindings(DirectExchange gpsExchange) {
+        List<Binding> bindings = new ArrayList<>();
+        for (int i = 1; i <= GPS_QUEUE_COUNT; i++) {
+            Queue queue = new Queue("gps.queue." + i, true);
+            String routingKey = "gps.key." + i;
+            bindings.add(BindingBuilder.bind(queue).to(gpsExchange).with(routingKey));
+        }
+        return bindings;
+    }
+
+    // 다른 car 관련 큐 설정 그대로 유지
+    @Bean
+    public DirectExchange carOnExchange() {
+        return new DirectExchange("car.on.exchange");
     }
 
     @Bean
@@ -34,28 +55,23 @@ public class RabbitmqConfig {
     }
 
     @Bean
-    public Queue carOffQueue() {
-        return new Queue("car.off.queue", true);
-    }
-
-    @Bean
-    public Queue gpsLogQueue() {
-        return new Queue("gps.queue", true);
-    }
-
-    @Bean
     public Binding carOnBinding() {
         return BindingBuilder.bind(carOnQueue()).to(carOnExchange()).with("car.on.key");
     }
 
     @Bean
-    public Binding carOffBinding() {
-        return BindingBuilder.bind(carOffQueue()).to(carOffExchange()).with("car.off.key");
+    public DirectExchange carOffExchange() {
+        return new DirectExchange("car.off.exchange");
     }
 
     @Bean
-    public Binding gpsLogBinding() {
-        return BindingBuilder.bind(gpsLogQueue()).to(gpsExchange()).with("gps.key");
+    public Queue carOffQueue() {
+        return new Queue("car.off.queue", true);
+    }
+
+    @Bean
+    public Binding carOffBinding() {
+        return BindingBuilder.bind(carOffQueue()).to(carOffExchange()).with("car.off.key");
     }
 
     @Bean
@@ -71,14 +87,9 @@ public class RabbitmqConfig {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(jsonMessageConverter);
-
-        // 여기서 prefetch count 및 concurrency 설정
-        factory.setPrefetchCount(50); // 한 컨슈머가 최대 50개까지 미리 가져올 수 있음
-//        @RabbitListener 에서 이미 설정
-//        factory.setConcurrentConsumers(25); // 동시에 실행될 컨슈머 수 (스레드 수)
-//        factory.setMaxConcurrentConsumers(25); // 필요시 확장 가능한 최대 컨슈머 수
-        factory.setAcknowledgeMode(AcknowledgeMode.AUTO); // 또는 MANUAL
-
+        factory.setPrefetchCount(50);
+        factory.setAcknowledgeMode(AcknowledgeMode.AUTO);
         return factory;
     }
 }
+
