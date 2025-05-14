@@ -1,0 +1,94 @@
+package com.wherecar.hub.common.config;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@Slf4j
+public class RabbitmqConfig {
+
+    @Value("${spring.rabbitmq.host}")
+    private String host;
+
+    @Value("${spring.rabbitmq.username}")
+    private String username;
+
+    @Value("${spring.rabbitmq.password}")
+    private String password;
+
+    @Value("${spring.rabbitmq.port}")
+    private int port;
+
+    @Bean
+    public DirectExchange gpsExchange() {
+        return new DirectExchange("gps.exchange");
+    }
+
+    @Bean
+    public DirectExchange carOnExchange() {
+        return new DirectExchange("car.on.exchange");
+    }
+
+    @Bean
+    public DirectExchange carOffExchange() {
+        return new DirectExchange("car.off.exchange");
+    }
+
+
+
+    @Bean
+    public Queue gpsQueue() {
+        return QueueBuilder.durable("gps.queue").build();
+    }
+
+    @Bean public Queue carOnQueue() {
+        return QueueBuilder.durable("car.on.queue").build();
+    }
+
+    @Bean public Queue carOffQueue() {
+        return QueueBuilder.durable("car.off.queue").build();
+    }
+
+    @Bean
+    public Binding gpsBinding(DirectExchange gpsExchange, Queue gpsQueue) {
+        return BindingBuilder.bind(gpsQueue).to(gpsExchange).with("car.gps.key");
+    }
+
+    @Bean public Binding carOnBinding(DirectExchange carOnExchange, Queue carOnQueue) {
+        return BindingBuilder.bind(carOnQueue).to(carOnExchange).with("car.on.key");
+    }
+
+    @Bean public Binding carOffBinding(DirectExchange carOffExchange, Queue carOffQueue) {
+        return BindingBuilder.bind(carOffQueue).to(carOffExchange).with("car.off.key");
+    }
+
+    @Bean
+    public ConnectionFactory connectionFactory() {
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
+        connectionFactory.setHost(host);
+        connectionFactory.setPort(port);
+        connectionFactory.setUsername(username);
+        connectionFactory.setPassword(password);
+        return connectionFactory;
+    }
+
+    @Bean
+    public MessageConverter messageConverter() {
+        return new Jackson2JsonMessageConverter();
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(messageConverter);
+        return rabbitTemplate;
+    }
+}
