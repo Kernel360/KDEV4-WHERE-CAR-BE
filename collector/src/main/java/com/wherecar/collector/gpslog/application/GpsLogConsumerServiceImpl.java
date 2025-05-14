@@ -22,8 +22,8 @@ public class GpsLogConsumerServiceImpl implements GpsLogConsumerService {
 
     @Override
     @RabbitListener(
-            queues ="gps.queue.1",
-            concurrency = "10",
+            queues ="gps.queue",
+            concurrency = "50",
             containerFactory = "rabbitListenerContainerFactory"
     )
     public void receiveGpsLog(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) throws IOException {
