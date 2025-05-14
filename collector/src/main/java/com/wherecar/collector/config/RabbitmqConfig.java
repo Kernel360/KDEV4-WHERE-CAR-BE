@@ -33,16 +33,15 @@ public class RabbitmqConfig {
     }
 
     @Bean
-    public List<Binding> gpsLogBindings(DirectExchange gpsExchange) {
+    public List<Binding> gpsLogBindings(DirectExchange gpsExchange, List<Queue> gpsLogQueues) {
         List<Binding> bindings = new ArrayList<>();
-        for (int i = 1; i <= GPS_QUEUE_COUNT; i++) {
-            Queue queue = new Queue("gps.queue." + i, true);
-            String routingKey = "gps.key." + i;
+        for (int i = 0; i < gpsLogQueues.size(); i++) {
+            Queue queue = gpsLogQueues.get(i); // ✅ 이미 등록된 Bean 사용
+            String routingKey = "gps.key." + (i + 1);
             bindings.add(BindingBuilder.bind(queue).to(gpsExchange).with(routingKey));
         }
         return bindings;
     }
-
     // 다른 car 관련 큐 설정 그대로 유지
     @Bean
     public DirectExchange carOnExchange() {
