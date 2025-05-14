@@ -1,11 +1,10 @@
 package com.wherecar.collector.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +13,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableRabbit
 public class RabbitmqConfig {
+
+    // Exchange만 참조용으로 선언
+    @Bean
+    public DirectExchange gpsExchange() {
+        return new DirectExchange("gps.exchange");
+    }
 
     @Bean
     public DirectExchange carOnExchange() {
@@ -25,44 +30,24 @@ public class RabbitmqConfig {
         return new DirectExchange("car.off.exchange");
     }
 
-    @Bean
-    public DirectExchange gpsExchange() {
-        return new DirectExchange("gps.exchange");
-    }
-
-    @Bean
-    public Queue carOnQueue() {
-        return new Queue("car.on.queue", true);
-    }
-
-    @Bean
-    public Queue carOffQueue() {
-        return new Queue("car.off.queue", true);
-    }
-
-    @Bean
-    public Queue gpsLogQueue() {
-        return new Queue("gps.queue", true);
-    }
-
-    @Bean
-    public Binding carOnBinding() {
-        return BindingBuilder.bind(carOnQueue()).to(carOnExchange()).with("car.on.key");
-    }
-
-    @Bean
-    public Binding carOffBinding() {
-        return BindingBuilder.bind(carOffQueue()).to(carOffExchange()).with("car.off.key");
-    }
-
-    @Bean
-    public Binding gpsLogBinding() {
-        return BindingBuilder.bind(gpsLogQueue()).to(gpsExchange()).with("gps.key");
-    }
-
+    // JSON 메시지 변환기
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
+    // 리스너 컨테이너 설정
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
+            ConnectionFactory connectionFactory,
+            MessageConverter jsonMessageConverter) {
+
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(jsonMessageConverter);
+        factory.setPrefetchCount(50); // 병렬 처리 성능 튜닝
+        factory.setAcknowledgeMode(AcknowledgeMode.AUTO); // 메시지 자동 ack
+        return factory;
+    }
 }
+
