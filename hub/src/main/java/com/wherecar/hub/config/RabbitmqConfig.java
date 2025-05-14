@@ -49,7 +49,6 @@ public class RabbitmqConfig {
         return new DirectExchange("gps.exchange");
     }
 
-    // 2. Queue - 여러 개의 gps.queue.N
     @Bean
     public List<Queue> gpsQueues() {
         List<Queue> queues = new ArrayList<>();
@@ -59,13 +58,13 @@ public class RabbitmqConfig {
         return queues;
     }
 
-    // 3. Binding - gps.key.1 ~ gps.key.N에 바인딩
     @Bean
-    public List<Binding> gpsBindings(DirectExchange gpsExchange) {
+    public List<Binding> gpsBindings(DirectExchange gpsExchange, List<Queue> gpsQueues) {
         List<Binding> bindings = new ArrayList<>();
-        for (int i = 1; i <= GPS_QUEUE_COUNT; i++) {
-            Queue queue = new Queue("gps.queue." + i, true);
-            bindings.add(BindingBuilder.bind(queue).to(gpsExchange).with("gps.key." + i));
+        for (int i = 0; i < gpsQueues.size(); i++) {
+            Queue queue = gpsQueues.get(i);
+            String routingKey = "gps.key." + (i + 1);
+            bindings.add(BindingBuilder.bind(queue).to(gpsExchange).with(routingKey));
         }
         return bindings;
     }
