@@ -23,14 +23,12 @@ public class GpsLogHubServiceImpl implements GpsLogHubService {
     @Async
     public void sendGpsLogMessage(GpsLogRequest gpsLogRequest) {
         try {
-            // mdn을 기준으로 큐 shard 결정
-            String mdn = gpsLogRequest.getMdn();
-            int shard = Math.abs(mdn.hashCode() % 5) + 1; // 1~5
+            int shard = (int)(Math.random() * 5) + 1;
             String routingKey = "gps.key." + shard;
 
             String objectToJSON = objectMapper.writeValueAsString(gpsLogRequest);
 
-            log.info("[sendGpsLogMessage] mdn={}, shard={}, routingKey={}", mdn, shard, routingKey);
+            log.info("[sendGpsLogMessage] shard={}, routingKey={}", shard, routingKey);
             log.info("[sendGpsLogMessage] objectToJSON={}", objectToJSON);
 
             rabbitTemplate.convertAndSend("gps.exchange", routingKey, objectToJSON);

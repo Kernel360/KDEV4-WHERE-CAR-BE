@@ -11,9 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Configuration
 @Slf4j
 public class RabbitmqConfig {
@@ -29,8 +26,6 @@ public class RabbitmqConfig {
 
     @Value("${spring.rabbitmq.port}")
     private int port;
-
-    private static final int GPS_QUEUE_COUNT = 5;
 
     // 1. Exchange 선언
     @Bean
@@ -48,53 +43,52 @@ public class RabbitmqConfig {
         return new DirectExchange("car.off.exchange");
     }
 
-    // 2. Queue 선언
-    @Bean
-    public List<Queue> gpsQueues() {
-        List<Queue> queues = new ArrayList<>();
-        for (int i = 1; i <= GPS_QUEUE_COUNT; i++) {
-            queues.add(QueueBuilder.durable("gps.queue." + i).build());
-        }
-        return queues;
+    // 2. GPS Queue 5개 개별 선언
+    @Bean public Queue gpsQueue1() { return QueueBuilder.durable("gps.queue.1").build(); }
+    @Bean public Queue gpsQueue2() { return QueueBuilder.durable("gps.queue.2").build(); }
+    @Bean public Queue gpsQueue3() { return QueueBuilder.durable("gps.queue.3").build(); }
+    @Bean public Queue gpsQueue4() { return QueueBuilder.durable("gps.queue.4").build(); }
+    @Bean public Queue gpsQueue5() { return QueueBuilder.durable("gps.queue.5").build(); }
+
+    // 3. GPS 바인딩 5개 개별 선언
+    @Bean public Binding gpsBinding1(DirectExchange gpsExchange, Queue gpsQueue1) {
+        return BindingBuilder.bind(gpsQueue1).to(gpsExchange).with("gps.key.1");
     }
 
-    @Bean
-    public Queue carOnQueue() {
+    @Bean public Binding gpsBinding2(DirectExchange gpsExchange, Queue gpsQueue2) {
+        return BindingBuilder.bind(gpsQueue2).to(gpsExchange).with("gps.key.2");
+    }
+
+    @Bean public Binding gpsBinding3(DirectExchange gpsExchange, Queue gpsQueue3) {
+        return BindingBuilder.bind(gpsQueue3).to(gpsExchange).with("gps.key.3");
+    }
+
+    @Bean public Binding gpsBinding4(DirectExchange gpsExchange, Queue gpsQueue4) {
+        return BindingBuilder.bind(gpsQueue4).to(gpsExchange).with("gps.key.4");
+    }
+
+    @Bean public Binding gpsBinding5(DirectExchange gpsExchange, Queue gpsQueue5) {
+        return BindingBuilder.bind(gpsQueue5).to(gpsExchange).with("gps.key.5");
+    }
+
+    // 4. 기타 Queue
+    @Bean public Queue carOnQueue() {
         return QueueBuilder.durable("car.on.queue").build();
     }
 
-    @Bean
-    public Queue carOffQueue() {
+    @Bean public Queue carOffQueue() {
         return QueueBuilder.durable("car.off.queue").build();
     }
 
-    // 3. Binding 선언
-    @Bean
-    public List<Binding> gpsBindings(DirectExchange gpsExchange, List<Queue> gpsQueues) {
-        List<Binding> bindings = new ArrayList<>();
-        for (int i = 0; i < gpsQueues.size(); i++) {
-            log.info(String.valueOf(gpsQueues.get(i)));
-            Queue queue = gpsQueues.get(i); // ✅ 실제 Bean을 참조
-            bindings.add(BindingBuilder
-                    .bind(queue)
-                    .to(gpsExchange)
-                    .with("gps.key." + (i + 1)));
-        }
-        return bindings;
-    }
-
-
-    @Bean
-    public Binding carOnBinding(DirectExchange carOnExchange, Queue carOnQueue) {
+    @Bean public Binding carOnBinding(DirectExchange carOnExchange, Queue carOnQueue) {
         return BindingBuilder.bind(carOnQueue).to(carOnExchange).with("car.on.key");
     }
 
-    @Bean
-    public Binding carOffBinding(DirectExchange carOffExchange, Queue carOffQueue) {
+    @Bean public Binding carOffBinding(DirectExchange carOffExchange, Queue carOffQueue) {
         return BindingBuilder.bind(carOffQueue).to(carOffExchange).with("car.off.key");
     }
 
-    // 4. RabbitMQ 연결
+    // 5. 연결/전송/변환 설정
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
@@ -105,13 +99,11 @@ public class RabbitmqConfig {
         return connectionFactory;
     }
 
-    // 5. 메시지 변환기 (JSON)
     @Bean
     public MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
-    // 6. RabbitTemplate 설정
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
