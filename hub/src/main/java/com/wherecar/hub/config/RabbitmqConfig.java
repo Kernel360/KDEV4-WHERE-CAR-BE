@@ -78,7 +78,7 @@ public class RabbitmqConfig {
 
     @Bean
     public Binding gpsBinding(DirectExchange gpsExchange, Queue gpsQueue) {
-        return BindingBuilder.bind(gpsQueue).to(gpsExchange).with("gps.key");
+        return BindingBuilder.bind(gpsQueue).to(gpsExchange).with("car.gps.key");
     }
 
     @Bean public Binding carOnBinding(DirectExchange carOnExchange, Queue carOnQueue) {

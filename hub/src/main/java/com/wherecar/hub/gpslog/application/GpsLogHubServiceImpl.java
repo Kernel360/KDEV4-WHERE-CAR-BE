@@ -1,6 +1,5 @@
 package com.wherecar.hub.gpslog.application;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wherecar.hub.common.MessageFactory;
 import com.wherecar.hub.gpslog.application.dto.GpsLogRequest;
@@ -23,20 +22,18 @@ public class GpsLogHubServiceImpl implements GpsLogHubService {
     @Async
     public void sendGpsLogMessage(GpsLogRequest gpsLogRequest) {
         try {
-//            int shard = (int)(Math.random() * 3) + 1;
-            int shard = 1;
-            String routingKey = "gps.key." + shard;
+            log.info("[GPSLOG][GpsLogHubServiceImpl][sendGpsLogMessage] 시작 | gpsLogRequest = {}", gpsLogRequest);
+            String routingKey = "car.gps.key";  // 고정된 routing key
 
             String objectToJSON = objectMapper.writeValueAsString(gpsLogRequest);
 
-            log.info("[sendGpsLogMessage] shard={}, routingKey={}", shard, routingKey);
+            log.info("[sendGpsLogMessage] routingKey={}", routingKey);
             log.info("[sendGpsLogMessage] objectToJSON={}", objectToJSON);
 
             rabbitTemplate.convertAndSend("gps.exchange", routingKey, objectToJSON);
-        } catch (JsonProcessingException jpe) {
-            log.error("❌ JSON 파싱 오류 발생", jpe);
+            log.info("[GPSLOG][GpsLogHubServiceImpl][sendGpsLogMessage] 끝");
         } catch (Exception e) {
-            log.error("❌ hub / GPS 로그 비동기 처리 예외 발생", e);
+            log.error("[GPSLOG][GpsLogHubServiceImpl][sendGpsLogMessage] 오류", e);
         }
     }
 }
