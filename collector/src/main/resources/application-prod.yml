@@ -23,5 +23,5 @@ server:
   port: 8080
 
 
-gps:
-  queue-name: ${GPS_QUEUE_NAME}
+#gps:
+#  queue-name: ${GPS_QUEUE_NAME}
