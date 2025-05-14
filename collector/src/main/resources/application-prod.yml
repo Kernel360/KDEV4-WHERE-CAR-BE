@@ -10,8 +10,8 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     hikari:
-      maximum-pool-size: 10
-      minimum-idle: 10
+      maximum-pool-size: 50
+      minimum-idle: 50
   rabbitmq:
     host: ${MQ_HOST_NAME}
     port: 5672

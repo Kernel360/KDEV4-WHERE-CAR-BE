@@ -45,13 +45,13 @@ jobs:
           docker build -f ./rest/Dockerfile -t $ECR_REGISTRY/where-car/rest:latest ./rest
           docker push $ECR_REGISTRY/where-car/rest:latest
 
-      # Hub
-      - name: Build and Push Hub
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: |
-          docker build -f ./hub/Dockerfile -t $ECR_REGISTRY/where-car/hub:latest ./hub
-          docker push $ECR_REGISTRY/where-car/hub:latest
+#      # Hub
+#      - name: Build and Push Hub
+#        env:
+#          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#        run: |
+#          docker build -f ./hub/Dockerfile -t $ECR_REGISTRY/where-car/hub:latest ./hub
+#          docker push $ECR_REGISTRY/where-car/hub:latest
 
       # Batch
       - name: Build and Push Batch
