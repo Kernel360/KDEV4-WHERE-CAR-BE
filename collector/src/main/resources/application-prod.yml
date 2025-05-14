@@ -6,7 +6,7 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:mysql://${DB_HOST_NAME}/${DB_STORAGE_NAME}
+    url: jdbc:mysql://${DB_HOST_NAME}/${DB_STORAGE_NAME}?rewriteBatchedStatements=true
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     hikari:
