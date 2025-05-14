@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -18,24 +19,16 @@ public class GpsLogBatchBuffer {
 
     private final GpsLogJdbcRepository gpsLogJdbcRepository;
 
+    // ✅ 동기화 리스트
     private final List<GpsLog> buffer = Collections.synchronizedList(new ArrayList<>());
 
-    // ✅ 배치 사이즈 & flush 주기 최적값
-    private static final int BATCH_SIZE = 1000;
+    // ✅ 설정
+    private static final int BATCH_SIZE = 20000;
     private static final long FLUSH_INTERVAL_MILLIS = 5000L;
-
-    private long lastFlushTime = System.currentTimeMillis();
 
     public void add(GpsLog log) {
         buffer.add(log);
-        maybeFlush();
-    }
-
-    private synchronized void maybeFlush() {
-        boolean batchReady = buffer.size() >= BATCH_SIZE;
-        boolean timeExceeded = System.currentTimeMillis() - lastFlushTime >= FLUSH_INTERVAL_MILLIS;
-
-        if (batchReady || timeExceeded) {
+        if (buffer.size() >= BATCH_SIZE) {
             flush();
         }
     }
@@ -51,6 +44,7 @@ public class GpsLogBatchBuffer {
 
     private void flush() {
         List<GpsLog> toFlush;
+        log.info("Flush size {}", buffer.size());
         synchronized (this) {
             if (buffer.isEmpty()) return;
             toFlush = new ArrayList<>(buffer);
@@ -59,12 +53,11 @@ public class GpsLogBatchBuffer {
 
         try {
             gpsLogJdbcRepository.batchInsert(toFlush);
-            lastFlushTime = System.currentTimeMillis();
             log.info("[GpsLogBatchBuffer] ✅ Flushed {} logs", toFlush.size());
         } catch (Exception e) {
-            log.error("[GpsLogBatchBuffer] ❌ Flush failed, restoring {} logs to buffer", toFlush.size(), e);
+            log.error("[GpsLogBatchBuffer] ❌ Flush failed. Restoring {} logs", toFlush.size(), e);
             synchronized (this) {
-                buffer.addAll(0, toFlush); // 앞에 복구
+                buffer.addAll(0, toFlush);
             }
         }
     }
