@@ -3,6 +3,7 @@ package com.wherecar.batch.stat.application;
 import com.wherecar.batch.main.domain.Car;
 import com.wherecar.batch.main.domain.CarLog;
 import com.wherecar.batch.main.domain.GpsLog;
+import com.wherecar.batch.main.domain.constant.DriveType;
 import com.wherecar.batch.main.infrastructure.CarLogRepository;
 import com.wherecar.batch.main.infrastructure.CarRepository;
 import com.wherecar.batch.main.infrastructure.GpsLogRepository;
@@ -145,7 +146,7 @@ public class CarLogSummaryBatch {
                     .onLongitude(carLog.getOnLongitude())
                     .offLatitude(carLog.getOffLatitude())
                     .offLongitude(carLog.getOffLongitude())
-                    .driveType(carLog.getDriveType())
+                    .driveType(carLog.getDriveType() != null ? carLog.getDriveType() : DriveType.UNCLASSIFIED)
                     .distance((int)(carLog.getOffMileage() - carLog.getOnMileage()))
                     .averageSpeed(avgSpeed)
                     .maxSpeed((int) maxSpeed)
