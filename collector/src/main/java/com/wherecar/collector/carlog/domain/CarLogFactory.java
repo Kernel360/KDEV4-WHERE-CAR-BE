@@ -1,6 +1,7 @@
 package com.wherecar.collector.carlog.domain;
 
 import com.wherecar.collector.carlog.application.dto.CarLogRequest;
+import com.wherecar.collector.common.constant.DriveType;
 import com.wherecar.collector.common.constant.GpsConditionType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,16 +21,17 @@ public class CarLogFactory {
         GpsConditionType onGpsCondition = CarLog.getGpsConditionType(carLogRequest.getGcd());
 
         return CarLog.builder()
-            .mdn(carLogRequest.getMdn())
-            .onGpsCondition(onGpsCondition)
-            .onLatitude(doubleLatitude)
-            .onLongitude(doubleLongitude)
-            .onAngle(Integer.parseInt(carLogRequest.getAng()))
-            .onSpeed(Integer.parseInt(carLogRequest.getSpd()))
-            .onSum(Integer.parseInt(carLogRequest.getSum()))
-            .onMileage(onMileage)
-            .onTime(onTime)
-            .build();
+                .driveType(DriveType.UNCLASSIFIED)
+                .mdn(carLogRequest.getMdn())
+                .onGpsCondition(onGpsCondition)
+                .onLatitude(doubleLatitude)
+                .onLongitude(doubleLongitude)
+                .onAngle(Integer.parseInt(carLogRequest.getAng()))
+                .onSpeed(Integer.parseInt(carLogRequest.getSpd()))
+                .onSum(Integer.parseInt(carLogRequest.getSum()))
+                .onMileage(onMileage)
+                .onTime(onTime)
+                .build();
     }
 
     public CarLog toFirstOnLog(CarLogRequest carLogRequest) {
@@ -43,6 +45,7 @@ public class CarLogFactory {
         GpsConditionType onGpsCondition = CarLog.getGpsConditionType(carLogRequest.getGcd());
 
         return CarLog.builder()
+                .driveType(DriveType.UNCLASSIFIED)
                 .mdn(carLogRequest.getMdn())
                 .onGpsCondition(onGpsCondition)
                 .onLatitude(doubleLatitude)
