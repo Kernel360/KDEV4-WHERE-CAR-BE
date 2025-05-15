@@ -10,22 +10,25 @@ spring:
     username: ${MAIN_DB_USERNAME}
     password: ${MAIN_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 5
   datasource-stat:
     jdbc-url: jdbc:mysql://${STAT_DB_HOST_NAME}/${STAT_DB_STORAGE_NAME}
     username: ${STAT_DB_USERNAME}
     password: ${STAT_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 5
   datasource-meta:
     jdbc-url: jdbc:mysql://${META_DB_HOST_NAME}/${META_DB_STORAGE_NAME}
     username: ${META_DB_USERNAME}
     password: ${META_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      maximum-pool-size: 10
+      maximum-pool-size: 5
       minimum-idle: 5
-      idle-timeout: 30000
-      max-lifetime: 1800000
-      connection-timeout: 20000
   batch:
     job:
       enabled: false
