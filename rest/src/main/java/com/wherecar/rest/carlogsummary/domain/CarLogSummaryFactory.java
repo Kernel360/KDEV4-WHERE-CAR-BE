@@ -40,12 +40,17 @@ public class CarLogSummaryFactory {
             totalDistance += carLogSummary.getDistance();
             totalDriveTime += (int) Duration.between(carLogSummary.getOnTime(),carLogSummary.getOffTime()).toSeconds();
 
-            switch (carLogSummary.getDriveType()) {
-                case UNCLASSIFIED -> unclassifiedCount++;
-                case PERSONAL     -> personalCount++;
-                case COMMUTE      -> commuteCount++;
-                case BUSINESS     -> businessCount++;
+            if(carLogSummary.getDriveType()==null){
+                unclassifiedCount++;
+            } else {
+                switch (carLogSummary.getDriveType()) {
+                    case UNCLASSIFIED -> unclassifiedCount++;
+                    case PERSONAL     -> personalCount++;
+                    case COMMUTE      -> commuteCount++;
+                    case BUSINESS     -> businessCount++;
+                }
             }
+
 
 
             onList.add(GpsPoint.builder()
