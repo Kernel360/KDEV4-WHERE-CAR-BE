@@ -73,10 +73,11 @@ services:
     deploy:
       resources:
         limits:
+          cpus: '0.5'
+          memory: 2048M
+        reservations:
           cpus: '0.3'
           memory: 1024M
-        reservations:
-          memory: 512M
     networks:
       - where-car-network
     depends_on:
