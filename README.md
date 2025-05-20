@@ -15,6 +15,12 @@
 ---
 
 
+
+🔗 **서비스 바로가기**: [wherecar.store](https://www.where-car.com/)  
+🎬 **발표 자료**: http://where-car.my.canva.site/
+
+---
+
 ## 주요 기능
 
 ### 실시간 차량 관제  
@@ -98,9 +104,5 @@
 
 
 
-## 링크
-
-🔗 **서비스 바로가기**: [wherecar.store](https://www.where-car.com/)  
-🎬 **발표 자료**: http://where-car.my.canva.site/
 
 
