@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="README.ko.md">🇰🇷 한국어로 보기</a> | <a href="README.en.md">🇺🇸 View in English</a>
+  <a href="README.ko.md">🇰🇷 한국어로 보기</a> | <a href="README.en.md">en View in English</a>
 </p>
 
 <p align="center">
