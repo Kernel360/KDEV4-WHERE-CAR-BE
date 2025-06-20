@@ -12,7 +12,7 @@ It’s easy for users, and powerful for businesses.
 ---
 
 🔗 [**Go to Service**](https://www.where-car.com/)  
-🎬 [**Final Presentation**](http://where-car.my.canva.site/)
+🎬 [**Final Presentation**](http://where-car2.my.canva.site/)
 
 ---
 

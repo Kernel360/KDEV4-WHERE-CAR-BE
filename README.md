@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  🔗 <a href="https://www.where-car.com/">Live Demo</a> | 🎬 <a href="http://where-car.my.canva.site/">Final Presentation</a>
+  🔗 <a href="https://www.where-car.com/">Live Demo</a> | 🎬 <a href="http://where-car2.my.canva.site/">Final Presentation</a>
 </p>
 
 ---
