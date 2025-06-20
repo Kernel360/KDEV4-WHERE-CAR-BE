@@ -17,7 +17,7 @@
 
 
 🔗 [**서비스 바로가기**](https://www.where-car.com/)  
-🎬 [**최종 발표 자료**](http://where-car.my.canva.site/) 
+🎬 [**최종 발표 자료**](http://where-car2.my.canva.site/) 
 
 ---
 
